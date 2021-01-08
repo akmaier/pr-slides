@@ -1,0 +1,381 @@
+\section{Discriminant Analysis I}
+
+\begin{frame}
+  \frametitle{Discriminant Analysis}
+
+  \structure{Discriminant analysis} methods are \emph{discriminative modeling} methods that model the posterior through its factorization 
+  
+  \begin{displaymath}
+    p(y|\vec x) = \frac{p(y)\cdot p(\vec x|y)}{\sum_y p(y)\cdot p(\vec x|y)}
+  \end{displaymath}
+\end{frame}
+
+
+\subsection{Gaussian Classifier}
+
+\begin{frame}
+  \frametitle{Gaussian Classifier}
+
+  We call the Bayesian classifier \structure{Gaussian}, if the class conditional density $p(\vec x|y)$ is Gaussian, i.\,e.
+
+  \begin{eqnarray*}
+     p(\vec x | y) &=& \mathcal {N} (\vec x ;\vec {\mu}_y, \mat\Sigma_y) \\
+                   &=& \frac{1}{\sqrt{\det 2\pi  \mat\Sigma_y}} 
+                       e^{-\frac{1}{2}(\vec x -\vec{\mu}_y)^T \mat\Sigma_y^{-1}(\vec x - \vec{\mu}_y)}
+  \end{eqnarray*}
+%
+  where
+%
+  \begin{center}
+    \begin{minipage}{0.6\textwidth}
+      \begin{itemize}
+        \item[$\vec x \in \real^d$:] $d$-dimensional feature vector\\
+        \item[$\vec {\mu}_y \in \real^d $:] mean vector of class y\\
+        \item[$ \mat\Sigma_y \in \real^{d\times d}$:] positive definite covariance matrix.
+      \end{itemize}
+    \end{minipage}
+  \end{center}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Gaussian Classifier \cont}
+
+  \structure{Facts about Gaussian classifiers:}
+
+  \begin{itemize}
+    \item In general the decision boundary is \structure{quadratic} in the components $x_i$ \\ 
+      of the feature vector $\vec x$. \\[.5cm]
+    \item If all classes share the same covariance, the decision boundary is \structure{linear} \\
+      in the components $x_i$ of the feature vector $\vec x$. \\[.5cm]
+    \item If all covariance matrices are diagonal matrices, \\
+      then we get a \structure{Na{\"i}ve Bayes} classifier.
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Gaussian Classifier \cont}
+
+  \structure{Facts about Gaussian classifiers (cont.):}
+  
+  \begin{itemize}
+    \item If the joint covariance matrix is $\mat\Sigma$ and priors are identical, \\
+      classification requires the minimization of the \structure{Mahalanobis distance}
+      \begin{eqnarray*}
+        y^* &=& \argmin_{y} \frac{1}{2} (\vec x-\vec\mu_y)^T\mat\Sigma^{-1}(\vec x-\vec\mu_y)
+      \end{eqnarray*}
+      \pause 
+    \item If all covariance matrices are the identity matrix, we get the \\
+      \structure{Nearest Neighbor} classifier based on the $L_2$-norm:
+      \begin{eqnarray*}
+        y^* &=& \argmin_{y} \frac{1}{2} (\vec x-\vec\mu_y)^T(\vec x-\vec\mu_y)
+      \end{eqnarray*}
+      The prototype vectors are the mean vectors.
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Gaussian Classifier \cont}
+  
+  \structure{From linear to quadratic decision boundaries:} \\[.5cm]
+  
+  A compromise between linear and quadratic decision boundaries \\
+  can be achieved by using \structure{regularized covariance matrices}:
+%  
+  \begin{eqnarray*}
+    \mat\Sigma_y (\alpha)= \alpha \mat\Sigma_y + (1-\alpha)\mat\Sigma
+  \end{eqnarray*}
+%  
+  where $\alpha\in [0,1]$ and $\mat\Sigma$ denotes the joint covariance.
+  \spread
+  
+  Obviously we have the extremes:
+  \begin{itemize}
+    \item Linear decision boundary: $\quad ~~\alpha = 0$
+    \item Quadratic decision boundary: $\alpha =1$
+  \end{itemize}
+\end{frame}
+
+
+\subsection{Feature Transform}
+
+\begin{frame}
+  \frametitle{Feature Transform}
+
+  Can we find a feature transform
+%  
+  \begin{eqnarray*}
+    \phi: \real^d &\rightarrow &\real^d
+   \end{eqnarray*}
+%
+  to generate features $\phi(\vec x)$ that share the same covariance matrix?
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Feature Transform \cont}
+
+  The symmetric positive semidefinite covariance matrix $\mat\Sigma\in \real^{d\times d}$ \\
+  can be decomposed using SVD:
+%  
+  \begin{eqnarray*}
+    \mat\Sigma&=& \pause \mat{U}\mat{D}\mat{U}^T \pause = (\mat{U}\mat{D}^{\frac{1}{2}})(\mat{U}\mat{D}^{\frac{1}{2}})^T \pause =  
+    (\mat{U}\mat{D}^{\frac{1}{2}})\cdot \mat{I} \cdot(\mat{U}\mat{D}^{\frac{1}{2}})^T
+  \end{eqnarray*}
+%
+  where $\mat{I}\in \real^{d\times d}$ is the identity matrix.
+  \pause
+   
+  \begin{itemize}
+    \item \structure{Determinant:}  
+      \begin{displaymath}
+        \det \mat\Sigma = \prod_{i=1}^d d_{i,i},
+      \end{displaymath}
+      where $d_{i,i}$ are the diagonal elements of $\mat D$, i.\,e.\ the \structure{singular values}. \pause
+    \item \structure{Inverse:}
+      \begin{displaymath}
+        \mat\Sigma^{-1} = \mat{U}\mat{D}^{-1}\mat{U}^T
+                          = (\mat{U}\mat{D}^{-\frac{1}{2}})\cdot \mat{I} \cdot(\mat{U}\mat{D}^{-\frac{1}{2}})^T
+      \end{displaymath}
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Feature Transform \cont}
+ 
+   Now we incorporate this:
+   
+  \begin{eqnarray*}
+    \mathcal {N} (\vec x ;\vec {\mu}, \mat\Sigma) 
+      &=& \frac{1}{\sqrt{\det 2\pi  \mat\Sigma}} 
+          e^{-\frac{1}{2}(\vec x -\vec{\mu})^T \, \mat\Sigma^{-1} \, (\vec x - \vec{\mu})} \\[.3cm] \pause
+      &=& \frac{1}{\sqrt{\det 2\pi  \mat\Sigma}} 
+          e^{-\frac{1}{2}(\vec x -\vec{\mu})^T \, (\mat{U}\mat{D}^{-\frac{1}{2}})\cdot \mat{I} \cdot(\mat{U}\mat{D}^{-\frac{1}{2}})^T \, (\vec x - \vec{\mu})} \\[.3cm] \pause
+      &=& \frac{1}{\sqrt{\det 2\pi  \mat\Sigma}} 
+          e^{-\frac{1}{2} \big( (\mat{D}^{-\frac{1}{2}}\mat{U}^T)\vec x - (\mat{D}^{-\frac{1}{2}}\mat{U}^T)\vec\mu \big)^T \,\mat{I} ~
+          \big( (\mat{D}^{-\frac{1}{2}}\mat{U}^T)\vec x- (\mat{D}^{-\frac{1}{2}}\mat{U}^T)\vec\mu \big) }
+  \end{eqnarray*}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Feature Transform \cont}
+ 
+  The classwise transform $\phi_y$ is even a linear function:
+%
+  \begin{displaymath}
+    \vec x' \quad = \quad \phi_y(\vec x) \quad = \quad \mat{D}_y^{-\frac{1}{2}}\mat{U}^T_y\vec x
+  \end{displaymath}
+  \pause 
+
+  It is straight forward  to show that $\vec x'$ is normally distributed
+  \begin{displaymath}
+     p(\vec x' | y) \quad = \quad \mathcal {N} (\vec x' ; \vec {\mu}'_y, \mat\Sigma'_y) 
+                    \quad = \quad \mathcal {N} (\vec x' ; \mat{D}_y^{-\frac{1}{2}}\mat{U}^T_y\vec {\mu}_y, \mat{I}) 
+  \end{displaymath}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Feature Transform \cont}
+
+  \structure{Conclusions:}
+  
+  \begin{itemize}
+    \item All classes $y$ share the same covariance matrix that is the identity matrix. \\[.3cm]
+    \item The decision boundary is linear. \\[.5cm] \pause
+    \item \vorsicht \structure{Huge disadvantage:} \\ 
+      feature transform depends on class number $y$! \\[.3cm]
+    \item If we have a classified training set, we can compute a transform \\
+      for each class such that all covariance matrices are the identity matrix. \\[.3cm]
+    \item Classification requires the application of different transforms.
+  \end{itemize}
+\end{frame}
+
+\input{nextTime.tex}
+
+\subsection{Linear Discriminant Analysis}
+
+\begin{frame}
+  \frametitle{Linear Discriminant Analysis}
+
+  \begin{algorithmic}
+    \STATE \structure{Input:} training data:  $S = \{ (\vec x_1, y_1), (\vec x_2, y_2), (\vec x_3, y_3), \dots, (\vec x_m, y_m) \}$
+      \pause
+    \STATE 1. ML estimation of the \structure{joint covariance matrix}:
+      \begin{displaymath}
+        \widehat{\mat\Sigma}= \frac{1}{m} \sum_{i=1}^m (\vec x_i - \vec \mu_{y_i})(\vec x_i - \vec \mu_{y_i})^T
+      \end{displaymath}
+      \pause
+     \STATE 2. Compute SVD of covariance matrix: $\widehat{\mat \Sigma}= \mat{U}\mat{D}\mat{U}^T$ \pause 
+     \STATE 3. Assign transform: 
+       \begin{displaymath}
+         \phi= \mat D^{-\frac{1}{2}} \mat{U}^T
+       \end{displaymath}
+       \pause
+     \STATE 4. Compute mean vectors for all $y$
+       \begin{displaymath}
+          \vec{\mu}'_y = \phi(\vec\mu_y)= \mat{D}^{-\frac{1}{2}} \mat{U}^T \vec{\mu}_y
+       \end{displaymath}
+       \pause \vspace{-.5cm}
+     \STATE \structure{Output:} feature transform $\phi$, transformed mean vectors $\vec{\mu}'_y$
+  \end{algorithmic}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Linear Discriminant Analysis \cont}
+
+  Decision rule using \structure{sphered data $\phi(\vec x)$}:
+
+  \begin{eqnarray*}
+    y^* &=& \pause \argmax_y p(y|\vec \phi(\vec x))\\ \pause
+        &=& \argmax_y 
+              \left\{ 
+                \log p(y) - \frac{1}{2} \big( \phi(\vec x) - \phi(\vec\mu_y) \big)^T \big( \phi(\vec x)-\phi(\vec\mu_y) \big)
+              \right\} \\ \pause
+        &=& \argmin_y \left\{ \frac{1}{2}\left\|\phi(\vec x)-\phi(\vec\mu_y) \right\|_2^2 - \log p(y) \right\}
+  \end{eqnarray*}
+
+  where $\|.\|_2$ denotes the $L_2$ norm.
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Linear Discriminant Analysis \cont}
+
+  \structure{Conclusions:}
+  
+  \begin{itemize}
+    \item If all classes share the \structure{same prior}, \\ the decision rule is the
+      \structure{Nearest Neighbor} decision rule, \\ 
+      where transformed mean vectors serve as prototypes. \\[.5cm]
+    \item The feature transform $\phi$ does not change the dimension of features.
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Linear Discriminant Analysis \cont}
+
+  \begin{figure}
+    \resizebox{0.35\linewidth}{!}{
+      \input{\texfigdir/lda_nearest_neighbor.pstex_t}
+    }
+    \caption{Nearest Neighbor classification for two classes}
+  \end{figure}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Linear Discriminant Analysis \cont}
+
+  \structure{2 classes:} insights from geometrical analysis of sphered data \\[.3cm]
+
+  \begin{itemize}
+    \item Angle between $\phi(\vec x)$ and $(\phi(\vec \mu_1)-\phi(\vec \mu_0))$ can be used \\
+      for decision making.\\[.5cm]
+    \item Decision rule:
+      {\small
+      \begin{displaymath}
+        y^* = \left\{
+                \begin{array}{cl}
+                  0, & \quad \mbox{if} \quad 
+                       \phi(\vec x)^T \big( \phi(\vec\mu_1) - \phi(\vec\mu_0) \big) < 
+                       \frac{1}{2} \big( 
+                         \phi(\vec{\mu}_1)^T \phi(\vec{\mu}_1) - 
+                         \phi(\vec{\mu}_0)^T \phi(\vec{\mu}_0) 
+                        \big) \\[.3cm]
+%                       \big( \phi(\vec{\mu}_1) + \phi(\vec{\mu}_0) \big)^T
+%                       \big( \phi(\vec{\mu}_1) - \phi(\vec{\mu}_0) \big) \\[.3cm]
+                  1, & \quad \mbox{otherwise}.
+                \end{array}
+              \right.
+      \end{displaymath}
+      }
+    \item Coordinate orthogonal to the 1-D subspace spanned by $(\phi(\vec \mu_1)-\phi(\vec \mu_0))$ does not affect relative distances.
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Linear Discriminant Analysis \cont}
+
+  \structure{$K$ classes:} insights from geometrical analysis of sphered data \\[.3cm]
+
+  \begin{itemize}
+    \item Class centroids span $(K-1)$-dimensional subspace. \\[.5cm]
+    \item Relative differences are not affected by coordinates in the $(d-K+1)$-dimensional
+          subspace that is orthogonal to the  $(K-1)$-dimensional subspace spanned 
+          by class centroids.
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Linear Discriminant Analysis \cont}
+
+  \structure{Objective:} \\[.5cm]
+
+  Will we gain an advantage if we transform features by $$\phi: \real^d\rightarrow \real^k$$ in higher $(k>d)$ or lower dimensional $(k<d)$ spaces?
+\end{frame}
+
+
+\subsection{Lessons Learned}
+
+\begin{frame}
+  \frametitle{Lessons Learned}
+ 
+ \begin{itemize}
+    \item Relationship between Bayesian classifier, Gaussian classifier, and \\
+      Nearest Neighbor classifier. \\[.5cm]
+    \item Mahalanobis distance \\[.5cm]
+    \item Linear Discriminant Analysis is a regularized Nearest Neighbor classifier \\[.5cm]
+    \item Class centroids span $(K-1)$-dimensional subspace 
+  \end{itemize}
+\end{frame}
+
+\input{nextTime.tex}
+
+\subsection{Further Readings}
+
+\begin{frame}
+  \frametitle{Further Readings}
+ 
+  You are required to be familiar with \structure{linear algebra} and \structure{matrix calculus}:
+
+  \begin{itemize}
+    \item SIAMS best selling book in the last decade:\\[.15cm]
+      Lloyd N. Trefethen, David Bau III: \\
+      \structure{Numerical Linear Algebra}, \\
+      SIAM, Philadelphia, 1997. \\[0.15cm]
+    \item All about matrix derivatives and related problems is described in the Matrix Cookbook:
+      \structure{\url{http://www.matrixcookbook.com}} \\[.3cm]
+  \end{itemize}
+
+  Basics on \structure{discriminant analysis} can be found in
+
+  \begin{itemize}
+    \item T. Hastie, R. Tibshirani, and J. Friedman: \\
+      \structure{The Elements of Statistical Learning --}\\
+      \structure{ Data Mining, Inference, and Prediction},\\
+      2nd edition, Springer, New York, 2009.
+   \end{itemize}
+\end{frame}
+
+
+\subsection{Comprehensive Questions}
+
+\begin{frame}
+  \frametitle{Comprehensive Questions}
+
+  \begin{itemize}
+    \item What is a Gaussian classifier? \\[1cm]
+    \item What is the idea behind the feature transform for the LDA? \\[1cm]
+    \item Formulate the LDA for normally distributed classes. \\[1cm]
+    \item What is the dimensionality of the LDA subspace for $K$ classes?
+  \end{itemize}
+\end{frame}

@@ -1,0 +1,275 @@
+\section{Na{\"i}ve Bayes}
+
+\subsection{Independency Assumptions}
+
+\begin{frame}
+  \frametitle{Na{\"i}ve Bayes and Statistical Independency}
+  
+  \structure{Na{\"i}ve Bayes is}
+
+   \begin{itemize}
+    \item still widely (and successfully) used \\[.5cm]
+    \item often outperforming much more advanced classifiers \\[.5cm]
+    \item appropriate in the presence of high dimensional features\\ (curse of dimensionality) \\[.5cm]
+    \item also called \structure{``Idiot's Bayes''}
+   \end{itemize}
+ \end{frame}
+ 
+ 
+\begin{frame}
+  \frametitle{Na{\"i}ve Bayes and Statistical Independency \cont}
+
+  For the class dependent pdf we can do the following factorization:
+%
+  \begin{eqnarray*}
+    p(\vec x| y) &=& p(x_1, x_2, \dots, x_d |y) \\[.3cm] \pause
+                 &=& p(x_1|y)p(x_2, x_3,\dots, x_d | y, x_1) \\[.3cm] \pause
+                 &=& p(x_1|y)p(x_2|y,x_1)p(x_3,x_4,\dots, x_d | y, x_1, x_2) \\[.3cm] \pause
+                 &=& p(x_1|y)\prod_{i=2}^d p(x_i|y, x_1,\dots,x_{i-1})
+  \end{eqnarray*}
+\end{frame}
+ 
+ 
+\begin{frame} 
+  \frametitle{Na{\"i}ve Bayes and Statistical Independency \cont}
+  
+  \begin{itemize}
+    \item The Na{\"i}ve Bayes classifier makes a very strong -- so to call \structure{na{\"i}ve} -- \structure{independency assumption}. \\[.5cm]
+    \item All $d$ components of the feature vector $\vec x$ are assumed to be mutually independent. \\[.5cm] \pause
+    \item This independency assumption implies:
+      \begin{eqnarray*}
+        p(\vec x| y) &=& \prod_{i=1}^d p(x_i|y)
+      \end{eqnarray*}
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Na{\"i}ve Bayes and Statistical Independency \cont}
+
+  The decision rule of na{\"i}ve Bayes reads as follows:
+
+  \begin{eqnarray*}
+     y^*  &=& \argmax\limits_{y} p(y|\vec x) \\ \pause
+          &=& \argmax\limits_{y} p(y) p(\vec x| y) \\ \pause
+          &=& \argmax\limits_{y} p(y) \prod_{i=1}^d p(x_i | y)
+   \end{eqnarray*}
+\end{frame}
+ 
+
+\subsection{An Example: Gaussians}
+
+\begin{frame}
+  \frametitle{An Example: Na{\"i}ve Bayes and Gaussians}
+
+  \begin{ovalblock}{Example} 
+    Assume the $100$--dimensional feature vector $\vec x\in \real^{100}$ belonging to class $y$ is normally distributed and all components are {\em mutually dependent}:
+ 
+    \begin{eqnarray*}
+      \vec\mu_y &\in& \real^{100} \\
+      \mat\Sigma &=&  \mat\Sigma^T \in \real^{100\times 100} 
+    \end{eqnarray*}
+ 
+    The total number of parameters to be estimated for each class is \pause $$100+100\cdot (100+1)/2= 5150.$$
+  \end{ovalblock}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{An Example: Na{\"i}ve Bayes and Gaussians \cont}
+
+  \begin{ovalblock}{Example cont.}
+    Assume the $100$--dimensional feature vector $\vec x\in \real^{100}$ belonging to class $y$ is normally distributed and all components are \emph{mutually independent}. 
+    \begin{displaymath}
+      p(\vec x| y) = \prod_{i=1}^{100} p(x_i | y) \quad = \quad \prod_{i=1}^{100} {\cal N}(x_i;\mu_i, \sigma^2_i).
+    \end{displaymath}
+ 
+    For each component $i=\{1,2,3,\dots, 100\}$ we have to estimate mean $\mu_i\in \real$ and variance $\sigma_i^2\in \real$.
+    The total number of parameters to be estimated for each class is \pause $$100+100= 200.$$
+  \end{ovalblock}
+\end{frame}
+
+
+\begin{frame}
+   \frametitle{An Example: Na{\"i}ve Bayes and Gaussians \cont}
+
+  \begin{ovalblock}{Example cont.}
+    \begin{figure}
+      \resizebox{.75\linewidth}{!}{
+        \input{\texfigdir/naive_bayes_parameters.pstex_t}
+      }
+   \end{figure}
+ \end{ovalblock}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{An Example: Na{\"i}ve Bayes and Gaussians \cont}
+  
+  \begin{ovalblock}{Example cont.}
+    \begin{figure}
+      \resizebox{.5\linewidth}{!}{
+        \input{\texfigdir/gaussian1.pstex_t}
+      }
+      \caption{Quadratic decision boundary that considers statistical dependency}
+   \end{figure}
+   \end{ovalblock}
+ \end{frame}
+ 
+ 
+\begin{frame}
+  \frametitle{An Example: Na{\"i}ve Bayes and Gaussians \cont}
+
+  \begin{ovalblock} {Example cont.}
+    \begin{figure}
+      \resizebox{.5\linewidth}{!}{
+        \input{\texfigdir/gaussian4.pstex_t}
+      }      
+      \caption{Quadratic decision boundary assuming independency of $x_1$ and $x_2$}
+    \end{figure}
+  \end{ovalblock}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Na{\"i}ve Bayes}
+ 
+  Let us consider the \structure{logit transform}
+
+  \footnotesize
+  \begin{eqnarray*}
+    \log \frac{p(y=0|\vec x)}{p(y=1|\vec x)} 
+      &=& \pause \log\frac{p(y=0) p(\vec x | y=0)}{p(y=1) p(\vec x | y=1)}\\[.3cm] \pause
+      &=& \log\frac{p(y=0)}{p(y=1)} + \log\frac{p(\vec x | y=0)}{p(\vec x | y=1)}\\[.3cm] \pause
+      &=& \log\frac{p(y=0)}{p(y=1)} + \log\frac{\prod_{i=1}^d p(x_i | y=0)}{\prod_{i=1}^d p(x_i | y=1)} \\[.3cm] \pause
+      &=& \underbrace{\alpha_0 + \sum_{i=1}^d \alpha_{0,i}( x_i)}_{\mbox {\structure{generalized additive model}}}
+   \end{eqnarray*}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Na{\"i}ve Bayes \cont}
+
+  \begin{center}
+    Is there anything between Bayes and Na{\"i}ve Bayes?
+  \end{center}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Na{\"i}ve Bayes \cont}
+
+  There are multiple techniques to beat the curse of dimensionality, \\
+  for example:
+
+  \begin{itemize}
+     \item Reduction of the parameter space\\
+       \begin{itemize}
+         \item Introduction of independency assumptions \\
+           (from complete dependency to mutual independency)
+         \item Parameter tying
+       \end{itemize}
+    \item Reduction of the dimension of the feature vectors       
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Na{\"i}ve Bayes \cont}
+
+  First order dependency
+  \begin{eqnarray*}
+    p(\vec x| y) &=& p(x_1, x_2, \dots, x_d |y) \\[.3cm] \pause
+                 &=& p(x_1|y)p(x_2, x_3,\dots, x_d | y, x_1) \\[.3cm] \pause
+                 &=& p(x_1|y)p(x_2|y,x_1)p(x_3,x_4,\dots, x_d | y, x_1, x_2) \\[.3cm] \pause
+                 &=& p(x_1|y)\prod_{i=2}^d p(x_i|y, x_{i-1})
+  \end{eqnarray*}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Na{\"i}ve Bayes \cont}
+
+  \begin{ovalblock}{Example}
+    \structure{First order dependency} in a Gaussian random vector can be identified through the covariance matrix $\mat\Sigma$. It has the following structure:
+    
+    \begin{eqnarray*}
+      \mat\Sigma &=& \left(
+        \begin{array}{ccccccc}
+          \sigma_{1,1} & \sigma_{2,1} & 0            & 0            & \cdots & 0              & 0 \\
+          \sigma_{2,1} & \sigma_{2,2} & \sigma_{3,2} & 0            & \cdots & 0              & 0 \\
+          0            & \sigma_{3,2} & \sigma_{3,3} & \sigma_{4,3} & \cdots & 0              & 0 \\
+          0            & 0            & \sigma_{4,3} & \sigma_{4,4} & \cdots & 0              & 0 \\
+          \vdots       & \vdots       & \vdots       & \vdots       & \ddots & \vdots         & \sigma_{d,d-1} \\
+          0            & 0            & 0            & 0            & \cdots & \sigma_{d,d-1} & \sigma_{d,d} \\
+        \end{array}
+      \right)
+    \end{eqnarray*}
+  \end{ovalblock}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Na{\"i}ve Bayes \cont}
+
+  \begin{ovalblock}{Example}
+    First order dependency in Gaussian random vector with \\
+    \structure{tied diagonal elements}, i.\,e.\ $\sigma_{i,i}=\sigma$:
+ 
+   \begin{eqnarray*}
+     \mat\Sigma &=& \left(
+       \begin{array}{ccccccc}
+         \sigma       & \sigma_{2,1} & 0            & 0            & \cdots & 0              & 0 \\
+         \sigma_{2,1} & \sigma       & \sigma_{3,2} & 0            & \cdots & 0              & 0 \\
+         0            & \sigma_{3,2} & \sigma       & \sigma_{4,3} & \cdots & 0              & 0 \\
+         0            & 0            & \sigma_{4,3} & \sigma       & \cdots & 0              & 0 \\
+         \vdots       & \vdots       & \vdots       & \vdots       & \ddots & \vdots         & \sigma_{d,d-1} \\
+         0            & 0            & 0            & 0            & \cdots & \sigma_{d,d-1} & \sigma \\
+       \end{array}
+     \right)
+    \end{eqnarray*}
+  \end{ovalblock}
+\end{frame}
+
+
+\subsection{Lessons Learned}
+
+\begin{frame}
+  \frametitle{Lessons Learned}
+
+  \begin{itemize}
+    \item Na{\"i}ve Bayes is rather successful. \\[.5cm]
+    \item Na{\"i}ve Bayes does not require a huge set of training data. \\[.5cm]
+    \item Statistical dependency vs. dimension of the search space. \\[.5cm]
+    \item Na{\"i}ve Bayes: give it a try!
+  \end{itemize}
+\end{frame}
+
+\input{nextTime.tex}
+
+\subsection{Further Readings}
+
+\begin{frame}
+  \frametitle{Further Readings}
+
+  \begin{itemize}
+    \item Brian D. Ripley: \\
+      \structure{Pattern Recognition and Neural Networks}, \\
+      Cambridge University Press, Cambridge, 1996.\\[.3cm]
+    \item Christopher M.\ Bishop: \\
+      \structure{Pattern Recognition and Machine Learning}, \\ 
+      Springer, New York, 2006
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Comprehensive Questions}
+
+  \begin{itemize}
+    \item What is the assumption of Na{\"i}ve Bayes? \\[1cm]
+    \item How does the assumption affect the class dependent pdf? \\[1cm]
+    \item What is the structure of the covariance matrix of normal-distributed classes in Na{\"i}ve Bayes? \\[1cm]
+    \item How can Na{\"i}ve Bayes be extended to first-order statistical dependencies?
+  \end{itemize}
+\end{frame}

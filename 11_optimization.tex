@@ -1,0 +1,772 @@
+\section{Optimization}
+
+\subsection{Motivation}
+
+\begin{frame}
+  \frametitle{Motivation}
+
+  \begin{itemize}
+    \item Optimization is crucial for many solutions in pattern recognition, \\
+      pattern analysis, machine learning, artificial intelligence, etc. \\[.25cm]
+    \item Optimization has many faces: 
+      \begin{itemize}
+        \item discrete optimization,
+        \item combinatorial optimization,
+        \item genetic algorithms,
+        \item gradient descent,
+        \item unconstrained and constrained optimization,
+        \item linear programming,
+        \item convex optimization, etc. \\[.25cm]
+      \end{itemize}
+    \item There is no lecture on pattern recognition without a \\
+      refresher course on optimization techniques. \\[.25cm]
+    \item Each researcher has his own favorite optimization algorithm.
+  \end{itemize}
+\end{frame}
+
+
+\subsection{Unconstrained Optimization}
+
+\begin{frame}
+  \frametitle{Convexity}
+
+  \begin{citeblock}{Definition}
+
+    A function $f: \real^d \rightarrow \real$ is \structure{\emph{convex}} if the domain $\mathsf{dom}(f)$ of $f$ is a convex set \\
+    and if $\forall \vec x, \vec y \in \mathsf{dom}(f)$, and $\theta$ with $0 \leq \theta \leq 1$, we have
+
+    \begin{displaymath}
+      f(\theta \vec x + (1-\theta) \vec y) \leq \theta f(\vec x) + (1-\theta) f(\vec y)
+    \end{displaymath}
+    \pause
+
+    A function $f: \real^d \rightarrow \real$ is \structure{\emph{concave}} if $-f$ is convex.
+
+  \end{citeblock}
+  \pause
+  \vspace{0.5cm}
+
+  \structure{Geometric interpretation:} \\[.25cm]
+
+  The line segment between $(\vec x, f(\vec x))$ and $(\vec y, f(\vec y))$ lies above the graph of $f$.
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Unconstrained Optimization}
+ 
+  Let us assume in the following that we have to compute the minimum \\
+  of a convex function
+
+  \begin{displaymath}
+    f: \real^d \rightarrow \real
+  \end{displaymath}
+
+  that is twice differentiable. \\[.25cm] \pause
+
+  The unconstrained optimization problem is just the solution of the\\
+  minimization problem
+
+  \begin{displaymath}
+    \vec x^* = \argmin_{\vec x} f(\vec x)
+  \end{displaymath}
+
+  where $\vec x^*$ denotes the optimal point.
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Unconstrained Optimization \cont}
+  
+  For this particular family of functions, a necessary and sufficient condition \\
+  for the  minumum are the zero-crossings of the function's gradient:
+  
+  \begin{displaymath}
+    \nabla f(\vec x^*) = \vec 0.
+  \end{displaymath}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Unconstrained Optimization \cont}
+
+  Most methods follow an \structure{iterative scheme}:
+
+  \begin{eqnarray*}
+    \mbox{initialization} & & \vec x ^{(0)}\\
+    \mbox{iteration step} & & \vec x^{(k+1)}= g(\vec x^{(k)}) 
+  \end{eqnarray*}
+
+  where $g: \real^d\rightarrow \real^d$ is the update function. \\[0.5cm] \pause
+
+  The iterations \structure{terminate}, if 
+  
+  \begin{displaymath}
+    \|\vec x^{(k+1)} - \vec x^{(k)}\| < \epsilon,
+  \end{displaymath}
+  
+  i.\,e.\ no further significant change.
+\end{frame}
+
+
+\subsection{Descent Methods}
+
+\begin{frame}
+
+  \frametitle{Descent Methods}
+
+  We now consider iteration schemes that produce a sequence of estimates \\
+  according to the update function
+%  
+  \begin{displaymath}
+    \vec x^{(k+1)} = g(\vec x^{(k)}) = \vec x^{(k)} + t^{(k)}\Delta \vec x^{(k)} .
+  \end{displaymath}
+%  
+  where 
+%  
+  \begin{eqnarray*}
+    \Delta \vec x^{(k)}\in \real ^d: & & \quad \mbox{is the \structure{search direction} in the $k$-th iteration}\\
+    t^{(k)}\in \real:                & & \quad \mbox{denotes the \structure{step length} in the $k$-th iteration}
+  \end{eqnarray*}
+  \pause
+%  
+  and where we expect 
+%  
+  \begin{displaymath}
+    f( \vec x^{(k+1)} ) < f(\vec x^{(k)}) ~, \quad \mbox{i.\,e.}~~ \nabla f(\vec x^{(k)})^T \Delta \vec x^{(k)} < 0
+  \end{displaymath}
+%  
+  except ~~$ \vec x^{(k+1)}=\vec x^{(k)}=\vec x^*$.
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Taylor Approximation}
+ 
+  For many problems it is always good to know the \structure{second order Taylor approximation}:
+
+  \begin{displaymath}
+    f(\vec x + t\cdot \Delta\vec x) 
+    \approx f(\vec x) + t\cdot \nabla f(\vec x)^T \Delta \vec x +
+      \frac{1}{2} t^2\cdot\Delta \vec x^T \nabla^2 f(\vec x)\Delta \vec x
+  \end{displaymath}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Descent Methods \cont}
+  
+  \begin{algorithmic}
+    \STATE \structure{Input:} function $f$, initial estimate $\vec x^{(0)}$
+    \STATE Initialize: $k:=0$
+    \REPEAT
+      \STATE Select (or compute) descent direction 
+      \STATE Line search (1-D optimization): $$t^{(k)}= \argmin_{t \geq 0}f(\vec x^{(k)}+t\cdot \Delta\vec x^{(k)})$$
+      \STATE Update:
+        \begin{displaymath}
+          \vec x^{(k+1)} = \vec x^{(k)} + t^{(k)}\Delta \vec x^{(k)} .
+        \end{displaymath}
+      \STATE $k:=k+1$
+    \UNTIL{$\|\vec x^{(k)} - \vec x^{(k-1)}\| < \epsilon$}
+    \STATE \structure{Output:} $\vec x^{(k)}$
+  \end{algorithmic}
+\end{frame}
+
+
+\subsection{Backtracking Line Search}
+
+\begin{frame}
+  \frametitle{Line Search Methods}
+
+  \begin{itemize}  
+    \item Multivariate optimization in its described form requires a \\
+      proper line search method.\\[.25cm]
+    \item Exact line search along the straight line $\{\vec x + t\Delta \vec x ~|~ t \geq 0\}$ has to solve
+      \begin{displaymath}
+        t^* = \argmin_{t\geq 0} f(\vec  x + t\Delta \vec x)
+      \end{displaymath}
+      and is rarely used. \\[.25cm]
+    \item An overview of methods can be found in numerical recipes.
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Line Search Methods \cont}
+  
+  \structure{Setting $t = 0.25$:}
+  
+  \begin{center}
+    \resizebox{.7\linewidth}{!}{
+        \input{\texfigdir/stepsize_example3.pstex_t}
+    }
+  \end{center}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Line Search Methods \cont}
+  
+  \structure{Setting $t=1.9$:}
+  
+  \begin{center}
+    \resizebox{.7\linewidth}{!}{
+      \alt<24->{
+        \input{\texfigdir/stepsize_example1_24.pstex_t}
+      }{\alt<23>{
+        \input{\texfigdir/stepsize_example1_23.pstex_t}
+      }{\alt<22>{
+        \input{\texfigdir/stepsize_example1_22.pstex_t}
+      }{\alt<21>{
+        \input{\texfigdir/stepsize_example1_21.pstex_t}
+      }{\alt<20>{
+        \input{\texfigdir/stepsize_example1_20.pstex_t}
+      }{\alt<19>{
+        \input{\texfigdir/stepsize_example1_19.pstex_t}
+      }{\alt<18>{
+        \input{\texfigdir/stepsize_example1_18.pstex_t}
+      }{\alt<17>{
+        \input{\texfigdir/stepsize_example1_17.pstex_t}
+      }{\alt<16>{
+        \input{\texfigdir/stepsize_example1_16.pstex_t}
+      }{\alt<15>{
+        \input{\texfigdir/stepsize_example1_15.pstex_t}
+      }{\alt<14>{
+        \input{\texfigdir/stepsize_example1_14.pstex_t}
+      }{\alt<13>{
+        \input{\texfigdir/stepsize_example1_13.pstex_t}
+      }{\alt<12>{
+        \input{\texfigdir/stepsize_example1_12.pstex_t}
+      }{\alt<11>{
+        \input{\texfigdir/stepsize_example1_11.pstex_t}
+      }{\alt<10>{
+        \input{\texfigdir/stepsize_example1_10.pstex_t}
+      }{\alt<9>{
+        \input{\texfigdir/stepsize_example1_09.pstex_t}
+      }{\alt<8>{
+        \input{\texfigdir/stepsize_example1_08.pstex_t}
+      }{\alt<7>{
+        \input{\texfigdir/stepsize_example1_07.pstex_t}
+      }{\alt<6>{
+        \input{\texfigdir/stepsize_example1_06.pstex_t}
+      }{\alt<5>{
+        \input{\texfigdir/stepsize_example1_05.pstex_t}
+      }{\alt<4>{
+        \input{\texfigdir/stepsize_example1_04.pstex_t}
+      }{\alt<3>{
+        \input{\texfigdir/stepsize_example1_03.pstex_t}
+      }{\alt<2>{
+        \input{\texfigdir/stepsize_example1_02.pstex_t}
+      }{
+        \input{\texfigdir/stepsize_example1_01.pstex_t}
+      }}}}}}}}}}}}}}}}}}}}}}}
+    }
+  \end{center}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Line Search Methods \cont}
+  
+  \structure{Setting $t^{(k+1)}= \frac{1}{2} t^{(k)}$ and starting with $t^{(0)} = 0.5$:}
+  
+  \begin{center}
+    \resizebox{.7\linewidth}{!}{
+        \input{\texfigdir/stepsize_example2.pstex_t}
+    }
+  \end{center}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Backtracking Line Search}
+
+  \begin{center}
+    \resizebox{.7\linewidth}{!}{
+      \alt<6->{
+        \input{\texfigdir/armijo6.pstex_t}
+      }{\alt<5>{
+        \input{\texfigdir/armijo5.pstex_t}
+      }{\alt<4>{
+        \input{\texfigdir/armijo4.pstex_t}
+      }{\alt<3>{
+        \input{\texfigdir/armijo3.pstex_t}
+      }{\alt<2>{
+        \input{\texfigdir/armijo2.pstex_t}
+      }{
+        \input{\texfigdir/armijo1.pstex_t}
+      }}}}}
+    }
+  \end{center}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Backtracking Line Search \cont}
+
+  The Armijo-Goldstein line search algorithm: \\[0.5cm]
+
+  \begin{algorithmic}
+    \STATE \structure{Input:} function $f$, search direction $\Delta\vec x$
+    \STATE Initialize: $t:=1$
+    \STATE Select: $\alpha\in [0,0.5]$ and $\beta\in [0,1]$.
+    \WHILE{$f(\vec x + t\Delta \vec x) > f(\vec x) +  \alpha t \cdot \nabla f(\vec x)^T\Delta\vec x$}
+      \STATE $t := \beta t$
+    \ENDWHILE
+    \STATE \structure{Output:} $t$
+  \end{algorithmic}
+\end{frame}
+
+
+\subsection{Gradient Descent Methods}
+
+\begin{frame}
+  \frametitle{Gradient Descent Methods}
+
+  A natural choice of the search direction is the \structure{negative gradient}:
+  
+  \begin{displaymath}
+    \Delta \vec x^{(k)} = -\nabla f(\vec x^{(k)})
+  \end{displaymath}
+  \vspace{1cm}
+
+  \structure{Rule of thumb:}\\[.15cm]
+  
+  The negative gradient is the steepest descent direction.
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Gradient Descent Methods \cont}
+
+  \begin{algorithmic}
+    \STATE \structure{Input:} function $f$, initial estimate $\vec x^{(0)}$
+    \STATE intialize: $k:=0$
+    \REPEAT
+      \STATE Set descent direction: $\Delta\vec x^{(k)}=- \nabla f(\vec x^{(k)}) $
+      \STATE Line search (1-D optimization): $$t^{(k)}= \argmin_{t \geq 0}f(\vec x^{(k)}+t\cdot \Delta\vec x^{(k)})$$
+      \STATE Update:
+        \begin{displaymath}
+          \vec x^{(k+1)} = \vec x^{(k)} + t^{(k)}\Delta \vec x^{(k)} .
+        \end{displaymath}
+      \STATE $k:= k+1$
+    \UNTIL{$\|\vec x^{(k)} - \vec x^{(k-1)}\|_2 < \epsilon$}
+    \STATE \structure{Output:} $\vec x^{(k)}$
+  \end{algorithmic}
+\end{frame}
+
+\input{nextTime.tex}
+
+\subsection{Steepest Descent Methods}
+
+\subsubsection{Algorithm}
+
+\begin{frame}
+  \frametitle{Steepest Descent Methods}
+
+  \structure{(Normalized) steepest descent, what does it mean?} \\[.25cm]
+
+  We search for the unit vector that shows the largest decrease \\
+  in the linear approximation of $f$:
+  
+  \begin{displaymath}
+    \Delta \vec x = \argmin_{\vec u} \{\nabla f(\vec x)^T \vec u ; \ \| \vec u\|_p = 1\}
+  \end{displaymath}   
+  \pause         
+   
+  \structure{Conclusions:} 
+
+  \begin{itemize}
+    \item The steepest descent direction depends on the chosen norm.
+    \item The negative gradient is not necessarily the best choice for the \\
+      search direction.
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Steepest Descent Methods \cont}
+
+  We consider now the first order Taylor approximation of $f(\vec x +\vec u)$ \\
+  around the selected position $\vec x$:
+  
+  \begin{displaymath}
+    f(\vec x+\vec u) \approx f(\vec x) + \nabla f(\vec x)^T \vec u.
+  \end{displaymath}
+  \pause
+  
+  \begin{itemize}
+    \item Here $ \nabla f(\vec x)^T \vec u$ is the directional derivative at $\vec x$ in direction $\vec u$.
+    \item The vector $\vec u$ denotes a descent direction if the inner product \\
+      with the gradient vetor is negative, i.\,e.
+      \begin{displaymath}
+        \nabla f(\vec x)^T \vec u < 0~.
+      \end{displaymath}
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Steepest Descent Methods \cont}
+
+  \vspace*{-.25cm}
+  \begin{algorithmic}
+    \STATE \structure{Input:} function $f$, initial estimate $\vec x^{(0)}$, norm $\|.\|$
+    \STATE intialize: $k:=0$
+    \REPEAT
+      \STATE Compute highest descent direction: $$ \Delta \vec x ^{(k)}= \argmin_{\vec u} \{\nabla f(\vec x^{(k)})^T \vec u ; \ \| \vec u\| = 1\}$$    
+      \STATE Line search (1-D optimization): $$t^{(k)}= \argmin_{t \geq 0}f(\vec x^{(k)}+t\cdot \Delta\vec x^{(k)})$$
+      \STATE Update:
+        \begin{displaymath}
+          \vec x^{(k+1)} = \vec x^{(k)} + t^{(k)}\Delta \vec x^{(k)} .
+        \end{displaymath}
+      \STATE $k:=k+1$
+    \UNTIL{$\|\vec x^{(k)} - \vec x^{(k-1)}\| < \epsilon$}
+    \STATE \structure{Output:} $\vec x^{(k)}$
+  \end{algorithmic}
+\end{frame}
+
+
+\subsubsection{$L_2$-norm}
+
+\begin{frame}
+  \frametitle{$L_2$-Norm}
+
+  The unit ball for the $L_2$-norm:
+
+  \begin{figure}
+    \resizebox{.3\linewidth}{!}{
+      \alt<4->{
+        \input{\texfigdir/unit_ball_gradient_L2_3.pstex_t}
+      }{\alt<3>{
+        \input{\texfigdir/unit_ball_gradient_L2_2.pstex_t}
+      }{\alt<2>{
+        \input{\texfigdir/unit_ball_gradient_L2_1.pstex_t}
+      }{
+        \input{\texfigdir/unit_ball_gradient_L2_0.pstex_t}
+      }}}
+    }
+  \end{figure}
+ 
+  For the $L_2$-norm the steepest descent direction is the negative gradient:
+  
+  \begin{displaymath}
+    \Delta \vec x 
+    = \argmin_{\vec u} \{\nabla f(\vec x)^T \vec u ; \ \| \vec u\|_2 = 1\}
+    = -\nabla f(\vec x)
+  \end{displaymath}
+\end{frame}
+
+
+\subsubsection{$L_1$-norm}
+
+\begin{frame}
+ \frametitle{$L_1$-Norm}
+ 
+  The unit ball for the $L_1$-norm: \\[.25cm]
+  
+  \begin{columns}
+  
+    \column{.5\linewidth}
+      \centering
+      \resizebox{.9\linewidth}{!}{
+        \alt<4->{
+          \input{\texfigdir/unit_ball_gradient_L1_3.pstex_t}
+        }{\alt<3>{
+          \input{\texfigdir/unit_ball_gradient_L1_2.pstex_t}
+        }{\alt<2>{
+          \input{\texfigdir/unit_ball_gradient_L1_1.pstex_t}
+        }{
+          \input{\texfigdir/unit_ball_gradient_L1_0.pstex_t}
+        }}}
+      }
+    
+      \column{.5\linewidth}
+        \centering
+        \onslide<5->
+        \resizebox{.9\linewidth}{!}{
+          \input{\texfigdir/unit_ball_gradient_L1_4.pstex_t}
+        }
+  \end{columns}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{$L_1$-Norm \cont}
+
+  \begin{itemize}
+    \item The steepest descent for the $L_1$-norm selects in each iteration \\
+      the component of $\nabla f(\vec x)$ with maximum absolute value and then \\
+      decreases or increases dependent on the sign of the selected component. \pause
+    \item Let $i$ be the index of the gradient component with maximum absolute \\
+      value, and let $\vec e_i\in\real^d$ denote the corresponding base vector.\\
+      The steepest descent direction is given by:
+      \begin{eqnarray*}
+        \Delta \vec x &=& \argmin_{\vec u} \{\nabla f(\vec x)^T \vec u ; \ \| \vec u\|_1 = 1\} \\
+                      &=& -\mbox{sgn}\left(\frac{\partial}{\partial x_i} f(\vec x)\right)\vec e_i
+      \end{eqnarray*}
+      \pause
+    \item \structure{Note:} Steepest descent using the $L_1$-norm results in the {\em coordinate descent algorithm}.
+  \end{itemize}
+\end{frame}
+
+
+\subsubsection{$L_\infty$-norm}
+
+\begin{frame}
+  \frametitle{$L_\infty$-Norm}
+
+  The unit ball for the $L_\infty$-norm: \\[.25cm]
+
+  \begin{columns}
+  
+    \column{.5\linewidth}
+      \centering
+      \resizebox{.9\linewidth}{!}{
+        \alt<2->{
+          \input{\texfigdir/unit_ball_gradient_Linfinity_2.pstex_t}
+        }{
+          \input{\texfigdir/unit_ball_gradient_Linfinity_1.pstex_t}
+        }
+      }
+    
+      \column{.5\linewidth}
+        \centering
+        \onslide<3->
+        \resizebox{.9\linewidth}{!}{
+          \input{\texfigdir/unit_ball_gradient_Linfinity_3.pstex_t}
+        }
+  \end{columns}
+\end{frame}
+
+
+\subsubsection{Quadratic $L_{\mat P}$-norm}
+
+\begin{frame}
+  \frametitle{$L_{\mat P}$-Norm}
+  
+  The unit ball for the $L_{\mat P}$-norm:
+
+  \begin{figure}
+    \resizebox{.45\linewidth}{!}{
+      \alt<3>{
+        \input{\texfigdir/unit_ball_gradient_LP_3.pstex_t}
+      }{\alt<2>{
+        \input{\texfigdir/unit_ball_gradient_LP_2.pstex_t}
+      }{
+        \input{\texfigdir/unit_ball_gradient_LP_1.pstex_t}
+      }}
+    }
+  \end{figure}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{$L_{\mat P}$-Norm \cont}
+  
+  The \structure{steepest descent} for the $L_{\mat P}$-norm is given by:
+%  
+  \begin{eqnarray*}
+    \Delta \vec x 
+      &=& \argmin_{\vec u} \{\nabla f(\vec x)^T \vec u ; \ \| \vec u\|_{\mat P} = 1\} \\ \pause
+      &=& \argmin_{\vec u} \{\nabla f(\vec x)^T \vec u ;\  (\vec u^T{\mat P}\vec u)^{\frac{1}{2}} = 1\} \\ \pause
+      &=& \argmin_{\vec u} \{\nabla f(\vec x)^T \vec u ;\ \| {\mat P}^{\frac{1}{2}} \vec u\|_2 = 1\}
+  \end{eqnarray*}
+  \pause
+%  
+  As we did in the LDA-transform, we introduce a transform to get \\
+  \structure{spherical data}:
+%
+  \begin{displaymath}
+    \vec u' = {\mat P}^{\frac{1}{2}} \vec u
+  \end{displaymath}
+  \pause
+%
+  and thus
+%  
+  \begin{displaymath}
+    f(\vec u) = f({\mat P}^{-\frac{1}{2}}\vec u') = f'(\vec u')
+  \end{displaymath}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{$L_{\mat P}$-Norm \cont}
+  
+  Instead of $f(\vec x)$ we now minimize $f'(\vec x')$ using the $L_2$-norm and \\
+  back-transform the result:
+  
+  \begin{eqnarray*}
+    \Delta \vec x' 
+      &=& \argmin_{\vec u} \{\nabla f'(\vec x')^T \vec u' ; \ \| \vec u'\|_{2} = 1\} \\[.15cm] \pause
+      &=& -\nabla f'(\vec x') \\[.15cm] \pause
+      &=& -\mat P^{-\frac{1}{2}}\nabla f({\mat P}^{-\frac{1}{2}}\vec x') \\[.15cm] \pause
+      &=& - {\mat P}^{-\frac{1}{2}}\nabla f(\vec x)
+  \end{eqnarray*}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{$L_{\mat P}$-Norm \cont}
+ 
+  Now we get for $\Delta \vec x$:
+
+  \begin{eqnarray*}
+    \Delta \vec x 
+      &=& {\mat P}^{-\frac{1}{2}} \Delta \vec x' \\[.15cm] \pause
+      &=& {\mat P}^{-\frac{1}{2}} \left( - {\mat P}^{-\frac{1}{2}}\nabla f(\vec x) \right) \\[.15cm] \pause
+      &=& - \mat{P}^{-1} \nabla f(\vec x).
+  \end{eqnarray*}
+  \pause
+   
+  \structure{Conclusion:} The steepest descent for the $L_{\mat P}$-norm is given by
+  
+  \begin{displaymath}
+     \Delta \vec x = -\mat{P}^{-1} \nabla f(\vec x)~.
+  \end{displaymath}
+\end{frame}
+
+
+\subsection{Newton's Method}
+
+\begin{frame}
+  \frametitle{Newton's Method}
+
+  \structure{The idea:}
+  
+  \begin{itemize}
+    \item Select a point.
+    \item Compute the minimum of the second order Taylor approximation.
+  \end{itemize}
+  
+  \begin{center}
+    \resizebox{.7\linewidth}{!}{
+      \alt<8->{
+        \input{\texfigdir/newton-raphson8.pstex_t}
+      }{\alt<7>{
+        \input{\texfigdir/newton-raphson7.pstex_t}
+      }{\alt<6>{
+        \input{\texfigdir/newton-raphson6.pstex_t}
+      }{\alt<5>{
+        \input{\texfigdir/newton-raphson5.pstex_t}
+      }{\alt<4>{
+        \input{\texfigdir/newton-raphson4.pstex_t}
+      }{\alt<3>{
+        \input{\texfigdir/newton-raphson3.pstex_t}
+      }{\alt<2>{
+        \input{\texfigdir/newton-raphson2.pstex_t}
+      }{
+        \input{\texfigdir/newton-raphson1.pstex_t}
+      }}}}}}}
+    }
+  \end{center}  
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Newton's Method \cont}
+ 
+  Second order Taylor approximation:
+  \begin{displaymath}
+    f(\vec x+\Delta \vec x) 
+    \approx f(\vec x) + \nabla f(\vec x)^T \Delta \vec x + \frac{1}{2} \Delta \vec x^T (\nabla^2 f(\vec x))\Delta \vec x 
+  \end{displaymath}
+  \pause
+
+  Now we select $\Delta \vec x$ such that 
+  \begin{displaymath}
+    \nabla\{  f(\vec x) + \nabla f(\vec x)^T \Delta \vec x + \frac{1}{2}\Delta \vec x^T (\nabla^2 f(\vec x))\Delta \vec x\} 
+    = 0
+  \end{displaymath}
+  \pause
+
+  Obviously the gradient is
+  \begin{displaymath}
+    \nabla f(\vec x)+ \nabla^2 f(\vec x)\Delta \vec x 
+    = 0
+  \end{displaymath}
+  \pause
+
+  and thus
+  \begin{displaymath}
+    \Delta \vec x 
+    = -(\nabla^2 f(\vec x))^{-1} \nabla f(\vec x)
+  \end{displaymath} 
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Newton's Method \cont}
+
+  \structure{Conclusion:} \\[.25cm]
+ 
+  Newton's method is an $\vec x$-dependent steepest descent method regarding \\
+  the $L_{\mat P}$-norm, where $\mat P = \nabla^2 f(\vec x)$ is the Hessian.
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Damped Newton's Method}
+  
+  \begin{algorithmic}
+    \STATE \structure{Input:} function $f$, initial estimate $\vec x^{(0)}$
+    \STATE intialize: $k:=0$
+    \REPEAT
+      \STATE Compute Newton step:     $$ \Delta \vec x^{(k)}= -\nabla^2 f(\vec x^{(k)})^{-1} \nabla f(\vec x^{(k)}) $$
+      \STATE Line search (1-D optimization): $$t^{(k)}= \argmin_{t \geq 0}f(\vec x^{(k)}+t\cdot \Delta\vec x^{(k)})$$
+      \STATE Update:
+        \begin{displaymath}
+          \vec x^{(k+1)} = \vec x^{(k)} + t^{(k)}\Delta \vec x^{(k)} .
+        \end{displaymath}
+    \STATE $k:=k+1$
+   \UNTIL{$\|\vec x^{(k)} - \vec x^{(k-1)}\| < \epsilon$}
+   \STATE \structure{Output:} $\vec x^{(k)}$
+ \end{algorithmic}
+\end{frame}
+
+
+\subsection{Lessons Learned}
+
+\begin{frame}
+  \frametitle{Lessons Learned}
+
+  \begin{itemize}
+    \item Gradient descent is widely applied. \\[.25cm]
+    \item Gradient descent and coordinate descent are special cases of steepest descent methods. \\[.25cm]
+    \item Steepest descent method depends on the chosen norm.
+  \end{itemize}
+\end{frame}
+
+\input{nextTime.tex}
+
+\subsection{Further Readings}
+
+\begin{frame}
+  \frametitle{Further Readings}
+
+  This chapter is basically copied from: \\[.25cm]
+ 
+  \begin{itemize}
+    \item S.~Boyd, L.~Vandenberghe: \\
+      \structure{Convex Optimization}, \\
+      Cambridge University Press, 2004. \\
+      \point{\small \url{http://www.stanford.edu/~boyd/cvxbook/}} \\[.25cm]
+    \item Jorge Nocedal, Stephen Wright: \\
+      \structure{Numerical Optimization}, \\
+      Springer, New York, 1999.
+  \end{itemize}
+\end{frame}
+
+
+\subsection{Comprehensive Questions}
+
+\begin{frame}
+  \frametitle{Comprehensive Questions}
+
+  \begin{itemize}
+    \item What is the general formulation for an unconstrained optimization problem? \\[.5cm]
+    \item Why do we need a line search in gradient descent approaches? \\[.5cm]
+    \item What is the Armijo-Goldstein line search algorithm? \\[.5cm]
+    \item What are the steepest descent directions if we apply the $L_\infty$, $L_1$, $L_2$, and $L_{\mat P}$ norm?
+  \end{itemize}
+\end{frame}

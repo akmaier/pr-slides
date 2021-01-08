@@ -1,0 +1,963 @@
+\section{Discriminant Analysis II}
+
+\subsection{Rank Reduced Linear Discriminant Analysis}
+
+\begin{frame}
+	\frametitle{Rank Reduced Linear Discriminant Analysis}
+
+	\begin{center}
+		\begin{minipage}{0.8\textwidth}
+			\begin{itemize}
+				\item[{\bf Problem}:] How to choose an $L$-dimensional subspace with $L=K-1$ that is good for  LDA? \\[.5cm]
+				\item[{\bf Idea}:] Maximize the spread of the $L$-dimensional projection of centroids. \\[.5cm]
+				\item[{\bf Solution}:] Principal component analysis, i.\,e.\ \\
+				      we compute the principal components of the \\
+				      covariance matrix of the mean vectors
+				      $$\vec{\mu}'_y = \phi(\vec{\mu}_y) \in \real^{K-1},$$
+				      where $y=1,2,\dots, K$.
+			\end{itemize}
+		\end{minipage}
+	\end{center}
+\end{frame}
+
+
+\begin{frame}
+	\frametitle{Rank Reduced Linear Discriminant Analysis \cont}
+
+	In \structure{Principle Component Analysis (PCA)} we compute a linear mapping $\mat\Phi \in \real^{L \times (K-1)}$ that
+	results in the highest spread of projected features:
+	\pause
+
+	\begin{displaymath}
+		\mat{\Phi}^* = \argmax_{\mat{\Phi}} \left(
+		\frac{1}{K}
+		\sum_{y=1}^K (\mat{\Phi}\vec {\mu}'_y - \mat {\Phi}\bar{\mat \mu}' )^T
+		(\mat{\Phi}\vec {\mu}'_y - \mat {\Phi}\bar{\mat \mu}' ) +
+		\sum_{i=1}^{L} \lambda_i (\| \mat{\Phi}_i \|_2^2 - 1)
+		\right)
+	\end{displaymath}
+	% 
+	where we applied the \structure{Lagrange multiplier} method to allow for the maximization of the spread subject to
+	%
+	\begin{displaymath}
+		\| \mat {\Phi}_i \|_2^2 = 1 ~, \quad i = 1, \ldots, K-1 ~.
+	\end{displaymath}
+	%
+	Here $\| \mat{\Phi}_i \|_2^2$ denotes the $L_2$ norm of the $i$-th row vector of $\mat{\Phi}$.
+\end{frame}
+
+
+\begin{frame}
+	\frametitle{Excursus: Optimization with Constraints}
+
+	\structure{Lagrange Multipliers:} simple example
+
+	\begin{columns}
+		\column{.5\linewidth}
+
+		\begin{itemize}
+			\item Find the maximum of \\
+			      $f(x,y) = x +y$ \\[.25cm]
+			      \onslide<2->{
+			\item constraint: $x^2 + y^2 = 1$ \\[.25cm]
+			      }
+			      \onslide<4->{
+			\item Lagrange function: \\
+			      $L(x,y,\lambda) = x + y + \lambda(x^2 + y^2 - 1)$ \\[0.25cm]
+			      }
+			      \onslide<5->{
+			\item Set the partial derivatives to zero: \\
+			      $\frac{\partial L}{\partial x} =
+				      \frac{\partial L}{\partial y} =
+				      \frac{\partial L}{\partial \lambda}
+				      \stackrel{!}{=} 0$
+			      }
+		\end{itemize}
+
+		\column{.5\linewidth}
+
+		\begin{center}
+			\resizebox{\linewidth}{!}{
+				\alt<3->{
+					\input{\texfigdir/lagrange_multiplier3.pstex_t}
+				}{\alt<2>{
+						\input{\texfigdir/lagrange_multiplier2.pstex_t}
+					}{
+						\input{\texfigdir/lagrange_multiplier1.pstex_t}
+					}}
+			}
+		\end{center}
+	\end{columns}
+\end{frame}
+
+
+\begin{frame}
+	\frametitle{Rank Reduced Linear Discriminant Analysis \cont}
+
+	We need some facts from matrix calculus: \\
+	\point \structure{\url{www.matrixcookbook.com}}%
+	\footnote{website currently off-line -- you can still download it \point\href{http://www2.imm.dtu.dk/pubdb/views/publication_details.php?id=3274}{\structure{here}}} \\
+	%  
+	\spread
+
+	\begin{enumerate}
+		\item Let $\vec\mu$ denote the mean and $\mat \Sigma$ the covariance matrix of a \\
+		      random vector $\vec x$, then we get:
+		      \begin{displaymath}
+			      E[(\mat A \vec x)^T(\mat A \vec x)] =
+			      {\mbox{tr}}(\mat A \mat \Sigma \mat A^T) + (\mat A \vec \mu)^T(\mat A\vec \mu)
+		      \end{displaymath}
+		      \pause
+		\item The matrix derivative is:
+		      \begin{displaymath}
+			      \frac{\partial \mbox{tr}( \mat X \mat B \mat X^T)}{\partial \mat X} = \mat X\mat B^T +\mat X\mat B
+		      \end{displaymath}
+	\end{enumerate}
+\end{frame}
+
+
+\begin{frame}
+	\frametitle{Rank Reduced Linear Discriminant Analysis \cont}
+
+	For our \structure{optimization problem} this implies:
+
+	\begin{eqnarray*}
+		& & \frac{\partial}{\partial{\mat{\Phi}}}
+		\left\{
+		\frac{1}{K} \sum_{y=1}^K (\mat{\Phi} \vec{\mu}'_y - \mat{\Phi} \bar{\vec{\mu}}' )^T
+		(\mat{\Phi} \vec{\mu}'_y - \mat{\Phi} \bar{\vec{\mu}}' )  +
+		\sum_{i=1}^{L} \lambda_i (\| \mat{\Phi}_i \|^2_2 - 1)
+		\right\} \\[.5cm] \pause
+		& & = \quad \frac{\partial}{\partial{\mat{\Phi}}}
+		\left\{
+		\frac{1}{K} \sum_{y=1}^K \left( \mat\Phi (\vec{\mu}'_y - \bar{\vec{\mu}}') \right)^T
+		\left( \mat\Phi (\vec{\mu}'_y - \bar{\vec{\mu}}') \right) +
+		\sum_{i=1}^{L} \lambda_i (\| \mat {\Phi}_i \|^2_2 - 1)
+		\right\} \\[.5cm] \pause
+		& & = \quad \frac{\partial}{\partial{\mat{\Phi}}}
+		\left\{
+		\mbox{tr} (\mat\Phi \ \mat \Sigma_{\mbox{inter}} \ \mat\Phi^T) +
+		\sum_{i=1}^{L} \lambda_i (\| \mat {\Phi}_i \|_2^2 - 1)
+		\right\}
+		\stackrel{!}{=} \mat 0.
+	\end{eqnarray*}
+\end{frame}
+
+
+\begin{frame}
+	\frametitle{Rank Reduced Linear Discriminant Analysis \cont}
+
+	Now we compute the \structure{partial derivatives}:
+
+	\begin{displaymath}
+		\frac{\partial}{\partial{\mat{\Phi}}}
+		\left\{
+		\mbox{tr} (\mat \Phi \ \mat \Sigma_{\mbox{inter}}  \ \mat \Phi^T) + \sum_{i=1}^{L} \lambda_i (\| \mat {\Phi}_i \|^2_2 - 1)  \right\} =
+		2 \mat \Phi\mat  \Sigma_{\mbox{inter}} +2 \mat{\lambda} \mat \Phi = \mat 0
+	\end{displaymath}
+	\pspread
+
+	This results in the eigenvalue and eigenvector problem:
+	\begin{displaymath}
+		\mat{\Sigma}_{\mbox{inter}} \mat \Phi^T = \mat{\lambda}' \mat \Phi^T
+	\end{displaymath}
+	\pspread
+
+	\structure{Note:} \\
+	In original PCA, the transform $\mat \Phi$ maximizes the overall spread using the covariance matrix of all features:
+
+	\begin{displaymath}
+		\mat{\Sigma} \mat{\Phi}^T = \mat{\lambda}' \mat \Phi^T
+	\end{displaymath}
+\end{frame}
+
+
+\begin{frame}
+	\frametitle{Rank Reduced Linear Discriminant Analysis \cont}
+
+	\begin{algorithmic}
+		\STATE  \structure{Input:} training data:  $S = \{ (\vec x_1, y_1), (\vec x_2, y_2), (\vec x_3, y_3), \dots, (\vec x_m, y_m) \}$ \\[.3cm]
+		\STATE 1. Compute the covariance matrix of transformed mean vectors
+		$$\widehat{\mat{\Sigma}}_{\mbox{inter}} =
+			\frac{1}{K} \sum_{y=1}^K (\vec \mu'_y - \bar{\vec \mu}')(\vec \mu'_y - \bar{\vec \mu}')^T,$$
+		\quad\,where $\bar{\vec \mu}' = \frac{1}{K} \cdot \sum_{y=1}^{K}\vec\mu'_y$. \\[.3cm]
+		\pause
+		\STATE 2. Compute the $L$ eigenvectors of the covariance matrix belonging \\
+		\quad\,to the largest eigenvalues. \\[.3cm]
+		\pause
+		\STATE 3. The eigenvectors are the rows of the mapping $\mat\Phi$ from the \\
+		\quad\,$(K-1)$- to the $L$-dimensional feature space. \\[.3cm]
+		\STATE  \structure{Output:} matrix $\mat\Phi$
+	\end{algorithmic}
+\end{frame}
+
+\input{nextTime.tex}
+
+\subsection{Fisher Transform}
+
+\begin{frame}
+	\frametitle{Fisher Transform}
+
+	The described method to compute the LDA mapping is not the original derivation.\\[.5cm]
+
+	\structure{Original method}
+
+	\begin{center}
+		\resizebox{0.6\linewidth}{!}{
+			\input{\texfigdir/lda.pstex_t}
+		}
+	\end{center}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Fisher Transform}
+
+	The described method to compute the LDA mapping is not the original derivation.\\[.5cm]
+
+	\structure{Original method}
+
+	\begin{columns}
+		\column{.65\linewidth}
+
+		\small \vspace{-.5cm}
+		\begin{itemize}
+			\item Project samples $\vec{x}_i$ onto a straight line with direction $\vec{r}$, $\lVert \vec{r} \rVert_2 = 1$:
+			      \begin{displaymath}
+				      \tilde{x}_i = \vec{x}_i^T \vec{r}
+			      \end{displaymath}
+			      \onslide<2->{
+			      \vspace{-.5cm}
+			\item Maximize the ratio of the between-class scatter and the within-class scatter:
+			      \begin{displaymath}
+				      \vec{r}^* =
+				      \argmax_{\vec{r}} J(\vec{r}) =
+				      \argmax_{\vec{r}} \frac{|\tilde{\mu}_1 - \tilde{\mu}_2|^2}{\tilde{s}_1^2 + \tilde{s}_2^2}
+			      \end{displaymath}
+			      }
+			      \onslide<3->{
+			      \vspace{-.5cm}
+			\item Classify by applying a threshold to $\tilde{x}_i$
+			      }
+		\end{itemize}
+
+		\column{.35\linewidth}
+
+		\onslide<1->{
+			\resizebox{\linewidth}{!}{
+				\input{\texfigdir/lda.pstex_t}
+			}
+		}
+	\end{columns}
+\end{frame}
+
+
+\begin{frame}
+	\frametitle{Fisher Transform \cont}
+
+	\structure{Finding $\vec{r}^*$}
+
+	\begin{enumerate}
+		\item Mean and scatter matrix for each class:
+		      {\small
+		      \begin{eqnarray*}
+			      \vec{\mu}_k &=& \frac{1}{m_k} \sum_{\substack{~i = 1\\ y_i = k}}^{m_k} \vec{x}_i \\
+			      \mat{S}_k   &=& \sum_{\substack{~i = 1\\ y_i = k}}^{m_k} (\vec{x}_i - \vec{\mu}_k) (\vec{x}_i - \vec{\mu}_k)^T
+		      \end{eqnarray*}
+		      }
+		\item \structure{Within-class scatter} matrix:
+		      {\small
+		      \begin{displaymath}
+			      \structure{\mat{S}_\mathsf{W}} = \mat{S}_1 + \mat{S}_2
+		      \end{displaymath}
+		      }
+		\item \structure{Between-class scatter} matrix:
+		      {\small
+		      \begin{displaymath}
+			      \structure{\mat{S}_\mathsf{B}} = (\vec{\mu}_1 - \vec{\mu}_2) (\vec{\mu}_1 - \vec{\mu}_2)^T
+		      \end{displaymath}
+		      }
+	\end{enumerate}
+\end{frame}
+
+
+\begin{frame}
+	\frametitle{Fisher Transform \cont}
+
+	\structure{Finding $\vec{r}^*$}
+
+	\begin{enumerate}
+		\setcounter{enumi}{3}
+		\item Expressing $\tilde{\mu}_k$ and $\tilde{s}_k^2$ of the projected samples in terms of $\vec{\mu}_k$ and $\mat{S}_k$:
+		      {\small
+		      \begin{eqnarray*}
+			      \onslide<1->{
+				      \tilde{\mu}_k &=&
+				      \onslide<1->{ \frac{1}{m_k} \sum_{\substack{~i = 1\\ y_i = k}}^{m_k} \tilde{x}_i }
+				      \onslide<2->{ = \frac{1}{m_k} \sum_{\substack{~i = 1\\ y_i = k}}^{m_k} \vec{r}^T  \vec{x}_i }
+				      \onslide<3->{ = \vec{r}^T \vec{\mu}_k } \\
+			      }
+			      \onslide<1->{
+				      \tilde{s}_k^2 &=&
+				      \onslide<1->{ \sum_{\substack{~i = 1\\ y_i = k}}^{m_k} (\tilde{x}_i - \tilde{\mu}_k)^2 }
+				      \onslide<4->{ = \sum_{\substack{~i = 1\\ y_i = k}}^{m_k} (\vec{r}^T \vec{x}_i - \vec{r}^T \vec{\mu}_k)^2 }
+				      \onslide<5->{ = \vec{r}^T \mat{S}_k \vec{r} }
+			      }
+		      \end{eqnarray*}
+		      }
+		      \onslide<6->{
+		\item Plug it into $J(\vec{r})$:
+		      {\small
+		      \begin{displaymath}
+			      J(\vec{r})
+			      = \frac{|\tilde{\mu}_1 - \tilde{\mu}_2|^2}{\tilde{s}_1^2 + \tilde{s}_2^2}
+			      \onslide<7->{ = \frac{\vec{r}^T \mat{S}_B \vec{r}}{\vec{r}^T \mat{S}_W \vec{r}}}
+		      \end{displaymath}
+		      }
+		      }
+		      \onslide<7->{
+		\item[] This is known as the \structure{Generalized Rayleigh Quotient}.
+		      }
+	\end{enumerate}
+\end{frame}
+
+
+\begin{frame}
+	\frametitle{Fisher Transform \cont}
+
+	\structure{Finding $\vec{r}^*$}
+
+	\begin{enumerate}
+		\setcounter{enumi}{5}
+		\item Maximizing the Generalized Rayleigh Quotient is equivalent to solving the following \structure{generalized eigenvalue problem}:
+		      {\small
+		      \begin{eqnarray*}
+			      \mat{S}_\mathsf{B} \vec{r}^* &=& \lambda \mat{S}_\mathsf{W} \vec{r}^* \\
+			      \mat{S}_\mathsf{W}^{-1} \mat{S}_\mathsf{B} \vec{r}^* &=& \lambda \vec{r}^* \\
+		      \end{eqnarray*}
+		      }
+		\item \structure{Note}: $\mat{S}_\mathsf{B} \vec{r}^*$ is always in the direction of $\vec{\mu}_1 - \vec{\mu}_2$; \\
+		      no need to compute the eigenvalues and eigenvectors of $\mat{S}_\mathsf{W}^{-1} \mat{S}_\mathsf{B}$! \\[.25cm]
+		      The direction of $\vec{r}^*$ is:
+		      {\small
+		      \begin{displaymath}
+			      \vec{r}^* = \mat{S}_\mathsf{W}^{-1} (\vec{\mu}_1 - \vec{\mu}_2)
+		      \end{displaymath}
+		      }
+	\end{enumerate}
+\end{frame}
+
+
+\begin{frame}
+	\frametitle{Fisher Transform \cont}
+
+	\begin{itemize}
+		\item Usually the total linear mapping for LDA is computed dimension by dimension through the maximization of the
+		      Rayleigh ratio for each projection axis $\vec a^*$:
+		      \begin{eqnarray*}
+			      \vec a^* &=& \argmax_{\vec a}\ \frac{\vec a^T \mat \Sigma_{\mbox{inter}} \vec a}{\vec a^T \mat \Sigma_{\mbox{intra}} \vec a}
+		      \end{eqnarray*}
+		      \pause
+		\item The solution is a generalized eigenvalue problem: $\vec a$ is the eigenvector of
+		      $$\mat \Sigma_{\mbox{intra}} ^{-1} \mat \Sigma_{\mbox{inter}}$$
+		      that belongs to the largest eigenvalue.
+	\end{itemize}
+\end{frame}
+
+
+\begin{frame}
+	\frametitle{Fisher Transform \cont}
+
+	In literature the optimization problem is mostly rewritten:
+	\spread
+
+	\begin{itemize}
+		\item Equivalent constrained optimization problem
+		      \begin{eqnarray*}
+			      \mbox{maximize:}   & & \vec r^T \mat \Sigma_{\mbox{inter}}\vec r\\
+			      \mbox{subject to:} & & \vec r^T \mat \Sigma_{\mbox{intra}} \vec r =1
+		      \end{eqnarray*}
+		      \spread
+		\item Lagrange multiplier method ($\lambda>0$):
+		      \begin{displaymath}
+			      \vec{r}^* = \argmax_{\vec r}
+			      \left\{
+			      \vec r^T \mat \Sigma_{\mbox{inter}} \vec r
+			      - \lambda{\vec r^T \mat \Sigma_{\mbox{intra}} \vec r}
+			      \right\}
+		      \end{displaymath}
+	\end{itemize}
+\end{frame}
+
+
+\subsection{Dimensionality Reduction}
+
+\begin{frame}
+
+	\frametitle{Dimensionality Reduction}
+
+	A few comments on dimensionality reduction:
+
+	\begin{itemize}
+		\item PCA does not require a classified set of feature vectors \\
+		      (in contrast to LDA). \\[.15cm]
+		\item PCA transformed features are approximately normally distributed (central limit theorem). \\[.15cm]
+		\item Components of PCA transformed features are mutually independent. \\[.15cm]
+		\item There exist many other methods for dimensionality reduction, e.\,g.,
+		      Sammon transform, independent component analysis. \\[.15cm]
+		\item Usually the estimation of transforms is computationally prohibited. \\[.15cm]
+		\item \structure{Johnson-Lindenstrauss lemma}: If vectors are projected onto a randomly selected subspace of suitably high dimension, then the distances between the vectors are approximately preserved.
+	\end{itemize}
+\end{frame}
+
+\input{nextTime.tex}
+
+\subsection{LDA application: adidas\_1 }
+
+\begin{frame}
+	\frametitle{The adidas\_1: A Digital Revolution in Sports}
+
+	\vspace{.5cm}
+	\begin{columns}[c,onlytextwidth]
+		\begin{column}{0.4\textwidth}
+			\includegraphics[width=1.25\linewidth]{\jpgdir/adidas_1_components.\jpg}
+		\end{column}\begin{column}{0.6\textwidth}
+			\begin{itemize}
+				\item For the first time ever, sport specific information can be processed with a running shoe
+				\item A built-in microprocessor permits an adaptation of the shoe to the prevailing run situation
+				      \begin{itemize}
+					      \item Running speed
+					      \item Runner fatigue
+					      \item Running surface
+					      \item \ldots
+				      \end{itemize}
+				\item Pattern Recognition at the LME provides the algorithms used for recognition
+			\end{itemize}
+		\end{column}
+	\end{columns}
+\end{frame}
+
+
+\begin{frame}
+	\frametitle{The adidas\_1: System Overview}
+
+	\vspace{.5cm}
+
+	\begin{columns}[c, onlytextwidth]
+		\begin{column}{0.5\textwidth}
+			\structure{Important parts of the adidas\_1:}
+			\begin{itemize}
+				\item A cushioning element (01) with a magnetic system for compression measurement \\
+				      \begin{itemize}
+					      \item $f_\mathsf{sample} = 1\mbox{kHz}$
+					      \item resolution $\Delta d = 0.1\,\mbox{mm}$
+				      \end{itemize}
+				\item A microcontroller and user interface (02)
+				      \begin{itemize}
+					      \item $f_\mathsf{clock} = 24\,\mbox{MHz}$
+					      \item 8 kB program memory
+				      \end{itemize}
+				\item A motor for cushioning adaptation \\
+				      using a cable system (03)
+			\end{itemize}
+		\end{column}\begin{column}{0.3\textwidth}
+			\includegraphics[width=\linewidth]{\jpgdir/adidas_shoe_exploded.\jpg}
+		\end{column}
+	\end{columns}
+\end{frame}
+
+
+\begin{frame}
+	\frametitle{The adidas\_1: Classification Framework Requirements}
+
+	\begin{itemize}
+		\item Only a few, simple features can be calculated in real time \\[.3cm]
+		\item The classification system has to be efficient, \\
+		      but computationally undemanding \\[.3cm]
+		\item LDA classifier yields a linear decision boundary and can be implemented using a polynomial of order one with weights $\alpha_i$ and features $x_i$ \\[.3cm]
+		\item In the two class case:
+		      \begin{displaymath}
+			      \mbox{sgn}(\vec\alpha^T\vec x+\alpha_0) =
+			      \mbox{sgn} \left ( \alpha_1 x_1 + \alpha_2 x_2 + \ldots + \alpha_d x_d + \alpha_0 \right )
+		      \end{displaymath}
+		      yields decision for either class.
+	\end{itemize}
+\end{frame}
+
+
+\begin{frame}
+	\frametitle{Classification System: Computed Features}
+
+	\begin{itemize}
+		\item 19 features initially computed for classification experiments
+		\item Feature selection: 3 features selected for implementation
+	\end{itemize}
+
+	\begin{center}
+		\includegraphics[width=.7\linewidth]{\jpgdir/adidas_features.\jpg}
+	\end{center}
+\end{frame}
+
+
+\begin{frame}
+	\frametitle{Classification System: LDA Classifier Visualization}
+
+	\begin{itemize}
+		\item Visualization of the decision region for hard/soft surface classification \\
+		      in 3D feature space
+	\end{itemize}
+
+	\begin{center}
+		\includegraphics[width=.45\linewidth]{\jpgdir/adidas_decision_region.\jpg}
+	\end{center}
+\end{frame}
+
+
+\iftrue
+
+	\subsection{PCA application: Shape Modeling}
+
+	\begin{frame}
+		\frametitle{Shape Modeling}
+
+		\begin{itemize}
+			\item Each shape is represented by $n$ sampled surface points.
+			\item Surface points are denoted by $\vec p_k\in \real^3$, $k=1,2, \dots, n$.
+			\item The set of surface points is encoded in a single vector (shape vector):
+			      \begin{displaymath}
+				      \vec x = \left(
+				      \begin{array}{c}
+						      \vec p_{1} \\
+						      \vec p_{2} \\
+						      \vdots     \\
+						      \vec p_{n}
+					      \end{array}
+				      \right)
+				      = \left(
+				      \begin{array}{c}
+						      p_{1,1} \\ p_{1,2} \\ p_{1,3} \\ p_{2,1}\\ \vdots \\ p_{n,3}
+					      \end{array}
+				      \right)
+				      \in \real^{3n}
+			      \end{displaymath}
+			      with $\vec p_k=(p_{k,1}, p_{k,2},  p_{k,3})^T$.
+		\end{itemize}
+	\end{frame}
+
+
+	\begin{frame}
+		\frametitle{Shape Modeling \cont}
+
+		We have $m$ shapes, thus $m$ shape vectors, and can generate the landmark configuration matrix:
+
+		\begin{displaymath}
+			\mat L =  [\vec x_1, \vec x_2, \dots, \vec x_m]
+		\end{displaymath}
+		\pause
+
+		Now we can compute the PCA of the columns of $\mat L$ and get the spectral decomposition of the associated covariance matrix
+
+		\begin{displaymath}
+			\mat \Sigma_L = \sum_i \lambda_i \vec e_i \vec e_i^T
+		\end{displaymath}
+
+		where $\lambda_i$ denote the eigenvalues and $\vec e_i$ the eigenvectors.
+	\end{frame}
+
+
+	\begin{frame}
+		\frametitle{Shape Modeling \cont}
+
+		Shape vectors $\vec x^*$ within the eigenvector space can be computed using linear combinations of $l$ eigenvectors:
+
+		\begin{displaymath}
+			\vec x^* = \bar{\vec x} + \sum_{i=1}^l a_i \vec e_i
+		\end{displaymath}
+
+		where $\bar{\vec x}$ denotes just the mean of the column vectors of $\mat L$ and $a_i\in \real$ are the shape parameters.
+	\end{frame}
+
+
+	\begin{frame}
+		\frametitle{Application of PCA: Segmentation}
+
+		\begin{itemize}
+			\item Lung, liver or kidneys
+			\item Generate and train an Active Shape Model (ASM) for such organs; \\
+			      requires training data and ``gold standard'' segmentation
+			\item Once \structure{point correspondences} are found, the different variations within the training data can be easily approximated by its Eigenvectors
+		\end{itemize}
+
+\begin{figure}
+  \copyrightbox[b]{
+      \makebox[.3\linewidth]{
+        \href{https://www.sciencedirect.com/science/article/abs/pii/S0895611108001006}{
+          \includegraphics[height=.2\textwidth]{\psdir/ASMFirstEigenMode.\ps}\hspace{2cm}
+        }
+      }
+      \makebox[.3\linewidth]{
+        \href{https://www.sciencedirect.com/science/article/abs/pii/S0895611108001006}{
+          \includegraphics[height=.2\textwidth]{\psdir/ASMSecondEigenMode.\ps}
+        }
+      }
+  }{M. Spiegel, D. Hahn, V. Daum, J. Wasza, J. Hornegger. \href{https://www.sciencedirect.com/science/article/abs/pii/S0895611108001006} {``Segmentation of kidneys using a new active shape model generation technique based on non-rigid image registration'', Computerized Medical Imaging and Graphics 2009}}
+\caption{Variation of the mean kidney shape along the first and second Eigenvector.}
+  \end{figure}
+
+	\end{frame}
+
+
+	\begin{frame}
+		\frametitle{Application of PCA: Segmentation \cont}
+		
+\begin{figure}
+  \copyrightbox[b]{
+      \makebox[.5\linewidth]{
+        \href{https://www.sciencedirect.com/science/article/abs/pii/S0895611108001006}{
+          \includegraphics[height=.45\textwidth]{\psdir/ASMSegmentationExample.\ps}
+        }
+      }
+  }{M. Spiegel, D. Hahn, V. Daum, J. Wasza, J. Hornegger. \href{https://www.sciencedirect.com/science/article/abs/pii/S0895611108001006} {``Segmentation of kidneys using a new active shape model generation technique based on non-rigid image registration'', Computerized Medical Imaging and Graphics 2009}}
+\caption{Iterative segmentation progress of a right kidney using an ASM.}
+  \end{figure}
+
+	\end{frame}
+
+
+	\begin{frame}
+		\frametitle{Application of PCA: Segmentation \cont}
+
+
+\begin{figure}
+  \copyrightbox[b]{
+      \makebox[.5\linewidth]{
+        \href{https://www.sciencedirect.com/science/article/abs/pii/S0895611108001006}{
+          \includegraphics[height=.45\textwidth]{\jpgdir/ASM3DResults.\jpg}
+        }
+      }
+  }{M. Spiegel, D. Hahn, V. Daum, J. Wasza, J. Hornegger. \href{https://www.sciencedirect.com/science/article/abs/pii/S0895611108001006} {``Segmentation of kidneys using a new active shape model generation technique based on non-rigid image registration'', Computerized Medical Imaging and Graphics 2009}}
+\caption{3-D view of the segmentation result.}
+  \end{figure}
+	\end{frame}
+
+\fi
+
+\input{nextTime.tex}
+
+\subsection{Notes on Regression}
+
+\subsubsection{Linear Regression}
+
+\begin{frame}
+	\frametitle{Notes on Regression}
+
+	In the two class situation, we set $y\in \{-1,+1\}$ and use the decision rule:
+
+	\begin{displaymath}
+		y^* = \mbox{sgn}(\vec \alpha^T\vec x + \alpha_0).
+	\end{displaymath}
+
+	We can compute the linear decision boundary simply by least-square estimation.
+\end{frame}
+
+
+\begin{frame}
+	\frametitle{Linear Regression \cont}
+
+	For a given set of learning data we use matrix notation:
+
+	\begin{displaymath}
+		\mat{X} = \left(
+		\begin{array}{cc}
+				\vec x_1^T & 1      \\
+				\vec x_2^T & 1      \\
+				\vdots     & \vdots \\
+				\vec x_m^T & 1
+			\end{array}
+		\right) \in \real^{m\times (d+1)} \qquad \vec y \quad = \quad
+		\left(
+		\begin{array}{c}
+				y_1    \\
+				y_2    \\
+				\vdots \\
+				y_m    \\
+			\end{array}
+		\right) \in \real^m
+	\end{displaymath}
+
+	and define
+
+	\begin{displaymath}
+		\vec \theta = { \vec \alpha\choose \alpha_0}
+	\end{displaymath}
+\end{frame}
+
+
+\begin{frame}
+	\frametitle{Linear Regression \cont}
+
+	One option to estimate $\vec \theta$ is to solve the linear regression problem:
+
+	\begin{displaymath}
+		\hat{\vec \theta} = \argmin_{\vec \theta}\| \mat X \vec \theta - \vec y\|_{2}^2
+	\end{displaymath}
+\end{frame}
+
+
+\begin{frame}
+	\frametitle{Linear Regression \cont}
+
+	The \structure{least-square estimator} for the $L_2$-norm:
+
+	\begin{eqnarray*}
+		\widehat{\vec \theta} &=& \argmin_{\vec\theta} \ \sum_{i=1}^m (\vec \theta^T\vec x_i-y_i)^2\\
+		&=& \argmin_{\vec\theta} \ (\mat{X}\vec \theta-\vec y)^T(\mat{X}\vec \theta-\vec y)
+	\end{eqnarray*}
+	\pause
+
+	and thus we get
+
+	\begin{displaymath}
+		\widehat{\vec \theta} = (\mat{X}^T\mat{X})^{-1}\mat{X}^T\vec y
+	\end{displaymath}
+
+	if the column vectors of $\mat X$ are mutually independent.
+\end{frame}
+
+
+\begin{frame}
+	\frametitle{Linear Regression \cont}
+
+	\structure{A few obvious questions:} \\[.5cm]
+
+	\begin{itemize}
+		\item Why should we prefer the Euclidean norm ($L_2$-norm)? \\[.5cm]
+		\item Will different norms lead to different results? \\[.5cm]
+		\item Which norm and decision boundary is the best one? \\[.5cm]
+		\item Can we incorporate prior knowledge in linear regression?
+	\end{itemize}
+\end{frame}
+
+
+\subsubsection{Ridge Regression}
+
+\begin{frame}
+	\frametitle{Ridge Regression}
+
+	In \structure{\emph{ridge regression}} (also called \emph{regularized regression}) we extend the \\
+	objective function by an additional term constraining the Euclidean length \\
+	of the parameter vector $\vec{\theta}$:
+
+	\begin{itemize}
+		\item It is linear regression with the log-likelihood penalized by $-\lambda\vec \theta^T \vec \theta$ \\
+		      where $\lambda > 0$, or alternatively \\[.5cm]
+		\item It is extended by a prior distribution on the parameter vector $\vec\theta$
+		      \begin{displaymath}
+			      \vec \theta = {\cal N}(\vec 0,\mbox{diag}( \tau^2) )
+		      \end{displaymath}
+	\end{itemize}
+\end{frame}
+
+
+\begin{frame}
+	\frametitle{Ridge Regression \cont}
+
+	\structure{Regularized regression:}
+
+	\begin{eqnarray*}
+		\widehat{\vec\theta}
+		&=& \argmin_{\vec\theta} \| \mat{X} \vec\theta - \vec y \|^2_2 + \lambda \|\vec\theta\|^2_2 \\ \pause
+		&=& \argmin_{\vec\theta} \ (\mat{X} \vec\theta - \vec y)^T (\mat{X} \vec\theta-\vec y) +
+		\lambda \cdot \vec\theta^T\vec \theta
+	\end{eqnarray*}
+	\pause
+
+	and thus we get the estimator:
+
+	\begin{displaymath}
+		\widehat{\vec\theta} = (\mat{X}^T\mat{X}+\lambda \mat{I})^{-1}\mat{X}^T\vec y
+	\end{displaymath}
+\end{frame}
+
+
+\begin{frame}
+	\frametitle{Ridge Regression \cont}
+
+	\structure{Notes:}
+
+	\begin{itemize}
+		\item The term $\lambda \mat{I}$ adds a positive constant $\lambda$ to the diagonal elements.
+		\item The problem is non-singular even if $\mat{X}^T \mat{X}$ is not of full rank. \\
+		\item This was the main motivation of ridge regression when it was first introduced in statistics in 1970. \\[.25cm] \pause
+		\item The ridge solutions are not equivariant under scaling of the inputs: \\
+		      \structure{standardize} the input before solving the regression problem! \\[.25cm] \pause
+		\item The intercept $\alpha_0$ should not be penalized:
+		      \begin{itemize}
+			      \item \structure{Center} the input $\vec{x}_i$.
+			      \item Estimate $\alpha_0$ by $\bar{y} = \frac{1}{m} \sum_{i=1}^m y_i$.
+			      \item Estimate the remaining coefficients by a ridge regression without  intercept. \\
+			            Matrix $\vec{X}$ has $d$ columns (instead of $d+1$).
+		      \end{itemize}
+	\end{itemize}
+\end{frame}
+
+
+\begin{frame}
+	\frametitle{Ridge Regression \cont}
+
+	\structure{Statistical approach:} parameters $\alpha_j$ are random variables \\[.5cm]
+
+	\begin{itemize}
+		\item Suppose
+		      \begin{displaymath}
+			      \forall 1 \le i \le m: \quad y_i
+			      \sim \mathcal{N}(\underbrace{\vec{\alpha}^T \vec{x}_i + \alpha_0}_\text{mean}, \underbrace{\sigma^2}_\text{variance})
+			      \onslide<2->{
+				      = \frac{1}{\sqrt{2 \pi} \cdot \sigma} e^{-\frac{1}{2} \cdot \frac{(y_i - \vec{\alpha}^T \vec{x}_i - \alpha_0)^2}{\sigma^2}}
+			      }
+		      \end{displaymath}
+		\item Parameters $\alpha_j$ are assumed to be independent of each other.
+		\item Prior distribution of $\alpha_j$:
+		      \begin{displaymath}
+			      \forall 1 \le j \le d: \quad \alpha_j
+			      \sim \mathcal{N}(0, \tau^2)
+			      \onslide<3->{
+				      = \frac{1}{\sqrt{2 \pi} \cdot \tau} e^{-\frac{1}{2} \cdot \frac{(\alpha_j - 0)^2}{\tau^2}}
+			      }
+		      \end{displaymath}
+	\end{itemize}
+\end{frame}
+
+
+\begin{frame}
+	\frametitle{Ridge Regression \cont}
+
+	\begin{itemize}
+		\item \structure{Maximizing the posterior probability of $\vec{\alpha}$ for given $\sigma^2$ and $\tau^2$:}
+		      \footnotesize
+		      \begin{eqnarray*}
+			      \argmax_{\vec{\alpha}} \prod_{i=1}^m p(\vec{\alpha}|y_i) \pause
+			      &=& \argmax_{\vec{\alpha}} \Bigg\{ \prod_{i=1}^m p(\vec{\alpha}) \cdot p(y_i | \vec{\alpha}) \Bigg\} \\ \pause
+			      &=& \argmax_{\vec{\alpha}} \Bigg\{ \prod_{j=1}^d p(\alpha_j) \cdot \prod_{i=1}^m p(y_i | \vec{\alpha}) \Bigg\} \\ \pause
+			      &=& \argmax_{\vec{\alpha}} \Bigg\{ \sum_{j=1}^d \log p(\alpha_j) + \sum_{i=1}^m \log p(y_i | \vec{\alpha}) \Bigg\} \\ \pause
+			      &=& \argmax_{\vec{\alpha}} \Bigg\{ - \frac{1}{2 \tau^2} \sum_{j=1}^d \alpha_j^2 - \frac{1}{2 \sigma^2} \sum_{i=1}^m (y_i - \vec{\alpha}^T \vec{x} - \alpha_0)^2 \Bigg\} \\ \pause
+			      &=& \argmin_{\vec{\alpha}} \Bigg\{ \frac{\sigma^2}{\tau^2} \sum_{j=1}^d \alpha_j^2 + \sum_{i=1}^m (y_i - \vec{\alpha}^T \vec{x} - \alpha_0)^2 \Bigg\}
+		      \end{eqnarray*}
+	\end{itemize}
+\end{frame}
+
+
+\begin{frame}
+	\frametitle{Ridge Regression \cont}
+
+	\begin{itemize}
+		\item \structure{Maximizing the posterior probability of $\vec{\alpha}$ for given $\sigma^2$ and $\tau^2$:} \\[.25cm]
+		      {\footnotesize
+		      \begin{displaymath}
+			      \argmax_{\vec{\alpha}} \prod_{i=1}^m p(\vec{\alpha}|y_i)
+			      = \argmin_{\vec{\alpha}} \Bigg\{ \lambda \vec{\alpha}^T \vec{\alpha} + (\mat{X}\vec{\alpha} - \vec{y})^T (\mat{X}\vec{\alpha} - \vec{y}) \Bigg\}
+			      \quad \text{with} \quad
+			      \lambda = \frac{\sigma^2}{\tau^2}
+		      \end{displaymath}
+		      }
+		      \vspace{.25cm} \pause
+		\item \structure{The ridge estimate is the mode of the posterior pdf!}
+	\end{itemize}
+\end{frame}
+
+
+\subsubsection{Lasso}
+
+\begin{frame}
+	\frametitle{Lasso}
+	Regularized regression using a mixture of $L_2$- and $L_1$-norm, \\
+	where the residual is penalized using the $L_2$-norm and \\
+	the regularizer uses the $L_1$-norm:
+
+	\begin{displaymath}
+		\widehat{\vec \theta} = \argmin_{\vec\theta} \|\mat{X}\vec \theta-\vec y\|^2_2 + \lambda \cdot \|\vec \theta\|_1
+	\end{displaymath}
+	\pause
+
+	The lasso is used to compute a sparse solution of the system of \\
+	linear equations, i.\,e.\ the number of non-zero elements in $\vec \theta$ shall be small.
+\end{frame}
+
+
+\subsection{Lessons Learned}
+
+\begin{frame}
+	\frametitle{Lessons Learned}
+
+	\begin{itemize}
+		\item Principal component analysis \\[.5cm]
+		\item Linear discriminant analysis with and without dimension reduction \\[.5cm]
+		\item Both PCA and LDA relate to an eigenvalue eigenvector problem \\[.5cm]
+		\item Alternative formulation of LDA using the Fisher transform \\[.5cm]
+		\item Linear and ridge regression for classification
+	\end{itemize}
+\end{frame}
+
+\input{nextTime.tex}
+
+\subsection{Further Readings}
+
+\begin{frame}
+	\frametitle{Further Readings}
+
+	You are required to be familiar with \structure{linear algebra} and \structure{matrix calculus}:
+
+	\begin{itemize}
+		\item SIAMS best selling book in the last decade:\\[.15cm]
+		      Lloyd N. Trefethen, David Bau III: \\
+		      \structure{Numerical Linear Algebra}, \\
+		      SIAM, Philadelphia, 1997. \\[0.15cm]
+		\item All about matrix derivatives and related problems is described in the Matrix Cookbook:
+		      \structure{\url{http://www.matrixcookbook.com}} \\[.3cm]
+	\end{itemize}
+
+	Basics on \structure{discriminant analysis} can be found in
+
+	\begin{itemize}
+		\item T. Hastie, R. Tibshirani, and J. Friedman: \\
+		      \structure{The Elements of Statistical Learning --}\\
+		      \structure{ Data Mining, Inference, and Prediction},\\
+		      2nd edition, Springer, New York, 2009.
+	\end{itemize}
+\end{frame}
+
+
+\begin{frame}
+	\frametitle{Further Readings \cont}
+
+	\structure{Details on the adidas\_1 shoe and the implemented classifier:}
+
+	\begin{itemize}
+		\item B.~Eskofier, F.~H\"onig, P.~K\"uhner: \\
+		      \structure{Classification of Perceived Running Fatigue in Digital Sports}, \\
+		      Proceedings of the 19th International Conference on Pattern Recognition (ICPR 2008), Tampa, Florida, U.\,S.\,A., 2008
+	\end{itemize}
+	\spread
+
+	\structure{Details on the shape modeling of kidneys and its application to segmentation:}
+
+	\begin{itemize}
+		\item M.~Spiegel, D.~Hahn, V.~Daum, J.~Wasza, J.~Hornegger: \\
+		      \structure{Segmentation of kidneys using a new active shape model generation technique based on non-rigid image registration}, \\
+		      Computerized Medical Imaging and Graphics 2009 33(1):29-39
+	\end{itemize}
+\end{frame}
+
+
+\subsection{Comprehensive Questions}
+
+\begin{frame}
+	\frametitle{Comprehensive Questions}
+
+	\begin{itemize}
+		\item What is the difference between PCA and LDA? \\[1cm]
+		\item How can PCA and LDA be combined to achieve a high rank reduction? \\[1cm]
+		\item Write down a straight forward objective function for linear regression! \\[1cm]
+		\item What happens if we replace the $L_2$-norm by another norm?
+	\end{itemize}
+\end{frame}
+

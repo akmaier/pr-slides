@@ -1,0 +1,757 @@
+
+\section{Norms and Norm Dependent Linear Regression}
+
+\subsection{Motivation}
+
+\begin{frame}
+  \frametitle{Motivation}
+
+  \begin{itemize}
+    \item Different norms and similarity measures play an important role in machine learning and pattern recognition. \\[.5cm]
+    \item In this chapter we summarize important definitions and facts on norms. \\[.5cm]
+    \item We consider the problem of linear regression for different norms. \\[.5cm]
+    \item We will briefly look into associated optimization problems.
+  \end{itemize}
+\end{frame}
+
+
+\subsection{Inner Product}
+
+\begin{frame}
+  \frametitle{Inner Product}
+
+  \begin{citeblock}{Definition}
+
+    The \structure{\emph{inner product of vectors}} $\vec x, \vec y\in \real^d$ is defined by 
+    \begin{displaymath}
+      \langle\vec x, \vec y\rangle = \vec x^T \vec y = \sum_{i=1}^d x_iy_i \quad .
+    \end{displaymath}
+  \end{citeblock}
+  \pspread
+  
+  \begin{ovalblock}{Example}
+    The \structure{\emph{Euclidean norm} ($L_2$-norm)} can be written in terms of an inner product:
+    \begin{displaymath}
+      \| \vec x \|_2 = \sqrt{\langle \vec x, \vec x \rangle } = 
+      \sqrt{ \vec x^T \vec x} = 
+      \sqrt{\sum_{i=1}^d x_i^2 }\quad .
+    \end{displaymath}
+  \end{ovalblock}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Inner Product \cont}
+
+  \begin{citeblock}{Definition}
+
+    The \structure{\emph{inner product of matrices}} $\mat X, \mat Y\in \real^{m\times n}$ is defined by 
+    \begin{displaymath}
+       \langle \mat X, \mat Y \rangle = 
+       \mbox{tr}(\mat X^T \mat Y) = 
+       \sum_{i=1}^m \sum_{j=1}^n x_{i,j} y_{i,j} \quad .
+    \end{displaymath}
+  \end{citeblock}
+  \pspread
+  
+  \begin{ovalblock}{Example}
+    The \structure{\emph{Frobenius norm}} can be written in terms of an inner product:
+    \begin{displaymath}
+      \| \vec X \|_F = 
+      \sqrt{ \langle \vec X, \vec X \rangle } =
+      \sqrt{ \mbox{tr}(\mat X^T \mat X)} =
+      \sqrt{ \sum_{i=1}^m \sum_{j=1}^n x_{i,j}^2} \quad .
+    \end{displaymath}
+  \end{ovalblock}
+\end{frame}
+
+
+\subsection{Norms}
+
+\begin{frame}
+  \frametitle{Norms}
+
+  \begin{citeblock}{Definition}
+
+    The function $\lVert\cdot\rVert$ %: \real^d\rightarrow \real$ 
+    is called a \structure{\emph{norm}} if it 
+    \pause
+
+    \begin{enumerate}
+      \item is \structure{nonnegative}: $\forall \vec x:~ \lVert\vec x\rVert\geq 0$ \\[.3cm] \pause
+      \item is \structure{definite}: $\|\vec x\| =0$ only if $\vec x=\vec 0$ \\[.3cm] \pause 
+      \item is \structure{homogeneous}: $\| a\vec x\|= |a|\cdot \|\vec x\|$ where $a\in \real$ \\[.3cm] \pause
+      \item fulfills the \structure{triangle inequality}:
+      \begin{displaymath}
+        \forall \vec x, \vec y:~\|\vec x+\vec y\| \leq \|\vec x\|+ \|\vec y\|
+      \end{displaymath}
+    \end{enumerate}
+  \end{citeblock}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Norms \cont}
+%  \begin{citeblock}{Definition}
+    \begin{itemize}
+      \item The \structure{$L_0$-norm} of a $d$-dimensional vector denotes the number of \\
+        non-zero entries. Despite its name, the $L_0$-norm is not a norm \\
+        because it is not homogeneous. \pause
+      \item The \structure{$L_p$-norm} ($p \geq 1$) of a $d$-dimensional vector is defined as 
+        \begin{displaymath}
+          \| \vec x\|_p = \left( \sum_{i=1}^d  |x_i|^p \right)^{\frac{1}{p}}
+        \end{displaymath}
+    \end{itemize}
+%  \end{citeblock} 
+\end{frame}
+ 
+ 
+\begin{frame}
+  \frametitle{Norms \cont}
+
+  \begin{itemize}
+    \item \structure{$L_1$-norm:} sum of absolute values
+      \begin{displaymath}
+        \| \vec x\|_1 = \sum_{i=1}^d |x_i|
+      \end{displaymath}
+      \pause
+    \item \structure{$L_2$-norm:} sum of squared values
+      \begin{displaymath}
+        \| \vec x\|_2 = \left(\sum_{i=1}^d x_i^2\right)^{\frac{1}{2}}
+      \end{displaymath}
+      \pause
+    \item \structure{$L_\infty$-norm:} maximum norm
+      \begin{displaymath}
+        \| \vec x\|_\infty = 
+        \lim_{p\rightarrow \infty} \left( \sum_{i=1}^d  |x_i|^p \right)^{\frac{1}{p}} =
+        \max_i \{ |x_i| \ ; \ i=1,2, \dots, d \}
+      \end{displaymath}
+  \end{itemize}
+\end{frame}
+ 
+ 
+\begin{frame}
+  \frametitle{Norms \cont}
+
+  \begin{citeblock}{Definition}
+
+    Let $\mat P$ be a symmetric positive definite matrix. \\
+    The \structure{\emph{quadratic $L_{\mat P}$-norm}} is defined by 
+    \begin{displaymath}
+      \| \vec x\|_{\mat P} = 
+      \sqrt{ \vec x^T \mat P \vec x} \pause = 
+      \sqrt{ (\mat P^\frac{1}{2} \vec x)^T \mat P^\frac{1}{2} \vec x} \pause =
+      \| \mat P^\frac{1}{2} \vec x\|_2
+    \end{displaymath}
+  \end{citeblock}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Norms \cont}
+
+  \structure{Note:} 
+
+  \begin{itemize}
+    \item The $L_2$-norm is the same as the quadratic $L_{\mat 1}$-norm. \\[.5cm] \pause
+    \item The \structure{Mahalanobis distance} between two vectors $\vec x$ and $\vec y$ based on the covariance matrix $\mat \Sigma$ is given by the quadratic $L_{\mat \Sigma^{-1}}$-norm:
+      \begin{displaymath}
+        \| \vec x - \vec y\|_{\mat \Sigma^{-1}} = 
+        \sqrt{ (\vec x - \vec y)^T \mat\Sigma^{-1} (\vec x - \vec y)}
+      \end{displaymath}
+      \pause
+    \item A norm is a measure for the length of a vector. It can also be used to measure the distance between two vectors $\vec x$ and $\vec y$:
+      \begin{displaymath}
+        \mbox{dist}(\vec x, \vec y) = \| \vec x - \vec y\|
+      \end{displaymath}
+  \end{itemize}
+\end{frame}
+ 
+ 
+\begin{frame}
+  \frametitle{Norms \cont}
+
+  \structure{Norms of matrices} can be defined by norms of vectors. \\[.25cm]
+  
+  \begin{citeblock}{Definition}
+
+    \small
+    Let $\|.\|_p$ and $\|.\|_q$ be norms for vectors in $\real^m$ and $\real^n$. \\
+    The \structure{\emph{operator norm}} of a matrix $\mat X\in \real^{m\times n}$  is defined by
+ 
+    \begin{displaymath}
+      \| \mat X\|_{p,q} = \sup\{ \| \mat X \vec u\|_p ; \  \| \vec u\|_q\leq 1 \}
+    \end{displaymath}
+  \end{citeblock}
+  \pspread
+  
+  \begin{ovalblock}{Example}
+    \small
+    If $p=q=2$, i.\,e.\ we use the $L_2$-norm twice, the operator norm of $\mat X$ \\
+    results in the maximum singular value:
+    
+    \begin{displaymath}
+      \| \mat X\|_{2,2}=   \| \mat X\|_{2} = \sigma_{\max}{(\mat X)}= \sqrt{\lambda_{\max}(\mat X^T\mat X)}
+    \end{displaymath}
+  \end{ovalblock}
+\end{frame}
+
+
+\subsection{Unit Balls}
+
+\begin{frame}
+  \frametitle{Unit Balls}
+
+  \begin{citeblock}{Definition}
+
+    The set
+    \begin{displaymath}
+      {\cal B} = \{ \vec x; \|\vec x\| \leq 1\}
+    \end{displaymath}
+    of all vectors $\vec x$ of length less or equal to one according to the norm $\|.\|$ \\
+    is called the \structure{\emph{unit ball}}.
+  \end{citeblock}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Unit Balls \cont}
+ 
+  The unit ball for the $L_1$-norm:
+
+  \begin{figure}
+    \resizebox{.4\linewidth}{!}{
+      \input{\texfigdir/unit_ball_L1.pstex_t}
+    }
+  \end{figure}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Unit Balls \cont}
+
+  The unit ball for the $L_2$-norm:
+
+  \begin{figure}
+    \resizebox{.4\linewidth}{!}{
+      \input{\texfigdir/unit_ball_L2.pstex_t}
+    }
+  \end{figure}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Unit Balls \cont}
+
+  The unit ball for the $L_{\infty}$-norm:
+
+  \begin{figure}
+    \resizebox{.4\linewidth}{!}{
+      \input{\texfigdir/unit_ball_Linfinity.pstex_t}
+    }
+  \end{figure}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Unit Balls \cont}
+
+  The unit ball for the $L_{\mat P}$-norm:
+  \begin{figure}
+    \resizebox{.4\linewidth}{!}{
+      \input{\texfigdir/unit_ball_LP.pstex_t}
+    }
+  \end{figure}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Unit Balls \cont}
+
+  Summary: unit balls for the $L_{\infty}$-, $L_4$-, $L_2$-, $L_1$-, $L_{0.5}$- and $L_0$-norm
+
+  \begin{figure}
+    \resizebox{\linewidth}{!}{
+      \input{\texfigdir/unit_ball_Linfinity.pstex_t} \hspace{1cm}
+      \input{\texfigdir/unit_ball_L4.pstex_t} \hspace{1cm}
+      \input{\texfigdir/unit_ball_L2.pstex_t} \hspace{1cm}
+      \input{\texfigdir/unit_ball_L1.pstex_t} \hspace{1cm}
+      \input{\texfigdir/unit_ball_L0_5.pstex_t} \hspace{1cm}
+      \input{\texfigdir/unit_ball_L0.pstex_t} \hspace{1cm}
+    }    
+  \end{figure}
+
+ The $L_{0.5}$- and the $L_0$-norm are not norms
+
+\end{frame}
+
+\input{nextTime.tex}
+
+\subsection{Norm Dependent Linear Regression}
+
+\begin{frame}
+  \frametitle{Norm Dependent Linear Regression}
+
+  In pattern recognition and pattern analysis (as in many other fields) one of the most important norm dependent linear regression problems is:
+
+  \begin{displaymath}
+   \mbox{minimize}\quad \| \mat A \vec x -\vec b\|
+  \end{displaymath}
+
+  or alternatively
+
+  \begin{displaymath}
+   \hat{\vec x} = \argmin_{\vec x} \| \mat A \vec x -\vec b\|
+  \end{displaymath}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Norm Dependent Linear Regression \cont}
+
+  \begin{itemize}
+    \item Different norms will lead to different results. \\[.5cm]\pause 
+    \item The estimation error $\epsilon\in \real$ is defined by $\epsilon= \|\vec x^*-\hat{\vec x}\|$, where $\vec x^*$ denotes the correct value. \\[.5cm] \pause 
+    \item The \structure{residual} $\vec r= (r_1, r_2, \dots, r_m)^T$ is defined by $\vec r= \mat A \vec x -\vec b$. \\[.5cm] \pause
+    \item If $\vec b$ is in the range of $\mat A$, the residual will be the zero vector.
+  \end{itemize}
+\end{frame}
+
+
+\subsubsection{Least-Squares Linear Regression}
+
+\begin{frame}
+  \frametitle{Least-Squares Linear Regression}
+
+  \structure{Minimization of the residual using the $L_2$-norm:}
+ 
+  \begin{eqnarray*}
+    \hat{\vec x} &=& \argmin_{\vec x} \| \mat A \vec x -\vec b\|_2 \\[.15cm] \pause 
+                 &=& \argmin_{\vec x} \sum_{i=1}^m r_i^2 \\[.15cm] \pause 
+                 &=& \argmin_{\vec x} \ (\mat A \vec x -\vec b)^T (\mat A \vec x -\vec b) \\[.15cm] \pause 
+                 &=& \argmin_{\vec x} \ \big( \vec x^T \mat A^T \mat A\vec x - \vec x^T\mat A^T \vec b - \vec b^T \mat A\vec x + \vec b^T \vec b \big) \\[.15cm] \pause 
+                 &=& \argmin_{\vec x} \ \big( \vec x^T \mat A^T \mat A\vec x - 2 \vec b^T \mat A\vec x + \vec b^T \vec b \big) \\
+  \end{eqnarray*}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Least-Squares Linear Regression \cont}
+
+  The \structure{partial derivatives} are:
+
+  \begin{displaymath}
+    \frac{\partial}{\partial \vec x} \ \left( \vec x^T \mat A^T \mat A\vec x - 2 \vec b^T \mat A\vec x + \vec b^T \vec b \right)
+    = \pause 2 \mat A^T \mat A \vec x - 2 \mat A^T \vec b = \vec{0}
+  \end{displaymath}
+
+  Using the partial derivatives we get a \structure{closed form solution} for the $L_2$-norm: \pause 
+
+  \begin{displaymath}
+    \hat{\vec x} = (\mat A^T \mat A)^{-1}\mat A^T \vec b
+  \end{displaymath}
+
+  if the columns of $\mat A$ are mutually independent.
+\end{frame}
+
+
+\subsubsection{Chebyshev Linear Regression}
+
+\begin{frame}
+
+  \frametitle{Chebyshev Linear Regression}
+ 
+  \structure{Minimization of the residual using the $L_\infty$-norm:}
+
+  \begin{displaymath}
+    \mbox{minimize}\quad \Bigg\{ \| \mat A \vec x -\vec b\|_\infty = \max\ \{ |r_1|, |r_2|, \dots, |r_m|\} \Bigg\}
+  \end{displaymath}
+  \pause
+
+  This optimization problem can be rewritten in terms of a LP-problem:
+
+  \begin{eqnarray*}
+    \begin{array}{lcl}
+     \mbox{minimize}& & r\\
+     \mbox{subject to} & &   - r\cdot \vec 1 \preceq \mat A \vec x - \vec b \preceq r\cdot \vec 1
+    \end{array}
+  \end{eqnarray*}
+
+  where $r\in \real$ and $\vec 1 \in \{1\}^m$.
+\end{frame}
+
+
+\subsubsection{Sum of Absolute Residuals}
+
+\begin{frame}
+  \frametitle{Sum of Absolute Residuals}
+
+  \structure{Minimization of the residual using the $L_1$-norm:}
+
+  \begin{displaymath}
+    \mbox{minimize}\quad \Bigg\{ \| \mat A \vec x -\vec b\|_1 = \sum_{i=1}^m  |r_i| \Bigg\}
+  \end{displaymath}
+  \pause
+  
+  This optimization problem can be rewritten in terms of a LP-problem:
+   
+  \begin{eqnarray*}
+    \begin{array}{lcl}
+      \mbox{minimize}   & & \vec 1^T \vec r \\
+      \mbox{subject to} & & - \vec r \preceq  \mat A \vec x -\vec b\preceq \vec  r
+    \end{array}
+  \end{eqnarray*}
+  
+  where $\vec r\in \real^m$ and $\vec 1 \in \{1\}^m$.
+\end{frame}
+
+
+\subsubsection{Ridge Regression and Unit Balls}
+
+\begin{frame}
+  \frametitle{Ridge Regression and Unit Balls}
+
+  \structure{Ridge regression} is defined via the optimization problem
+
+  \begin{displaymath}
+    \mbox{minimize} \quad \mat \|A\vec x -\vec b\|_2+\lambda \cdot\|\vec x\|_2
+  \end{displaymath}
+  
+  \begin{center}
+    \resizebox{.4\linewidth}{!}{
+      \alt<7->{
+        \input{\texfigdir/ridge_regression7.pstex_t}
+      }{\alt<6>{
+        \input{\texfigdir/ridge_regression6.pstex_t}
+      }{\alt<5>{
+        \input{\texfigdir/ridge_regression5.pstex_t}
+      }{\alt<4>{
+        \input{\texfigdir/ridge_regression4.pstex_t}
+      }{\alt<3>{
+        \input{\texfigdir/ridge_regression3.pstex_t}
+      }{\alt<2>{
+        \input{\texfigdir/ridge_regression2.pstex_t}
+      }{
+        \input{\texfigdir/ridge_regression1.pstex_t}
+      }}}}}}
+    }
+  \end{center}
+\end{frame}
+
+
+\subsubsection{Lasso and Unit Balls}
+
+\begin{frame}
+  \frametitle{Lasso and Unit Balls}
+  
+  The \structure{lasso} (Tibshirani 1996) is defined via the optimization problem
+  
+  \begin{displaymath}
+    \mbox{minimize} \quad \mat \|A\vec x -\vec b\|_2+\lambda \cdot\|\vec x\|_1
+  \end{displaymath}
+
+  \begin{center}
+    \resizebox{.4\linewidth}{!}{
+      \alt<6>{
+        \input{\texfigdir/lasso6.pstex_t}
+      }{\alt<5>{
+        \input{\texfigdir/lasso5.pstex_t}
+      }{\alt<4>{
+        \input{\texfigdir/lasso4.pstex_t}
+      }{\alt<3>{
+        \input{\texfigdir/lasso3.pstex_t}
+      }{\alt<2>{
+        \input{\texfigdir/lasso2.pstex_t}
+      }{
+        \input{\texfigdir/lasso1.pstex_t}
+      }}}}}
+    }
+  \end{center}
+\end{frame}
+
+
+\subsubsection{Compressed Sensing}
+
+\begin{frame}
+  \frametitle{Compressed Sensing}
+
+  \begin{itemize}
+    \item In the previous chapter we motivated regularized linear regression. \\[.25cm]
+    \item Assume we have fewer measurements than required to estimate the parameter vector $\vec x$. \\[.25cm]
+    \item Solution of the underdetermined case required. \\[.25cm]
+    \item We call a vector $S$-sparse if its support, i.\,e.\ the number of non-zero entries, is less or equal to $S$  \\[.25cm] \pause
+    \item The vector $\vec x$ can be recovered mostly always by solving the convex optimization problem (quadratic programming):
+      \begin{eqnarray*}
+        \mbox{minimize}   & &\quad \|\vec x\|_1\\
+        \mbox{subject to} & & \quad \mat A\vec x =\vec b.
+      \end{eqnarray*}
+  \end{itemize}
+\end{frame}
+
+
+\subsection{Convex and Non-Convex Penalty Functions}
+
+\begin{frame}
+  \frametitle{Penalty Function}
+
+  Motivated by the discussion of different norms, we now introduce and study \structure{penalty functions}.
+  \spread
+
+  \begin{citeblock}{Definition}
+	  
+    The \structure{\emph{penalty function approximation problem}} is defined as follows:
+
+    \begin{eqnarray*}
+      \mbox{minimize}   & &\sum_{i=1}^m \phi(r_i) \\
+      \mbox{subject to} & & \vec r= (r_1, r_2, \dots, r_m)^T = \mat A\vec x -\vec b,
+    \end{eqnarray*}
+    
+    where $\phi:\real \rightarrow \real$ is the penalty function for the components of the \\
+    residual vector.
+  \end{citeblock}
+ \end{frame}
+ 
+ 
+\begin{frame}
+  \frametitle{Penalty Function \cont}
+
+  \structure{Note:} \\[.5cm]
+  
+  \begin{itemize}
+    \item The penalty function $\phi$ assigns \structure{costs} to residuals. \\[.5cm]
+    \item If $\phi$ is a convex function, the penalty function approximation problem \\
+      is a convex optimization problem.
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Penalty Function \cont}
+
+  Penalty functions of the $L_1$-,  $L_2$-norms:
+
+  \begin{displaymath}
+    \phi_{L_1}(r) = |r|;  \qquad \qquad \qquad \qquad \qquad \phi_{L_2}(r) = r^2
+  \end{displaymath}
+  \pause
+  
+  \vspace{-0.5cm}
+  \begin{figure}
+    \resizebox{.4\linewidth}{!}{
+      \input{\texfigdir/penalty_L1.pstex_t} 
+    }
+    \hspace{1cm}
+    \resizebox{.4\linewidth}{!}{
+      \input{\texfigdir/penalty_L2.pstex_t} 
+    }
+  \end{figure}
+
+  \begin{itemize}
+    \item In $L_1$ small deviations are weighted higher than using $L_2$.
+    \item In $L_1$ large deviations are weighted lower than using $L_2$.
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Penalty Function \cont}
+
+  \structure{Log barrier function}
+
+  \begin{displaymath}
+    \phi_\mathsf{barrier}(r) = 
+      \left\{
+        \begin{array}{cl}
+          -a^2\log \left(1-\left( \frac{r}{a}\right)^2 \right),  & \quad \mbox{if} \quad |r| < a\\
+          \infty,                                                & \quad \mbox{otherwise}
+        \end{array}
+      \right.
+  \end{displaymath}     
+
+  \begin{figure}
+    \resizebox{.6\linewidth}{!}{
+      \alt<3->{
+        \input{\texfigdir/penalty_LogBarrier3.pstex_t} 
+      }{\alt<2>{
+        \input{\texfigdir/penalty_LogBarrier2.pstex_t} 
+      }{
+        \input{\texfigdir/penalty_LogBarrier1.pstex_t} 
+      }}
+    }
+  \end{figure}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Penalty Function \cont}
+
+  \structure{Dead zone linear penalty function}
+  
+  \begin{displaymath}
+    \phi_\mathsf{dz}(r) = 
+      \left\{
+        \begin{array}{cl}
+          0,     & \quad \mbox{if} \quad |r| \leq a\\
+          |r|-a, & \quad \mbox{otherwise}
+        \end{array}
+      \right.
+  \end{displaymath}
+
+  \begin{figure}
+    \resizebox{.6\linewidth}{!}{
+      \alt<3->{
+        \input{\texfigdir/penalty_DeadZoneLinear3.pstex_t} 
+      }{\alt<2>{
+        \input{\texfigdir/penalty_DeadZoneLinear2.pstex_t} 
+      }{
+        \input{\texfigdir/penalty_DeadZoneLinear1.pstex_t} 
+      }}
+    }
+  \end{figure}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Penalty Function \cont}
+
+  \structure{Large error penalty function}
+  
+  \begin{displaymath}
+    \phi_\mathsf{e}(r) = 
+      \left\{
+        \begin{array}{cl}
+          r^2, & \quad \mbox{if} \quad |r| \leq a \\
+          a^2, & \quad \mbox{otherwise}
+        \end{array}
+      \right.
+  \end{displaymath}
+
+  \begin{figure}
+    \resizebox{.6\linewidth}{!}{
+      \alt<3->{
+        \input{\texfigdir/penalty_LargeError3.pstex_t} 
+      }{\alt<2>{
+        \input{\texfigdir/penalty_LargeError2.pstex_t} 
+      }{
+        \input{\texfigdir/penalty_LargeError1.pstex_t} 
+      }}
+    }
+  \end{figure}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Penalty Function \cont}
+
+  \structure{Huber function}
+  
+  \begin{displaymath}
+    \phi_\mathsf{Huber}(r) = 
+      \left\{
+        \begin{array}{cl}
+          r^2,            & \quad \mbox{if} \quad |r| \leq a \\
+          a\cdot(2|r|-a), & \quad \mbox{otherwise}
+        \end{array}
+      \right.
+  \end{displaymath}
+
+  \begin{figure}
+    \resizebox{.6\linewidth}{!}{
+      \alt<3->{
+        \input{\texfigdir/penalty_Huber3.pstex_t} 
+      }{\alt<2>{
+        \input{\texfigdir/penalty_Huber2.pstex_t} 
+      }{
+        \input{\texfigdir/penalty_Huber1.pstex_t} 
+      }}
+    }
+  \end{figure}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Penalty Functions \cont}
+
+  \begin{figure}
+    \resizebox{1.0\linewidth}{!}{
+      \alt<6->{
+        \input{\texfigdir/penalty6.pstex_t} 
+      }{\alt<5>{
+        \input{\texfigdir/penalty5.pstex_t} 
+      }{\alt<4>{
+        \input{\texfigdir/penalty4.pstex_t} 
+      }{\alt<3>{
+        \input{\texfigdir/penalty3.pstex_t} 
+      }{\alt<2>{
+        \input{\texfigdir/penalty2.pstex_t} 
+      }{
+        \input{\texfigdir/penalty1.pstex_t} 
+      }}}}}
+    }
+  \end{figure}
+\end{frame}
+
+
+\subsection{Lessons Learned}
+
+\begin{frame}
+  \frametitle{Lessons Learned}
+
+  \begin{itemize}
+    \item We have considered vector and matrix norms in more detail. \\[.3cm]
+    \item Important vector norms: $L_1$, $L_2$, $L_\infty$, and $L_{\mat P}$. \\[.3cm]
+    \item Unit balls \\[.3cm] \pause
+    \item Linear regression for different norms: range from closed form solution to LP-problem. \\[.3cm]
+    \item Regularized linear regression: range from closed form solution through QP-problem up to combinatorial optimization. \\[.3cm]
+    \item We need to know the basics of algorithms for unconstrained and constrained optimization as well as convex optimization.
+  \end{itemize}
+\end{frame}
+
+\input{nextTime.tex}
+
+\subsection{Further Readings}
+
+\begin{frame}
+  \frametitle{Further Readings}
+
+  \begin{itemize}
+    \item G.~Golub, C.~F.~Van~Loan: \\
+      \structure{Matrix Computations}, 3rd Edition, \\
+      The Johns Hopkins University Press, Baltimore, 1996. \\[.15cm]
+    \item Lloyd N. Trefethen, David Bau III: \\
+      \structure{Numerical Linear Algebra}, \\
+      SIAM, Philadelphia, 1997. \\[0.15cm]
+    \item S.~Boyd, L.~Vandenberghe: \\
+      \structure{Convex Optimization}, \\
+      Cambridge University Press, 2004. \\
+      \point{\small \url{http://www.stanford.edu/~boyd/cvxbook/}} \\
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Further Readings \cont}
+
+  \begin{itemize}
+    \item Compressed sensing is one of the most recent hot topics in pattern recognition and image processing. An excellent source is: \\[.3cm]
+      \centerline{\structure{\url{http://www.dsp.ece.rice.edu/cs}}}
+      \vspace{.3cm}
+      or the recent workshop on compressed sensing at Duke University: \\[.3cm]
+    \structure{\url{http://people.ee.duke.edu/\%7Elcarin/compressive-sensing-workshop.html}}.
+  \end{itemize}
+\end{frame}
+
+
+\subsection{Comprehensive Questions}
+
+\begin{frame}
+  \frametitle{Comprehensive Questions}
+
+  \begin{itemize}
+    \item What is the difference between the $L_p$- (p $\ge$ 1) and the $L_{\mat P}$-norm? \\[1cm]
+    \item How do the unit balls look like for $L_{\infty}$-, $L_4$-, $L_2$-, $L_1$- and $L_0$-norm? \\[1cm]
+    \item What is the benefit of using the $L_1$- over the $L_2$-norm for sparse, underdetermined problems? \\[1cm]
+    \item What specific property of penalty functions is of special interest and \\
+      why do we need different penalty functions at all? 
+  \end{itemize}
+\end{frame}

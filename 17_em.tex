@@ -1,0 +1,978 @@
+\def\p{\vec{\theta}}
+\def\hatp{\vec{\hat{\theta}}}
+\def\BiasField{\vec{\beta}}
+
+\section{The Expectation Maximization Algorithm}
+
+\subsection{Parameter Estimation}
+
+\begin{frame}
+  \frametitle{Parameter Estimation Methods}
+
+  \structure{Goal:} Derivation of a parameter estimation technique that can deal with
+  \begin{itemize}
+    \item high dimensional parameter spaces and
+    \item latent, hidden, incomplete data.
+  \end{itemize}
+  \pspread
+  
+  Parameter estimation techniques known from statistics: \\[0.25cm]
+  
+  \begin{enumerate}
+    \item \structure{Maximum likelihood estimation (ML estimation)}
+      \begin{itemize}
+        \item All observations are assumed to be mutually statistically independent. 
+        \item The observations are kept fixed.
+        \item The (log-)likelihood function is optimized regarding the parameters. \\[0.25cm] \pause
+      \end{itemize}
+    \item \structure{Maximum a-posteriori estimation (MAP estimation)}
+      \begin{itemize}
+        \item The probability density function of the parameters $p(\vec{\theta})$ to be estimated \\
+          is known.
+      \end{itemize}
+  \end{enumerate}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Parameter Estimation}
+
+  Let $X$ be the observed random variable and $\p$ the parameter set. \\
+  The estimates of $\p$ are denoted by $\hatp$. \\
+  Let $x$ be an event assigned to the random variable $X$. \\[.25cm] \pause 
+%
+  \begin{itemize}
+    \item \structure{ML estimation:} $\displaystyle \hatp= \argmax_{\p}\ p(x; \p) = \argmax_{\p}\ \log p(x; \p)$  \\[.25cm] \pause 
+    \item \structure{MAP estimation:}
+      {\small
+        \begin{eqnarray*}
+          \hatp &=& \argmax_{\p}\ p(\p|{x})\\
+                &=& \argmax_{\p}\ \frac{p(\p)\,p(x|\p)}
+                                       {\sum_{\p} p(\p)\,p(x|\p)} \\
+                &=& \argmax_{\p}\ \log p(\p) + \log p(x|\p)
+        \end{eqnarray*}
+      }
+    \item[] Here $\p$ is considered as a random variable and its probability density function $p(\p)$ is known.
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{ML Estimation: Example}
+
+  \begin{ovalblock}{Example}
+    Let us assume a Gaussian distributed random vector:
+%
+    \begin{displaymath}
+      p(\vec{x};\vec{\mu}, \mat{\Sigma}) = \frac{1}{\sqrt{\det(2\pi\mat{\Sigma})}}
+        e^{-\frac{1}{2}(\vec{x}-\vec{\mu})^T \mat{\Sigma}^{-1} (\vec{x}-\vec{\mu})} \pause
+    \end{displaymath}
+%    
+    \begin{itemize}
+      \item We observe the random vectors $\vec{x}_1, \vec{x}_2, \dots, \vec{x}_m$ (training data). \pause
+      \item Based on these training data, we have to estimate the mean vector $\vec{\mu}$ and the covariance matrix $\mat{\Sigma}$.
+    \end{itemize}
+  \end{ovalblock}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{ML Estimation: Example \cont}
+
+  \begin{ovalblock}{Example \cont}
+    \small
+    The ML estimator assumes \structure{mutually independent observations} and \\
+    optimizes the pdf for the given set of training data:
+%
+    {\footnotesize
+      \begin{eqnarray*}
+        \{\hat{\vec{\mu}}, \hat{\mat{\Sigma}}\}
+          &=& \argmax_{\vec{\mu},\mat{\Sigma}}\ \prod_{i=1}^m p(\vec{x}_i;\vec{\mu}, \mat{\Sigma}) \\ \pause 
+          &=& \argmax_{\vec{\mu},\mat{\Sigma}}\ \sum_{i=1}^m \log p(\vec{x}_i;\vec{\mu}, \mat{\Sigma}) \\ \pause
+          &=& \argmax_{\vec{\mu},\mat{\Sigma}} L(\vec{x}_1, \vec{x}_2, \dots, \vec{x}_m; \vec{\mu}, \mat{\Sigma}) \pause
+      \end{eqnarray*}
+    }
+%
+    where the \structure{log-likelihood function} is defined by
+%
+    {\footnotesize
+      \begin{displaymath}
+        L:= L(\vec{x}_1, \vec{x}_2, \dots, \vec{x}_m; \vec{\mu}, \mat{\Sigma}) =
+        \sum_{i=1}^m \log p(\vec{x}_i;\vec{\mu}, \mat{\Sigma})
+      \end{displaymath}
+    }
+    \vspace{-.25cm}
+  \end{ovalblock}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{ML Estimation: Example \cont}
+
+  \begin{ovalblock}{Example \cont}
+     \small
+     \structure{Necessary conditions} for the estimation of the parameters are:
+%
+     {\footnotesize
+       \begin{displaymath}
+         \frac{\partial L}{\partial \vec{\mu}} \stackrel{!}{=} \vec{0} 
+         \quad \quad \mbox{and} \quad \quad
+         \frac{\partial L}{\partial \mat{\Sigma}} \stackrel{!}{=} \vec{0} \pause
+       \end{displaymath}
+     }
+%
+     Now we get for the mean vector:
+%    
+     {\footnotesize
+       \begin{displaymath}
+         \frac{\partial L}{\partial \vec{\mu}} = 
+         \sum_{i=1}^m \mat{\Sigma}^{-1}(\vec{x_i}-\vec{\mu}) \stackrel{!}{=} 
+         \vec{0} \pause
+       \end{displaymath}
+     }
+%
+     and thus the \structure{ML estimate for the mean vector} meets our expectation:
+%
+     {\footnotesize
+       \begin{displaymath}
+         \vec{\hat{\mu}} = \frac{1}{m}\sum_{i=1}^m \vec{x}_i
+      \end{displaymath}
+    }
+    \vspace{-.25cm}
+  \end{ovalblock}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{ML Estimation: Example \cont}
+
+  \begin{ovalblock}{Example \cont}
+    \small
+    Along the same lines, we get the \structure{estimator of the covariance matrix} \\
+    by computation of the zero crossings of the partial derivatives w.\,r.\,t.\ the components of the covariance matrix:
+ 
+    \begin{displaymath}
+      \hat{\mat{\Sigma}} = \frac{1}{m} \sum_{i=1}^m (\vec x_i-\hat{\vec{\mu}})
+                                                    (\vec x_i-\hat{\vec{\mu}})^T
+    \end{displaymath}
+  \end{ovalblock}
+\end{frame}
+
+
+\subsection{Gaussian Mixture Models}
+
+\begin{frame}
+  \frametitle{Gaussian Mixture Models}
+  
+  So far, we have considered parameter estimation for statistical models with: \pause
+
+  \begin{itemize}
+    \item one class-dependent distribution component \pause
+    \item uni- or multivariate feature vectors \pause
+    \item the type was mostly Gaussian (normally distributed features)
+  \end{itemize}
+  \pspread
+  
+  Now we extend this model by representing the observations with a set of $K$ multivariate Gaussian distributions:\\
+
+  \begin{center}
+    \structure{Gaussian Mixture Model (GMM)}
+  \end{center}
+\end{frame}
+
+
+\mode<handout>{
+  \begin{frame}
+    \frametitle{Gaussian Mixture Models \cont}
+
+    \begin{center}
+      \resizebox{.8\linewidth}{!}{
+        \input{\texfigdir/koerpergroesse_gesamt.pstex_t}
+      }
+    \end{center}
+  \end{frame}
+}
+
+
+\begin{frame}
+  \frametitle{Gaussian Mixture Models \cont}
+
+  \begin{center}
+    \resizebox{.8\linewidth}{!}{
+     \alt<3->{
+       \input{\texfigdir/koerpergroesse_weiblich+maennlich.pstex_t}
+     }{\alt<2>{
+       \input{\texfigdir/koerpergroesse_weiblich.pstex_t}
+     }{
+        \input{\texfigdir/koerpergroesse_gesamt.pstex_t}
+     }}
+    }
+  \end{center}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Gaussian Mixture Models \cont}
+
+  \begin{center}
+    \resizebox{.8\linewidth}{!}{
+     \alt<2->{
+       \input{\texfigdir/gmm2.pstex_t}
+     }{
+       \input{\texfigdir/gmm1.pstex_t}
+     }
+    }
+  \end{center}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Gaussian Mixture Models \cont}
+
+  \structure{Problem description:} \\[.5cm]
+  
+  Given $m$ feature vectors in an $d$ dimensional space, find a set of $K$ multivariate Gaussian distributions that best represent the observations. 
+  \pspread
+  
+  GMMs are an example of classification by \structure{\emph{unsupervised learning}}: \pause
+
+  \begin{itemize}
+    \item It is not known which feature vectors are generated by which of the $K$ Gaussians \pause
+    \item The desired output is, for each feature vector, an estimate of the probability that it is generated by distribution $k$
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Gaussian Mixture Models \cont}
+
+  \structure{GMM parameter estimation:}
+%  
+  \begin{eqnarray*}
+    \vec\mu_k            &\phantom{=}& \mbox{the $K$ means} \\
+    \mat\Sigma_k         &\phantom{=}& \mbox{the $K$ covariance matrices of size $d \times d$} \\
+    p_k                  &\phantom{=}& \mbox{fraction of all features in component $k$} \\
+    p(k|i) \equiv p_{ik} &\phantom{=}& \mbox{the $K$ probabilities for each of the $m$ feature vectors $\vec{x}_i$}
+  \end{eqnarray*}  
+  \pspread
+
+  \structure{Additional estimates:}
+%  
+  \begin{eqnarray*}
+    p(\vec x) &\phantom{=}& \mbox{probability distribution of observing a feature vector $\vec x$} \\
+    L         &\phantom{=}& \mbox{overall log-likelihood function of the estimated parameter set}
+  \end{eqnarray*}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{GMM -- Expectation}
+  
+  The key to the estimation problem is the \structure{overall log-likelihood objective function $L$}:
+  \begin{displaymath}
+    L = \sum_{i = 1}^{m} \log p(\vec x_i) \pause
+  \end{displaymath}
+  
+  Split $p(\vec x_i)$ % (mixture weight of $\vec x_i$) 
+  into its contributions from the $K$ Gaussians:
+  \begin{displaymath}
+    p(\vec x_i) = \sum_{k=1}^{K} p_k \, {\mathcal N}(\vec x_i | \vec \mu_k, \mat \Sigma_k) \pause
+  \end{displaymath}
+
+  Individual probabilities for the $K$ contributions:
+  \begin{displaymath}
+    p_{ik} \equiv p(k|i) = \frac{ p_k\,{\mathcal N}(\vec x_i | \vec \mu_k, \mat \Sigma_k)}{p(\vec x_i)}
+  \end{displaymath}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{GMM -- Maximization}
+  
+  \structure{Problem:} How do we get $\vec \mu_k, \mat \Sigma_k$ and $p_k$? \pause
+
+  \begin{itemize}
+    \item Similar to the ML estimate for the Gaussian, we maximize the log-likelihood by deriving w.\,r.\,t.\ the unknowns. \\[.25cm] \pause
+    \item The \structure{ML estimates} are:
+      \begin{eqnarray*}
+        \hat{\vec \mu}_k 
+          &=& \frac{\sum_i p_{ik} \vec x_i}{\sum_i p_{ik}} \\
+        \hat{\mat \Sigma}_k 
+          &=& \frac{\sum_i p_{ik} (\vec x_i - \hat{\vec \mu}_k)(\vec x_i - \hat{\vec \mu}_k)^T}{\sum_i p_{ik}} \\
+        \hat{p}_k 
+          &=& \frac{1}{m} \sum_{i=1}^m p_{ik}
+      \end{eqnarray*}
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{GMM Parameter Estimation}
+
+  \structure{Observations:}
+
+  \begin{itemize}
+    \item If we know the values for the parameters ($\vec \mu_k, \mat \Sigma_k, p_k$), we can compute the expectations (\structure{E-step}).\pause 
+    \item Once we have the expectations we can compute improved values for the parameters (\structure{M-step}).
+  \end{itemize}
+  \pspread
+
+  We have found an \structure{iterative solution scheme} for the nonlinear GMM parameter estimation problem:
+
+  \begin{itemize}
+    \item \emph{Right at} the ML solution both E- and M-step relations hold. \pause 
+    \item The ML parameters are a stationary point for the E- and M-step. \pause 
+    \item Starting from any parameter values, an iteration of the E-step combined with an M-step will increase $L$
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{GMM Parameter Estimation \cont}
+  
+  \structure{EM algorithm for GMM parameter estimation:}
+%
+  \begin{centernss}
+    \begin{struktogramm}(100,50)
+      \assign{Initialization: $\vec \mu_k^{(0)}, \mat \Sigma_k^{(0)}, p_k^{(0)}$}
+      \assign{$j \gets 0$}
+      \until{$L$ is no longer changing}
+        \assign{\structure{Expectation step}: \\
+          compute new values for $p_{ik}, L$ }
+        \assign{\structure{Maximization step}: \\
+          update values for $\vec \mu_k^{(j)}, \mat \Sigma_k^{(j)}, p_k^{(j)}$ }
+        \assign{$j \gets j+1$}
+      \untilend
+      \assign{Output: estimates $\hat{\vec \mu}_k, \hat{\mat \Sigma}_k, \hat{p}_k$}
+    \end{struktogramm}
+  \end{centernss}
+%
+%   \begin{center}
+%     \begin{struktogramm}{10cm}{0.7cm}
+%       \BLOCK {Initialization: $\vec \mu_k^{(0)}, \mat \Sigma_k^{(0)}, p_k^{(0)}$}
+%       \BLOCK {Set $j:=0$}
+%       \REPEAT {
+%         \BLOCK {\structure{Expectation Step}: \\
+%           compute new values for $p_{ik}, L$ }
+%         \BLOCK {\structure{Maximization Step}: \\
+%           update values for $\vec \mu_k^{(j)}, \mat \Sigma_k^{(j)}, p_k^{(j)}$ }
+%         \BLOCK {Set $j:=j+1$}
+%       }
+%       UNTIL{$L$ is no longer changing}
+%       \BLOCK {Output: estimates $\hat{\vec \mu}_k, \hat{\mat \Sigma}_k, \hat{p}_k$}
+%     \end{struktogramm}
+%   \end{center}
+\end{frame}
+
+
+\input{nextTime.tex}
+
+\subsection{Missing Information Principle}
+
+\begin{frame}
+  \frametitle{Missing Information Principle}
+
+  A colloquial formulation of the \structure{missing information principle (MIP)} is \\
+  as simple as:
+
+  \begin{center}
+    \tikz[baseline]{
+      \node[fill=bl1!100, anchor=base, rounded corners=3pt, inner sep=3mm] (d1) {
+        \color{bl3}
+        observable information $=$ complete information $-$ hidden information
+      };
+    }
+  \end{center}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Missing Information Principle \cont}
+
+  \structure{Mathematical formalization of the MIP:}
+
+  \begin{itemize}
+    \item observable random variable: $X$
+    \item hidden random variable: $Y$
+    \item parameter set: $\p$ \\[0.25cm]
+  \end{itemize}
+  \pspread
+  
+  The joint probability density of the events $x$ (observation) and $y$ (hidden) is:
+  \begin{displaymath}
+    p(x,y; \p) = p(x; \p)\  p(y | x; \p) \pause
+  \end{displaymath}
+%
+  and thus:
+  \begin{displaymath}
+    p(x; \p)= \frac{p(x, y; \p)}{p(y|x; \p)}
+  \end{displaymath}
+  \pause
+  
+  \vspace*{0.25cm}
+  The mathematical formulation of the MIP is:
+  \begin{displaymath}
+    -\log p(x; \p) = -\log p(x, y; \p) -(-\log p(y|x; \p))
+  \end{displaymath}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Key Equation}
+
+  We now consider the mathematical formulation of the key equation and derive an iterative parameter estimation scheme: \pause
+
+  \begin{itemize}
+   \item Let $i$ denote the iteration parameter. \pause 
+   \item Consider the key equation $(i+1)$-st iteration
+     {\small
+       \begin{displaymath}
+         \log p\left(x    ; \hatp^{(i+1)} \right) =
+         \log p\left(x, y ; \hatp^{(i+1)} \right) -
+         \log p\left(y|x  ; \hatp^{(i+1)} \right)~,
+       \end{displaymath}
+     }
+     where $\hatp^{(i+1)}$ denotes the estimation in iteration step $(i+1)$. \pause
+   \item Now we multiply both sides with $p\left( y|x ; \hatp^{(i)} \right)$ and \\
+     integrate over the hidden event $y$:
+     \footnotesize
+     \begin{eqnarray*}
+             \int p\left(y|x ; \hatp^{(i)} \right) \log p\left( x ;   \hatp^{(i+1)} \right)\, \mathsf{d}y \pause
+         &=& \int p\left(y|x ; \hatp^{(i)} \right) \log p\left(x, y ; \hatp^{(i+1)} \right)\, \mathsf{d}y -{} \\
+         & & \int p\left(y|x ; \hatp^{(i)} \right) \log p\left(y|x  ; \hatp^{(i+1)} \right)\, \mathsf{d}y
+     \end{eqnarray*}
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Key Equation \cont}
+  
+  Now consider the left hand side of this equation:
+  
+  \begin{eqnarray*}
+          & & \int p\left(y|x ; \hatp^{(i)}   \right) \, \log p\left( x ; \hatp^{(i+1)} \right)\ \mathsf{d}y ={} \\ \pause
+          &=& \log p\left(x   ; \hatp^{(i+1)} \right) \, \int p\left( y|x ; \hatp^{(i)} \right)\ \mathsf{d}y = \\ \pause
+          &=& \log p\left(x   ; \hatp^{(i+1)} \right) \pause
+  \end{eqnarray*}
+  
+  \begin{itemize}
+    \item \structure{Observation:} The left side of the key equation is the log likelihood function of observations. \\[.3cm] \pause 
+    \item \structure{Conclusion:} The maximization of the right hand side of the above key equation corresponds to a ML estimation
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Kullback-Leibler Statistics and Entropy}
+  
+  For the terms on the right hand side we introduce the following notation \\
+  (formally this is incorrect due to the differences in the iteration index):
+  
+  \begin{itemize}
+    \item \structure{Kullback-Leibler Statistics}
+      \begin{displaymath}
+        Q(\hatp^{(i)};\hatp^{(i+1)}) =
+        \int p(y|x; \hatp^{(i)}) \log p(x, y;\hatp^{(i+1)}) \ \mathsf{d}y \pause
+      \end{displaymath}
+   \item \structure{Entropy:}
+     \begin{displaymath}
+       H(\hatp^{(i)};\hatp^{(i+1)}) = 
+       - \int p(y|x; \hatp^{(i)}) \log p(y|x; \hatp^{(i+1)})\ \mathsf{d}y
+      \end{displaymath}
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Kullback-Leibler Statistics}
+
+  Let us first take a closer look at the Kullback-Leibler statistics:
+  \begin{displaymath}
+    Q(\p,\p') = \int p(y| x; \p)\ \log{p(x,y;\p')}\ \mathsf{d}y
+  \end{displaymath}
+
+  The Kullback-Leibler statistics (also called $Q$-function) w.\,r.\,t.\ $\p'$ given $\p$ is the \structure{conditional expectation}:
+  \begin{displaymath}
+    E[\log p(x,y;\p') \ | \ x, \p] = 
+    \int p(y| x; \p)\ \log{p(x,y;\p')}\ \mathsf{d}y
+  \end{displaymath}
+\end{frame}
+
+
+\iffalse
+\begin{frame}
+ \frametitle{Kullback-Leibler Statistics}
+ Using the argument that the position of a maximum of a function does
+ not change by scaling the function value with a positive
+ factor and by translation, we see that for give $X$ and $\p$::
+ \begin{eqnarray*}
+   \hat{\p}' &=& \argmax_{\p'} \int p(Y| X; \p)\ \log{p(X,Y;\p')} \ dy\\
+            &=& \argmax_{\p'} \frac{1}{p(X;\p)}
+                                 \int p(X, Y; \p)\ \log
+                                 {p(X,Y;\p')} \ dy\\
+            &=& \argmax_{\p'} \int p(X, Y; \p)\ \log{p(X,Y;\p')} \ dy\\
+            &=& \argmax_{\p'} -\int p(X, Y; \p)\ \log{p(X,Y;\p')}\ dy
+                                 +\int p(X, Y; \p)\ \log{p(X,Y;\p)}\ dy\\
+            &=& \argmax_{\p'} \int p(X, Y; \p)\
+                \log\frac{p(X,Y;\p')}{p(X,Y;\p)} \ dy
+ \end{eqnarray*}
+\end{frame}
+\fi
+
+
+\begin{frame}
+  \frametitle{Key Equation}
+  
+  The \structure{key equation} of the Expectation Maximization algorithm (EM algorithm) can be rewritten:
+
+  \begin{center}
+    \tikz[baseline]{
+      \node[fill=bl1!100, anchor=base, rounded corners=3pt, inner sep=3mm] (d1) {
+        \color{bl3}
+        $\log p\left( x; \hatp^{(i+1)} \right) = 
+        Q\left( \hatp^{(i)}; \hatp^{(i+1)} \right) + 
+        H\left( \hatp^{(i)}; \hatp^{(i+1)} \right)$
+      };
+    }
+  \end{center}
+  \spread
+
+  \begin{itemize}
+    \item Below we will motivate that the maximization of the Kullback-Leibler statistics can replace the optimization of the log-likelihood function. \\[.5cm]
+    \item A complete proof can be found in the literature (see Further Readings).
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Entropy Changes with Iterations}
+ 
+  For the entropy we get the inequality:
+  \begin{displaymath}
+    H(\p;\p') \geq H(\p; \p) \pause
+  \end{displaymath}
+
+  This is shown rather straightforward:
+
+  \begin{eqnarray*}
+    & & \hspace{-1cm}H({\p};{\p'}) - H(\p;{\p}) \\ \pause 
+    &=& - \int p(y|x;\p) \, \log p(y|x;{\p}')\ \mathsf{d}y
+        + \int p(y|x;\p) \, \log p(y|x;{\p})\ \mathsf{d}y \\ \pause 
+    &=& - \int p(y|x;\p) \, \log \frac{p(y|x;{\p}')}{p(y|x;{\p})}\ \mathsf{d}y \\ \pause 
+    &=&   \int p(y|x;\p) \, \log \frac{p(y|x;{\p})}{p(y|x;{\p'})}\ \mathsf{d}y 
+  \end{eqnarray*}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Entropy Changes with Iterations \cont}
+  
+  The difference of the considered entropies
+
+  \begin{eqnarray*}
+    & & \hspace{-1cm}H({\p};{\p'})-H(\p;{\p}) = \\
+    &=& \int p(y|x;{\p}) \, \log \frac{p(y|x;{\p})}{p(y|x;{\p'})}\ \mathsf{d}y \ge 0
+  \end{eqnarray*}
+
+  is thus the Kullback-Leibler divergence of the pdf's $p(y|x;{\p})$ and $p(y|x;{\p'})$, \\
+  and the Kullback-Leibler divergence is known to be non-negative.
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Entropy Changes with Iterations \cont}
+
+  The best to see this is to make use of the inequality
+  \begin{displaymath}
+  \log(x) \leq x-1
+  \end{displaymath}
+
+  and conclude:
+  \begin{eqnarray*}
+    \int p(x) \, \log \frac{p(x)}{q(x)}\ \mathsf{d}x 
+      & =  & -\int p(x) \, \log \frac{q(x)}{p(x)}\ \mathsf{d}x \\ \pause
+      &\geq& \int p(x) \left( 1 - \frac{q(x)}{p(x)} \right) \, \mathsf{d}x\\ \pause 
+      & =  & 1-1 = 0
+  \end{eqnarray*}
+\end{frame}
+
+
+\subsection{Expectation Maximization Algorithm}
+
+\begin{frame}
+  \frametitle{Expectation Maximization Algorithm}
+
+  \structure{The basic idea of the EM algorithm:} \\[0.5cm]
+
+  Instead of maximizing the log-likelihood function on the left hand side \\
+  of the key-equation, we maximize the Kullback-Leibler statistics iteratively \\
+  while ignoring the entropy term.
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Expectation Maximization Algorithm \cont}
+
+  \begin{centernss}
+    \resizebox{.85\linewidth}{!}{
+      \begin{struktogramm}(100,50)
+        \assign{Initialization: $\hatp^{(0)}$}
+        \assign{$i \gets -1$}
+        \until{$\hatp^{(i+1)}$ $=$ $\hatp^{(i)}$}
+          \assign{$i \gets i+1$}
+          \assign{ \structure{Expectation step:} \\[.25cm]
+            \centerline{$Q\left( \hatp^{(i)}\, ; \,\p \right) := \int p\left( y|x; \hatp^{(i)} \right) \log p(x, y;{\p} )\ \mathsf{d}y$} } 
+          \assign{ \structure{Maximization step:} \\[.25cm]
+            \centerline{$\displaystyle {\hatp}^{(i+1)} \gets \argmax_{{\p}} Q\left( \hatp^{(i)}\,;\, \p \right)$} }
+        \untilend
+        \assign {Output: estimate $\hatp \gets \hatp^{(i)}$}
+      \end{struktogramm}
+    }
+  \end{centernss}
+%
+%   \begin{center}
+%     \begin{struktogramm}{10cm}{0.7cm}
+%       \BLOCK {Initialization: $\hatp^{(0)}$}
+%       \BLOCK {Set $i:=-1$}
+%       \REPEAT {
+%         \BLOCK { Set $i:= i+1$ }
+%         \BLOCK { \structure{Expectation Step:} \\
+%           $Q\left( \hatp^{(i)}\, ; \,\p \right) := \int p\left( y|x; \hatp^{(i)} \right) \log p(x, y;{\p} )\ \mathsf{d}y$ } 
+%         \BLOCK { \structure{Maximization Step:} \\
+%           $\displaystyle {\hatp}^{(i+1)} := \argmax_{{\p}} Q\left( \hatp^{(i)}\,;\, \p \right)$ }
+%       }
+%       UNTIL {$\hatp^{(i+1)}$ $=$ $\hatp^{(i)}$}
+%       \BLOCK {Output: estimate $\hatp:= \hatp^{(i)}$}
+%     \end{struktogramm}
+%   \end{center}
+\end{frame}
+
+
+\subsection{Advantages of the EM Algorithm}
+
+\begin{frame}
+  \frametitle{Advantages of the EM Algorithm}
+
+  A few \structure{practical positive aspects} regarding the EM algorithm:
+
+  \begin{itemize}
+    \item The maximum of the KL statistics is usually computed using zero crossings of the gradient. \\[.3cm] \pause 
+    \item Mostly we find \structure{closed form iteration schemes}. \\[.3cm] \pause 
+    \item Easy to implement closed form iteration formulas (if these exist). \\[.3cm] \pause 
+    \item Iteration scheme is numerically robust. \\[.3cm] \pause 
+    \item Closed form iterations have constant memory requirements. \\[.3cm] \pause 
+    \item If the argument in the logarithm can be factorized properly, \\
+      we observe a decomposition of the parameter space \\
+      (independent lower dimensional sub-spaces)
+  \end{itemize}
+\end{frame}
+
+
+\subsection{Drawbacks of EM}
+
+\begin{frame}
+  \frametitle{Drawbacks of EM}
+
+  The EM algorithm has a few \structure{major drawbacks}: \pause
+
+  \begin{itemize}
+    \item slow, slow, slow convergence \\
+      (should not be used in run time critical applications) \pause 
+    \item local optimization method, i.\,e.\ the initialization $\hatp^{(0)}$ has to lie in the area of attraction of the global maximum.
+  \end{itemize}
+
+  \begin{center}
+    \resizebox{.6\linewidth}{!}{
+      \input{\texfigdir/em_local.pstex_t}
+    }
+  \end{center}
+\end{frame}
+
+
+\subsection{Constrained Optimization}
+
+\begin{frame}
+  \frametitle{Constrained Optimization}
+
+  Many optimization problems in the context of the EM algorithm are \\
+  of the following form: \\[.25cm]
+
+  \begin{ovalblock}{Example}
+    \small
+    Optimize the multivariate function
+    {\footnotesize
+      \begin{displaymath}
+        f_0(p_1,p_2,\dots,p_K) = \sum_{k=1}^{K} a_k \ \log p_k
+      \end{displaymath}
+    }
+%    
+    subject to
+    {\footnotesize
+      \begin{eqnarray*}
+        \sum_{k=1}^K p_k & =    & 1 \\
+        p_k              & \geq & 0
+      \end{eqnarray*}
+    }
+    \vspace{-.5cm}
+  \end{ovalblock}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Constrained Optimization \cont}
+  
+  \begin{ovalblock}{Example}
+    \small
+    Application of the \structure{Lagrange multiplier} method:
+    {\footnotesize
+      \begin{displaymath}
+        L(p_1,p_2,\dots,p_K) = 
+        \sum_{k=1}^K a_k\ \log p_k + \nu \left( \sum_{k=1}^K p_k-1 \right) \pause
+      \end{displaymath}
+    }
+    
+    The optimization can be done using the \structure{partial derivative}:
+    {\footnotesize
+      \begin{displaymath}
+        \frac{\partial L(p_1,p_2,\dots,p_K)}{\partial p_k} =
+        \frac{a_k}{p_k} + \nu \stackrel{!}{=} 0 \quad .
+      \end{displaymath}
+    }
+    \vspace{-.25cm}
+  \end{ovalblock}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Constrained Optimization \cont}
+  
+  \begin{ovalblock}{Example \cont}
+    \small
+    The \structure{Lagrange multiplier} is:
+    {\footnotesize
+    \begin{displaymath}
+      a_k= -\nu p_k~. \pause
+    \end{displaymath}
+    }
+ 
+    Due to the fact that the $p_k$'s are unknown, we have to apply a trick to get $\nu$. \\
+    We just sum both sides of the above equation over all $k$ and get:
+    {\footnotesize
+      \begin{displaymath}
+        \nu = -\sum_{k=1}^K a_k~. \pause
+      \end{displaymath}
+    }
+
+    The estimator for $p_k$ now is:
+    {\footnotesize
+      \begin{displaymath}
+        \hat{p}_k = \frac{a_k}{\sum_{l=1}^K a_l}
+      \end{displaymath}
+    }
+  \end{ovalblock}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{EM Algorithm: Example}
+
+  \begin{ovalblock}{Example}
+    \small
+    Estimate the priors $p_k$ of classes $k=1,2, \dots, K$ from the observation $x$ \\
+    where the probability density function of observations is given by the marginal over all classes:
+    {\footnotesize
+    \begin{displaymath}
+      p(x;\BiasField) = \sum_{k=1}^K p_k\,p(x|k; \BiasField) \pause
+    \end{displaymath}
+    }
+
+    \structure{Application of the EM scheme:}
+    \begin{itemize}
+      \item observable random measurement: $x$
+      \item hidden random measurement: $k$
+      \item parameter set: $\p = \{p_k; k=1,\dots, K\}$
+    \end{itemize}
+  \end{ovalblock}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{EM Algorithm: Example \cont}
+
+  \begin{ovalblock}{Example}
+    \small
+    For illustration purposes let us consider three classes.
+    If events, in this case 2-D points, are labeled by colors representing different classes, the priors are easily estimated by relative frequencies.
+
+    \begin{center}
+      \resizebox{.45\linewidth}{!}{
+        \input{\texfigdir/gauss_em1.pstex_t}
+      }
+    \end{center}
+  \end{ovalblock}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{EM Algorithm: Example \cont}
+
+  \begin{ovalblock}{Example \cont}
+    \small
+    The problem appears quite difficult, if the class (color) labels are missing.
+
+    \begin{center}
+      \resizebox{.45\linewidth}{!}{
+        \input{\texfigdir/gauss_em2.pstex_t}
+      }
+    \end{center}
+  \end{ovalblock}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{EM Algorithm: Example \cont}
+
+  \begin{ovalblock}{Example}
+    \small
+    The \structure{Kullback-Leibler statistics} results in:
+    {\footnotesize
+      \begin{eqnarray*}
+        Q\left( \hatp^{(i)}; \hatp^{(i+1)} \right) 
+          &=& \sum_{k=1}^{K} a_k \log \left( \hat{p}_k^{(i+1)} \, p(x|k;\BiasField) \right) \\ \pause 
+          &=& \sum_{k=1}^{K} a_k \left( \log \hat{p}_k^{(i+1)} + \log p(x|k; \BiasField) \right) \\ \pause 
+          &=& \sum_{k=1}^{K} a_k \log \hat{p}_k^{(i+1)} +
+              \sum_{k=1}^{K} a_k \log p(x|k;\BiasField)
+      \end{eqnarray*}
+    }
+    where
+    {\footnotesize
+      \begin{eqnarray*}
+        a_k
+          &=& \frac{\hat{p}_k^{(i)} \, p(x|k; \BiasField)}
+                   {\sum_{j}\hat{p}_j^{(i)} \, p(x|j; \BiasField)}
+      \end{eqnarray*} \vspace{-.2cm}
+    }
+  \end{ovalblock}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{EM Algorithm: Example \cont}
+
+  \begin{ovalblock}{Example \cont}
+    \small
+    Now we compute the gradient with respect to $\hat{p}_k^{(i+1)}$ and its zero crossing.\\
+    The final estimator for priors now is a closed form iteration scheme:
+   
+   \begin{displaymath}
+     \hat{p}_k^{(i+1)} = 
+     \frac{
+       \frac{\hat{p}_k^{(i)} \, p(x|k; \BiasField)}
+            {\sum_{j}\hat{p}_j^{(i)} \, p(x|j, \BiasField)}
+     }{
+       \sum_l \frac{\hat{p}_l^{(i)} \, p(x|l; \BiasField)}
+                   {\sum_j \hat{p}_j^{(i)} \, p(x|j; \BiasField)}
+     } \pause =  
+     \frac{\hat{p}_k^{(i)} \, p(x|k; \BiasField)}
+          {\sum_j \hat{p}_j^{(i)} \, p(x|j; \BiasField)}
+    \end{displaymath}
+  \end{ovalblock}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Initialization of Priors:}
+
+  \begin{itemize}
+   \item Use prior medical knowledge about the frequency of tissue classes \\[.5cm]
+   \item If no prior information is available, assume uniform distribution
+  \end{itemize}
+\end{frame}
+
+\iffalse
+\fi
+\iffalse
+
+\begin{figure}
+  \centerline{\psscaleboxto(\linewidth,0){%
+   \includegraphics[height=.4\textheight]{mr_wells0.eps}
+   \includegraphics[height=.4\textheight]{mr_wells1.eps}
+  }}
+ \caption[MRI enhancement \cite{IMG-Wells}]
+   {Original MRI (left) and the estimated bias field (right)
+          using the EM technique
+         (Courtesy of W. Wells)}\label{f:mr:enhance}
+\end{figure}
+
+\begin{figure}
+  \centerline{\psscaleboxto(\linewidth,0){%
+   \includegraphics[height=.4\textheight]{mr_wells2.eps}
+   \includegraphics[height=.4\textheight]{mr_wells3.eps}
+  }}
+ \caption[MRI segmentation \cite{IMG-Wells}]
+   {Original MRI (left) and the result of segmentation (right)
+         (Courtesy of W. Wells)}\label{f:mr:segm}
+\end{figure}
+
+\begin{figure}
+  \centerline{\psscaleboxto(\linewidth,0){%
+   \includegraphics[height=.4\textheight]{mr_wells4.eps}
+   \includegraphics[height=.4\textheight]{mr_wells5.eps}
+  }}
+ \caption{White matter surface computed by conventional and
+          adaptive segmentation (Courtesy of W. Wells)}\label{f:ii:struct}
+\end{figure}
+\fi
+
+
+\subsection{Lessons Learned}
+
+\begin{frame}
+  \frametitle{Lessons Learned}
+
+  \begin{itemize}
+    \item Standard parameter estimation method: ML estimation \\[.5cm]
+    \item If the prior pdf of the parameters is known: MAP estimation \\[.5cm]
+    \item In the presence of latent random variables: EM algorithm \\[.5cm]
+    \item EM advantages: decomposition of search space, closed form iteration schemes \\[.5cm]
+    \item EM disadvantage: slow convergence, local method
+  \end{itemize}
+\end{frame}
+
+\input{nextTime.tex}
+
+\subsection{Further Readings}
+
+\begin{frame}
+  \frametitle{Further Readings}
+   
+  \small
+  \begin{itemize}
+    \item Easy to understand tutorial on ML estimation: \\[.15cm]
+      In Jae Myung: \\
+      \point\href{http://faculty.psy.ohio-state.edu/myung/personal/mle.pdf}{\structure{Tutorial on maximum likelihood estimation}}, \\
+      Journal of Mathematical Psychology, 47(1):90-100, 2003 \\[.25cm]
+    \item The classics for an introduction to the EM algorithm is: \\[.15cm]
+      A.\,P.\ Dempster, N.\,M.\ Laird, D.\,B.\ Rubin: \\
+      \point\href{http://web.mit.edu/6.435/www/Dempster77.pdf}{\structure{Maximum Likelihood Estimation from Incomplete Data via the EM Algorithm}}, \\
+      Journal of the Royal Statistical Society, Series B, 39(1):1-38. \\[.25cm]
+    \item W.\,H.\ Press, S.\,A.\ Teukolsky, W.\,T.\ Vetterling, B.\,P.\ Flannery: \\
+      \point\href{http://www.nr.com/}{\structure{Numerical Recipes}}, \\
+      3rd Edition, Cambridge University Press, 2007.
+  \end{itemize}
+\end{frame}
+
+
+\subsection{Comprehensive Questions}
+
+\begin{frame}
+  \frametitle{Comprehensive Questions}
+
+  \begin{itemize}
+    \item What is a Gaussian Mixture Model? \\[0.5cm]
+    \item What is the missing information principle? \\[0.5cm]
+    \item Write down the key equation for the EM algorithm: \\[0.5cm]
+    \item Is the EM algorithm a local or a global parameter estimation method?
+  \end{itemize}
+\end{frame}

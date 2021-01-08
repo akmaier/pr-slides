@@ -1,0 +1,316 @@
+\section{Support Vector Machines I}
+
+\subsection{Motivation}
+
+\begin{frame}
+  \frametitle{Motivation}
+
+  \begin{itemize}
+  \item Assume two linearly separable classes. \\[.5cm]
+  \item Computation of linear decision boundary that allows the separation of \\
+    training data and that generalizes well.\\[.5cm]
+  \item \structure{Vapnik 1996}: Optimal separating hyperplane separates two classes \\
+    and maximizes the distance to the closest point from either class. \\
+    This results in
+    \begin{itemize}
+      \item unique solution for hyperplanes, and
+      \item (in most cases) better generalization.
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+ 
+ 
+\begin{frame}
+  \frametitle{Motivation \cont}
+
+  Linearly separable and non-separable classes
+  
+  \begin{columns}
+    \column{.5\linewidth}
+      \begin{center}
+        \resizebox{.9\linewidth}{!}{
+          \input{\texfigdir/linearly_separable.pstex_t}
+        }
+      \end{center}
+
+    \column{.5\linewidth}
+      \begin{center}
+        \resizebox{.9\linewidth}{!}{
+          \input{\texfigdir/not_linearly_separable.pstex_t}
+        }
+      \end{center}
+  \end{columns}
+\end{frame}
+
+
+\mode<handout>{
+\begin{frame}
+  \frametitle{Motivation \cont}
+
+  Many, many, many solutions \ldots
+  
+  \begin{center}
+    \resizebox{.45\linewidth}{!}{
+      \input{\texfigdir/linear_separation.pstex_t}
+    }
+  \end{center}
+
+  \vspace{-.3cm}
+  \structure{Idea:} Average the perceptron solutions.
+\end{frame}
+}
+
+\mode<beamer>{
+\begin{frame}
+  \frametitle{Motivation \cont}
+
+  Many, many, many solutions \ldots
+  
+  \begin{center}
+    \resizebox{.45\linewidth}{!}{
+      \alt<3->{
+        \input{\texfigdir/linear_separation3.pstex_t}
+      }{\alt<2>{
+        \input{\texfigdir/linear_separation2.pstex_t}
+      }{
+        \input{\texfigdir/linear_separation1.pstex_t}
+      }}
+    }
+  \end{center}
+
+  \vspace{-.3cm}
+  \structure{Idea:} Average the perceptron solutions.
+\end{frame}
+}
+
+
+\begin{frame}
+ \frametitle{Motivation \cont}
+
+ We distinguish between: \\[.25cm]
+
+ \begin{columns}
+   \column{.5\linewidth}
+     \hspace*{0.75cm} \structure{1.\ Hard margin} problem
+     \begin{center}
+       \resizebox{.9\linewidth}{!}{
+         \input{\texfigdir/svm_hard_margin.pstex_t}
+       }
+     \end{center}
+     \pause
+   \column{.5\linewidth}
+     \hspace*{0.75cm} \structure{2. Soft margin} problem
+     \begin{center}
+       \resizebox{.9\linewidth}{!}{
+         \input{\texfigdir/svm_soft_margin.pstex_t}
+       }
+     \end{center}
+ \end{columns}
+\end{frame}
+
+
+\subsection{Remarks on Linear Algebra}
+
+\begin{frame}
+  \frametitle{Remarks on Linear Algebra}
+
+  Assume we have an \structure{affine function} that defines the decision boundary: \pause
+
+  \begin{eqnarray*}
+    f(\vec x) &=& \vec \alpha^T \vec x + \alpha_0
+  \end{eqnarray*}
+  \pause
+  
+  \begin{itemize}
+    \item For any point $\vec x$ on the hyperplane, we have $f(\vec x)= 0$. \\[.5cm] \pause
+    \item A necessary condition for two points on the hyperplane is:
+      \begin{displaymath}
+        f(\vec x_1) = f(\vec x_2) \quad \mbox{and thus} \quad \vec \alpha^T (\vec x_1-\vec x_2) =0.
+        \pause
+      \end{displaymath}
+    \item The \structure{normal vector $\vec n$} of the hyperplane is $\vec n= \vec \alpha/\|\vec \alpha\|_2$.
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Remarks on Linear Algebra \cont}
+ 
+  \begin{itemize}
+    \item The signed distance $d$ of a point $\vec x$ to the hyperplane is: \pause
+      \begin{displaymath}
+        d = 
+        \frac{\|\vec \alpha\|_2}{\vec \alpha^T\vec \alpha} \cdot f(\vec x) = 
+        \frac{1}{\|\vec \alpha\|_2}\cdot f(\vec x)  =
+        \frac{1}{\|\nabla f(\vec x)\|_2}\cdot f(\vec x) \pause
+      \end{displaymath}
+    \item Assume points $\vec x_1, \vec x_2$ on either side of the margin satisfy $f(\vec x_1)= +1$ and $f(\vec x_2)=-1$. \\[.5cm]
+            
+      Thus we have:
+
+      \begin{displaymath}
+        \vec \alpha^T (\vec x_1 - \vec x_2) = 2 \pause
+        \quad \mbox{and} \quad
+        \frac{\vec \alpha^T}{\|\vec \alpha\|_2} (\vec x_1-\vec x_2) 
+        = \frac{2}{\|\vec \alpha\|_2}
+      \end{displaymath}
+  \end{itemize}
+\end{frame}
+
+
+\subsection{Hard Margin Problem}
+
+\begin{frame}
+  \frametitle{Constrained Optimization Problem}
+ 
+  \structure{Constraints:}
+  
+  \begin{itemize}
+    \item Separation of classes has to be done with margin:
+      \begin{eqnarray*}
+        \vec \alpha^T \vec x_i+\alpha_0 &\leq& -1, \quad \mbox{if} \quad y_i= -1 \\
+        \vec \alpha^T \vec x_i+\alpha_0 &\geq& +1, \quad \mbox{if} \quad y_i= +1 \\ \pause
+      \end{eqnarray*}
+    \item This is equivalent to:
+      \begin{displaymath}
+        y_i\cdot (\vec \alpha^T\vec x_i + \alpha_0) \geq 1
+      \end{displaymath}
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Constrained Optimization Problem \cont}
+
+  The \structure{maximization} of the margin corresponds to the following optimization problem with linear constraints:
+
+  \begin{center}
+    \tikz[baseline]{
+      \node[fill=bl1!100,anchor=base,rounded corners=3pt] (d1) {
+        \color{bl3}
+        $\begin{aligned}
+           \displaystyle 
+           \mbox{maximize}   &\qquad \frac{1}{\|\vec \alpha\|_2} \\[.2cm]
+           \mbox{subject to} &\qquad \forall i:~ y_i\cdot (\vec \alpha^T\vec x_i + \alpha_0) \geq 1
+        \end{aligned}$
+      };
+    }\\[.2cm]
+  \end{center}
+  \pause
+
+  \structure{Note:}
+  
+  \begin{itemize}
+    \item Linear constraints ensure that all feature vectors have maximum distance to decision boundary. \\[.15cm] \pause
+    \item Basically we compute the distance of the convex hulls of feature sets. \\[.15cm] \pause
+    \item We need constrained optimization methods to solve the problem.
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Constrained Optimization Problem \cont}
+
+  The optimization problem is equivalent to \\[.75cm]
+
+  \begin{center}
+    \tikz[baseline]{
+      \node[fill=bl1!100,anchor=base,rounded corners=3pt] (d1) {
+        \color{bl3}
+        $\begin{aligned}
+           \displaystyle 
+           \mbox{minimize}   &\qquad \frac{1}{2} {\|\vec \alpha\|^2_2} \\[.2cm]
+           \mbox{subject to} &\qquad \forall i:~ y_i\cdot (\vec \alpha^T\vec x_i + \alpha_0) -1 \geq 0
+        \end{aligned}$
+      };
+    }
+  \end{center}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Constrained Optimization Problem \cont}
+
+  \structure{Remarks on the optimization problem:}
+  
+  \begin{itemize}
+    \item Convex optimization problem \\[.3cm]
+    \item Efficient algorithms for solving the convex optimization problem \\
+      (interior point method) \\[.3cm]
+    \item Standard libraries can be used for minimization \\[.3cm]
+    \item Solution is unique
+  \end{itemize}
+\end{frame}
+
+
+\subsection{Soft Margin Problem}
+
+\begin{frame}
+  \frametitle{Non-linearly Separable Classes}
+
+  If classes are not linearly separable, we have to introduce \structure{\emph{slack variables}}. \\[1cm] \pause
+  
+  \structure{Convex optimization problem:}
+  
+  \begin{center}
+    \tikz[baseline]{
+      \node[fill=bl1!100,anchor=base,rounded corners=3pt] (d1) {
+        \color{bl3}
+        $\begin{aligned}
+           \displaystyle 
+           \mbox{minimize}    &\qquad \frac{1}{2} {\|\vec \alpha\|^2_2} + \mu \sum_i \xi_i \\[.3cm]
+            \mbox{subject to} &\qquad \forall i:~ -(y_i\cdot (\vec \alpha^T\vec x_i + \alpha_0) -1+\xi_i) \leq 0~,\\[.2cm]
+                              &\qquad \forall i:~ -\xi_i \leq 0
+        \end{aligned}$
+      };
+    }
+  \end{center}
+\end{frame}
+
+
+\subsection{Lessons Learned}
+
+\begin{frame}
+  \frametitle{Lessons Learned}
+
+  \begin{itemize}
+    \item Support vector machine \\[.5cm]
+    \item Hard and soft margin problem \\[.5cm]
+    \item Convex optimization 
+  \end{itemize}
+\end{frame}
+
+\input{nextTime.tex}
+
+\subsection{Further Readings}
+
+\begin{frame}
+  \frametitle{Further Readings}
+
+  \begin{itemize}
+    \item Bernhard Sch{\"o}lkopf, Alexander J. Smola: \\
+      \structure{Learning with Kernels}, \\
+      The MIT Press, Cambridge, 2003. \\[.15cm]
+    \item Vladimir N. Vapnik: \\
+      \structure{The Nature of Statistical Learning Theory}, \\
+      Information Science and Statistics, Springer, Heidelberg, 2000. \\[.15cm]
+    \item S.~Boyd, L.~Vandenberghe: \\
+      \structure{Convex Optimization}, \\
+      Cambridge University Press, 2004. \\
+      \point{\small \url{http://www.stanford.edu/~boyd/cvxbook/}}
+  \end{itemize}
+\end{frame}
+
+
+\subsection{Comprehensive Questions}
+
+\begin{frame}
+  \frametitle{Comprehensive Questions}
+
+  \begin{itemize}
+    \item What is the concept of a SVM? \\[1cm]
+    \item What is the difference between a hard and soft margin SVM? \\[1cm]
+    \item What is the convex optimization problem of the hard margin SVM? \\[1cm]
+    \item What is the convex optimization problem of the soft margin SVM?
+  \end{itemize}
+\end{frame}

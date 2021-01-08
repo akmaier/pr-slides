@@ -1,0 +1,554 @@
+\section{Duality in Optimization}
+
+\subsection{The Primal Problem}
+
+\begin{frame}
+  \frametitle{The Primal Problem}
+ 
+  \begin{itemize}
+    \item Consider the \structure{\emph{primal optimization problem}}: \\[.4cm]
+      \begin{center}
+        \tikz[baseline]{
+          \node[fill=bl1!100,anchor=base,rounded corners=3pt] (d1) {
+            \color{bl3}
+            $\begin{aligned}
+               \displaystyle 
+               \mbox{minimize~}  & \qquad f_0(\vec{x}) \\[.3cm]
+               \mbox{subject to} & \qquad f_i(\vec{x}) \leq 0, \quad i=1,2,\dots, m \\
+                                 & \qquad h_i(\vec{x}) = 0,    \quad i=1,2,\dots, p
+             \end{aligned}$
+          };
+        }\\[.4cm]
+      \end{center}
+      with variable $\vec{x}\in\real^n$. \\[.5cm]
+    \item The function $f_0(\vec{x})$ is \structure{not} required to be \structure{convex}.
+  \end{itemize}
+\end{frame}
+
+
+\subsection{The Lagrangian}
+
+\begin{frame}
+  \frametitle{The Lagrangian}
+ 
+  \begin{citeblock}{Lagrangian}
+
+    The \structure{\emph{Lagrangian} $L$} of the aforementioned problem is defined as
+    \begin{displaymath}
+      L(\vec{x},\vec{\lambda}, \vec{\nu}) = 
+      f_0(\vec{x}) + \sum_{i=1}^m \lambda_i f_i(\vec{x}) + \sum_{i=1}^p \nu_i h_i(\vec{x})
+    \end{displaymath}
+    \pause
+ 
+    \begin{itemize}
+      \item $\lambda_i$ is the Lagrange multipliers associated with the $i$-th \structure{inequality} \\
+        constraint $f_i(\vec{x})\leq 0$. \\[.15cm] \pause
+      \item $\nu_i$ is the Lagrange multiplier associated with the $i$-th \structure{equality} constraint $h_i(\vec{x})= 0$. \\[.15cm] \pause
+      \item The vectors $\vec{\lambda}$ and $\vec{\nu}$ are called {\em Lagrange multiplier vectors} \\
+        or simply \structure{\emph{dual variables}}. 
+    \end{itemize}
+  \end{citeblock}
+\end{frame}
+
+
+\subsection{Lagrange Dual Function}
+
+\begin{frame}
+  \frametitle{Langrange Dual Function}
+  
+  \begin{citeblock}{Lagrange dual function}
+
+     The \structure{\emph{Lagrange dual function}} is defined as the infimum of the Lagrangian \\
+     over $\vec{x}$
+     \begin{eqnarray*}
+       g(\vec{\lambda,\nu}) 
+         & = & \inf_{\vec{x}}L(\vec{x},\vec{\lambda}, \vec{\nu}) \\ \pause 
+         & = & \inf_{\vec{x}} \left(   
+                                f_0(\vec{x}) + \sum_{i=1}^m\lambda_i f_i(\vec{x}) + 
+                                \sum_{i=1}^p\nu_i h_i(\vec{x})
+                              \right)
+    \end{eqnarray*}
+  \end{citeblock}
+  \pspread
+  
+  \structure{Note:} 
+  
+  \begin{itemize}
+    \item The Lagrange dual function is a \structure{pointwise affine function} \\
+      in the dual variables. \pause 
+    \item The \structure{Lagrange dual function is concave} \\
+      (even if the original problem is not convex).
+  \end{itemize}
+
+\end{frame}
+
+
+\begin{frame}{Optimal Value and Lower Bound}
+
+  \begin{lemma}
+    Let $p^*$ be the optimal value of the optimization problem. \\
+    For any $\vec\lambda \succeq 0$ and any $\vec \nu$ the following bound is valid:
+    \begin{displaymath}
+      g(\vec{\lambda,\nu}) \leq p^* 
+    \end{displaymath} 
+  \end{lemma}
+\end{frame}
+
+
+\begin{frame}{Optimal Value and Lower Bound \cont}
+  
+  \begin{center}
+    \resizebox{.8\linewidth}{!}{
+      \alt<13->{
+        \input{\texfigdir/lagrange13.pstex_t}
+      }{\alt<12>{
+        \input{\texfigdir/lagrange12.pstex_t}
+      }{\alt<11>{
+        \input{\texfigdir/lagrange11.pstex_t}
+      }{\alt<10>{
+        \input{\texfigdir/lagrange10.pstex_t}
+      }{\alt<9>{
+        \input{\texfigdir/lagrange09.pstex_t}
+      }{\alt<8>{
+        \input{\texfigdir/lagrange08.pstex_t}
+      }{\alt<7>{
+        \input{\texfigdir/lagrange07.pstex_t}
+      }{\alt<6>{
+        \input{\texfigdir/lagrange06.pstex_t}
+      }{\alt<5>{
+        \input{\texfigdir/lagrange05.pstex_t}
+      }{\alt<4>{
+        \input{\texfigdir/lagrange04.pstex_t}
+      }{\alt<3>{
+        \input{\texfigdir/lagrange03.pstex_t}
+      }{\alt<2>{
+        \input{\texfigdir/lagrange02.pstex_t}
+      }{
+        \input{\texfigdir/lagrange01.pstex_t}
+      }}}}}}}}}}}}
+    }
+  \end{center}
+\end{frame}  
+
+
+\begin{frame}{Optimal Value and Lower Bound \cont}
+
+  \begin{columns}
+    \column{.6\linewidth}
+      \begin{center}
+        \resizebox{\linewidth}{!}{
+          \input{\texfigdir/dual.pstex_t}
+        }
+      \end{center}
+    \column{.4\linewidth}
+      \vspace{.3cm}
+      \begin{itemize}
+        \item Neither $f_0(x)$ nor $f_1(x)$ is convex,
+        \item but the dual function $g(\lambda)$ is concave!
+      \end{itemize}
+  \end{columns}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Optimal Value and Lower Bound \cont}
+
+  Let $\tilde{\vec{x}}$ be a \structure{feasible point} of the optimization problem. \\[.3cm]
+  If $\vec{\lambda}\succeq 0$, we have due to the \structure{$m$ inequality} and \structure{$p$ equality} constraints:
+  \begin{displaymath}
+    \sum_{i=1}^m \lambda_i f_i(\tilde{\vec{x}}) + 
+    \sum_{i=1}^p\nu_i h_i(\tilde{\vec{x}}) 
+    \leq 0~,
+  \end{displaymath}
+  \pause
+
+  Thus we have
+  \begin{displaymath}
+    L(\tilde{\vec{x}},\vec{\lambda},\vec{\nu}) =
+    f_0 ({\tilde{\vec{x}}}) + 
+    \sum_{i=1}^m\lambda_i f_i(\tilde{\vec{x}}) + 
+    \sum_{i=1}^p\nu_i h_i(\tilde{\vec{x}}) 
+    \leq f_0 ({\tilde{\vec{x}}})~.
+  \end{displaymath}
+\end{frame}
+  
+  
+\begin{frame}
+  \frametitle{Optimal Value and Lower Bound \cont}
+  
+  Using the \structure{definition of the dual function} we get:
+  
+  \begin{displaymath}
+    g(\vec{\lambda,\nu}) = 
+    \inf_{{\vec{x}}} L({\vec{x}},\vec{\lambda}, \vec{\nu}) \leq
+    L(\tilde{\vec{x}}, \vec{\lambda}, \vec{\nu}) \leq
+%    f_0(\tilde{\vec{x}}) + 
+%    \sum_{i=1}^m\lambda_i f_i(\tilde{\vec{x}}) + 
+%    \sum_{i=1}^p\nu_i h_i(\tilde{\vec{x}}) \leq 
+    f_0(\tilde{\vec{x}})
+  \end{displaymath}
+  \pause
+  
+  \vspace{.25cm}
+  The inequality $g(\vec{\lambda,\nu}) \leq f_0(\tilde{\vec{x}})$ holds for \structure{every feasible point $\tilde{\vec{x}}$}.\\[.5cm]
+  \pause
+
+  Consequently, the dual function $g(\vec{\lambda,\nu})$ is also smaller or equal to the optimal value $p^*$:
+  
+  \begin{displaymath}
+    g(\vec{\lambda,\nu}) \leq p^*
+  \end{displaymath}
+  \hfill \qed %\structure{\ensuremath{\blacksquare}}
+\end{frame}
+
+
+\subsection{The Lagrange Dual Problem}
+
+\begin{frame}
+  \frametitle{The Lagrange Dual Problem}
+ 
+  \structure{Problem:} how to find the best lower bound for the primal problem \\[1cm]
+ 
+  The Lagrange dual problem is given by the optimization problem:
+  
+  \begin{eqnarray*}
+    \mbox{maximize}   & & g(\vec{\lambda}, \vec{\nu}) \\[.3cm]
+    \mbox{subject to} & & \vec{\lambda}\succeq 0
+  \end{eqnarray*}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{The Lagrange Dual Problem \cont}
+  
+  \begin{citeblock}{Optimal duality gap}
+
+    Let  ${p}^*$ be the optimal value of the primal problem and \\
+    ${d}^*$ the optimal value of the Lagrange dual problem. \\[.3cm] \pause
+    
+    \begin{itemize}
+      \item The difference $p^*-d^*$ is the \structure{\emph{optimal duality gap}}. \\[.3cm] \pause
+      \item If $p^*=d^*$, the duality gap is zero. \\
+        In this case we talk about \structure{\emph{strong duality}}. \\[.3cm] \pause
+      \item If $p^*> d^*$, we have \structure{\emph{weak duality}}.
+     \end{itemize}
+  \end{citeblock}
+\end{frame}
+
+
+\subsection{Slater's condition}
+
+\begin{frame}
+  \frametitle{Slater's Condition}
+
+  \begin{citeblock}{Theorem}
+
+    Given a \structure{\emph{convex} primal optimization problem}:
+    \small
+    \begin{eqnarray*}
+      \mbox{minimize~}  & & \quad f_0(\vec{x}) \\
+      \mbox{subject to} & & \quad f_i(\vec{x}) \leq 0, \quad i=1,2,\dots, m \\
+                        & & \quad \mat{A} \vec{x} = \vec{b}
+    \end{eqnarray*}
+    \normalsize
+    with $f_0, f_1, \ldots, f_m$ being convex. \\[.3cm]
+
+    If there exists an $\vec{x} \in \text{relint}~\big\{\mathcal{D} = \cap_{i=0}^m \text{dom}(f_i) \big\}$ with
+    \small
+    \begin{align*}
+      & f_i(\vec{x}) < 0, \quad i=1,\dots,m \\
+      & \mat{A}\vec{x} = \vec{b} 
+    \end{align*}
+    then \structure{strong duality} holds.
+  \end{citeblock}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Refinement of Slater's Condition}
+
+  \begin{citeblock}{Theorem}
+
+    Given a \structure{\emph{convex} primal optimization problem}. \\[.2cm]
+
+    If the first $k$ constraint functions $f_1, \ldots, f_k$ are \structure{\emph{affine}}, and \\
+    if there exists an $\vec{x} \in \text{relint}~\mathcal{D}$ with
+    \small
+    \begin{displaymath}
+      \renewcommand\arraystretch{1.4}      
+      \begin{array}{l l}
+        f_i(\vec{x}) \le 0, \quad i=1,\dots,k                   & \text{\footnotesize (affine constraints)}\\
+        f_i(\vec{x}) <   0, \quad i=k+1, \ldots, m \qquad \quad & \text{\footnotesize (convex constraints)}\\
+        \mat{A}\vec{x} = \vec{b} & \\
+      \end{array}
+    \end{displaymath}
+    then \structure{strong duality} holds.
+  \end{citeblock}
+  \pause
+
+  \vspace{.3cm} 
+  \structure{Note:} the refined Slater's condition reduces to \structure{feasibility} when the constraints are all linear equalities and inequalities, and $\text{dom}(f_0)$ is open.  
+\end{frame}
+
+
+\subsection{KKT Optimality Conditions}
+
+\begin{frame}
+  \frametitle{Karush-Kuhn-Tucker Optimality Conditions}
+
+  Let $\vec x^*$ be a primal and $(\vec \lambda^*, \vec \nu^*)$ dual optimal points with zero duality gap. \\[.3cm]
+
+  For the primal optimal point $\vec x^*$, the gradient with respect to $\vec x$ of $L(\vec x, \vec \lambda^*, \vec \nu^*)$ is \vec{0}:
+ 
+  \begin{displaymath}
+    \nabla L(\vec x^*, \vec \lambda^*, \vec \nu^*) = 
+    \nabla f_0(\vec{x}^*) + 
+    \sum_{i=1}^m \lambda_i^* \nabla f_i(\vec{x}^*) + 
+    \sum_{i=1}^p \nu_i^* \nabla h_i(\vec{x}^*) = 
+    \vec{0}
+  \end{displaymath}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Karush-Kuhn-Tucker Optimality Conditions}
+  
+  The following four conditions are called KKT conditions: \\[3mm] \pause
+  
+  \begin{enumerate}
+    \item \structure{Primal constraints:} 
+      \begin{itemize}
+        \item $f_i(\vec{x}) \leq 0, \quad i = 1, 2, \dots, m$
+        \item $h_i(\vec{x}) =    0, \quad i = 1, 2, \dots, p$ \\[3mm] \pause
+      \end{itemize}
+    \item \structure{Dual constraints:} $\vec \lambda \succeq 0$ \\[3mm] \pause
+    \item \structure{Complementary slackness:} $ \lambda_i \, f_i(\vec{x})= 0$ \\[3mm] \pause
+    \item \structure{Gradient of the Lagrangian $L$ is zero:}
+      \begin{displaymath}
+        \nabla L(\vec x, \vec \lambda, \vec \nu) = 
+        \nabla f_0(\vec{x}) + 
+        \sum_{i=1}^m\lambda_i \nabla f_i(\vec{x}) +        
+        \sum_{i=1}^p\nu_i \nabla h_i(\vec{x}) = 
+        \vec{0}
+      \end{displaymath}
+  \end{enumerate}
+   \pause
+    
+   If strong duality holds and if $\vec x^*$ and $(\vec \lambda^*, \vec \nu^*)$ are optimal points, \\
+   then the KKT conditions hold.
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Karush-Kuhn-Tucker Optimality Conditions}
+
+  \alt<15->{
+    \structure{Complementary slackness:} {\color{gr3} $\lambda_i^* \cdot f_i(\vec{x}^*) = 0$}
+  }{
+    \structure{Complementary slackness}
+  }
+ 
+  \def\phan{\phantom{\stackrel{\color{red} =}{\cancel{\color{black} \le}}}}
+
+  \begin{eqnarray*}
+    \alt<10->{ 
+      \tikz[baseline]{ 
+        \node[fill=bl1,anchor=base,rounded corners=2pt] (start) {
+          \color{bl3} $ f_0(\vec{x}^*) $
+        };
+      }
+    }{
+      \tikz[baseline]{ 
+        \node[fill=white,anchor=base,rounded corners=2pt] (res) {
+          \color{black} $ f_0(\vec{x}^*) $
+        };
+      }
+    }
+    \pause
+      & = & g(\vec{\lambda}^*, \vec{\nu}^*) \\ \pause
+      & = & \inf_{\vec{x}} \Bigg( f_0(\vec{x}) + \sum_{i=1}^m \lambda_i^*  f_i(\vec{x}) + \sum_{i=1}^p \nu_i^* h_i(\vec{x}) \Bigg) \\ \pause
+      \alt<12->{
+        & \stackrel{\color{red} =}{\cancel{\color{black} \le}} &  
+      }{
+        &\le& 
+      }
+        f_0(\vec{x}^*) + 
+        \alt<15>{
+          \tikz[baseline,remember picture]{ 
+            \node[fill=gr1,anchor=base,rounded corners=2pt] (c1) {
+              \color{gr3} $ \displaystyle \sum_{i=1}^m $ 
+              \tikz \node[fill=white,anchor=base, rounded corners=2pt] (cs) {\color{gr3} $ \lambda_i^*  f_i(\vec{x}^*) $};
+            };
+            \draw [thick, decoration={brace, mirror, raise=0.35cm}, decorate, color=gr3] (cs.west) -- node[pos=0.5,xshift=0mm,yshift=-5.5mm]  {
+              \tiny $= 0$
+            } (cs.east);  
+            \draw [thick, decoration={brace, mirror, raise=0.75cm}, decorate, color=black] (c1.west) -- node[pos=0.5,xshift=.4mm,yshift=-1.1cm]  {
+              \scriptsize $\stackrel{\color{red}=}{\cancel{\color{black}\le}} 0$
+            } (c1.east);  
+          }
+        }{\alt<14>{
+          \tikz[baseline,remember picture]{ 
+            \node[fill=gr1,anchor=base,rounded corners=2pt] (c1) {
+              \color{gr3} $ \displaystyle \sum_{i=1}^m $ 
+              \tikz \node[anchor=base, rounded corners=2pt] (cs) {\color{gr3} $ \lambda_i^*  f_i(\vec{x}^*) $};
+            };
+            \draw [thick, decoration={brace, mirror, raise=0.75cm}, decorate, color=black] (c1.west) -- node[pos=0.5,xshift=.4mm,yshift=-1.1cm]  {
+              \scriptsize $\stackrel{\color{red}=}{\cancel{\color{black}\le}} 0$
+            } (c1.east);  
+          }
+        }{\alt<13>{
+          \tikz[baseline,remember picture]{ 
+            \node[fill=white,anchor=base,rounded corners=2pt] (c1) {
+              $ \displaystyle \sum_{i=1}^m $
+              \tikz \node[anchor=base, rounded corners=2pt] (cs) {$ \lambda_i^*  f_i(\vec{x}^*) $};
+            };
+            \draw [thick, decoration={brace, mirror, raise=0.75cm}, decorate, color=black] (c1.west) -- node[pos=0.5,xshift=.4mm,yshift=-1.1cm]  {
+              \scriptsize $\stackrel{\color{red}=}{\cancel{\color{black}\le}} 0$
+            } (c1.east);  
+          }
+        }{\alt<9->{
+          \tikz[baseline,remember picture]{ 
+            \node[fill=white,anchor=base,rounded corners=2pt] (c1) {
+              $ \displaystyle \sum_{i=1}^m$
+              \tikz \node[anchor=base, rounded corners=2pt] (cs) {$ \lambda_i^*  f_i(\vec{x}^*) $};
+            };
+            \draw [thick, decoration={brace, mirror, raise=0.75cm}, decorate, color=black] (c1.west) -- node[pos=0.5,yshift=-1.1cm]  {\scriptsize $\phan\le 0\phan$} (c1.east);  
+          }
+        }{\alt<8>{
+          \tikz[baseline,remember picture]{ 
+            \node[fill=bl1,anchor=base,rounded corners=2pt] (c1) {
+              \color{bl3} $ \displaystyle \sum_{i=1}^m$
+              \tikz \node[fill=bl1, anchor=base, rounded corners=2pt] (cs) {$ \lambda_i^*  f_i(\vec{x}^*) $};
+            };
+            \draw [thick, decoration={brace, mirror, raise=0.75cm}, decorate, color=bl3] (c1.west) -- node[pos=0.5,yshift=-1.1cm]  {\scriptsize $\phan\le 0\phan$} (c1.east);  
+          }
+        }{\alt<7>{
+          \tikz[baseline,remember picture]{ 
+            \node[fill=bl1,anchor=base,rounded corners=2pt] (c1) {
+              \color{bl3} $ \displaystyle \sum_{i=1}^m$
+              \tikz \node[fill=bl1, anchor=base, rounded corners=2pt] (cs) {$ \lambda_i^*  f_i(\vec{x}^*) $};
+            };
+            \draw [thick, decoration={brace, mirror, raise=0.75cm}, decorate, color=white] (c1.west) -- node[pos=0.5,yshift=-1.1cm]  {\scriptsize \phantom{$\le 0$}} (c1.east);  
+          }
+        }{
+          \tikz[baseline,remember picture]{ 
+            \node[fill=white,anchor=base,rounded corners=2pt] (c1) {
+              \color{black} $ \displaystyle \sum_{i=1}^m $
+              \tikz \node[anchor=base, rounded corners=2pt] (cs) {$ \lambda_i^*  f_i(\vec{x}^*) $};
+            };
+            \draw [thick, decoration={brace, mirror, raise=0.75cm}, decorate, color=white] (c1.west) -- node[pos=0.5,yshift=-1.1cm]  {\scriptsize \phantom{$\le 0$}} (c1.east);  
+          }
+        }}}}}}
+        + 
+        \alt<7->{
+          \tikz[baseline]{ 
+            \node[fill=white,anchor=base,rounded corners=2pt] (c1) {
+              $ \displaystyle \sum_{i=1}^p \nu_i^* h_i(\vec{x}^*) $
+            };
+            \draw [thick, decoration={brace, mirror, raise=0.75cm}, decorate, color=black] (c1.west) -- node[pos=0.5,yshift=-1.1cm]  {\scriptsize $= 0$} (c1.east);  
+          }
+        }{\alt<6->{
+          \tikz[baseline]{ 
+            \node[fill=bl1!100,anchor=base,rounded corners=2pt] (c1) {
+              \color{bl3} $ \displaystyle \sum_{i=1}^p \nu_i^* h_i(\vec{x}^*) $
+            };
+            \draw [thick, decoration={brace, mirror, raise=0.75cm}, decorate, color=bl3] (c1.west) -- node[pos=0.5,yshift=-1.1cm]  {\scriptsize $= 0$} (c1.east);  
+          }
+        }{\alt<5>{
+          \tikz[baseline]{ 
+            \node[fill=bl1!100,anchor=base,rounded corners=2pt] (c1) {
+              \color{bl3} $ \displaystyle \sum_{i=1}^p \nu_i^* h_i(\vec{x}^*) $
+            };
+            \draw [thick, decoration={brace, mirror, raise=0.75cm}, decorate, color=white] (c1.west) -- node[pos=0.5,yshift=-1.1cm]  {\scriptsize \phantom{$= 0$}} (c1.east);  
+          }
+        }{
+          \tikz[baseline]{ 
+            \node[fill=white,anchor=base,rounded corners=2pt] (c1) {
+              \color{black} $ \displaystyle \sum_{i=1}^p \nu_i^* h_i(\vec{x}^*) $
+            };
+            \draw [thick, decoration={brace, mirror, raise=0.75cm}, decorate, color=white] (c1.west) -- node[pos=0.5,yshift=-1.1cm]  {\scriptsize \phantom{$= 0$}} (c1.east);  
+          }
+        }}} \\
+      \alt<11->{
+        & \stackrel{\color{red} =}{\cancel{\color{black} \le}} &  
+      }{\alt<9->{
+        &\le& 
+      }{}}
+      \alt<10->{ 
+        \tikz[baseline]{ 
+          \node[fill=bl1,anchor=base,rounded corners=2pt] (res) {
+            \color{bl3} $ f_0(\vec{x}^*) $
+          };
+        }
+      }{\alt<9>{
+        \tikz[baseline]{ 
+          \node[fill=white,anchor=base,rounded corners=2pt] (res) {
+            \color{black} $ f_0(\vec{x}^*) $
+          };
+        }
+      }{}} 
+      \phan
+  \end{eqnarray*}
+
+  \onslide<15>
+    \hfill \qed
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Karush-Kuhn-Tucker Optimality Conditions \cont}
+
+  \structure{Conclusions \scriptsize ~(Boyd 2004, Sec. 5.5.3)}
+
+  \begin{itemize}
+    \item For \structure{\emph{any} optimization problem} with differentiable objective and constraint functions for which strong duality obtains, any pair of primal and dual optimal points must satisfy the KKT conditions. \\[.2cm] \pause
+    \item For \structure{any \emph{convex} optimization problem} with differentiable objective and and constraint functions, any points that satisfy the KKT conditions are primal and dual optimal, and have zero duality gap. \\[.2cm] \pause
+    \item If a \structure{\emph{convex} optimization problem} with differentiable objective and constraint functions satisfies Slater's condition, then the KKT conditions provide necessary and sufficient conditions for optimality.
+  \end{itemize}
+\end{frame}
+
+
+\subsection{Lessons Learned}
+
+\begin{frame}
+  \frametitle{Lessons Learned}
+  
+  \begin{itemize}
+    \item Formalization of the primal problem using the Lagrangian \\[.5cm]
+    \item Lagrange dual function \\[.5cm]
+    \item Duality gap \\[.5cm]
+    \item Karush-Kuhn-Tucker optimality conditions
+  \end{itemize}
+\end{frame}
+
+\input{nextTime.tex}
+
+\subsection{Further Readings}
+
+\begin{frame}
+  \frametitle{Further Readings}
+
+  \begin{itemize}
+    \item S.~Boyd, L.~Vandenberghe: \\
+      \structure{Convex Optimization}, \\
+      Cambridge University Press, 2004. \\
+      \point{\small \url{http://www.stanford.edu/~boyd/cvxbook/}} \\[.25cm]
+    \item Jorge Nocedal, Stephen Wright: \\
+      \structure{Numerical Optimization}, \\
+      Springer, New York, 1999.
+  \end{itemize}
+\end{frame}
+
+
+\subsection{Comprehensive Questions}
+
+\begin{frame}
+  \frametitle{Comprehensive Questions}
+
+  \begin{itemize}
+    \item What is the Lagrangian of a constrained objective function? \\[1cm]
+    \item What is the Lagrange dual function? \\[1cm]
+    \item What is the duality gap? \\[1cm]
+    \item What are the Karush-Kuhn-Tucker optimality conditions?
+  \end{itemize}
+\end{frame}

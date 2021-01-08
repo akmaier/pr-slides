@@ -1,0 +1,202 @@
+\input{header}
+
+%\newcommand\hmmax{0}
+%\newcommand\bmmax{0}
+
+%\documentclass{beamer}
+%\documentclass[handout]{beamer}
+%\documentclass[draft,handout]{beamer}
+
+% Skalierung auf DIN A4 beim Handout und mehrere Folien auf ein Blatt
+%\mode<handout>{
+%  \usepackage{pgfpages}
+%  \pgfpagesuselayout{resize to}[a4paper,border shrink=5mm,landscape]
+%  \pgfpagesuselayout{2 on 1}[a4paper,border shrink=3mm]
+%  \pgfpagesuselayout{4 on 1}[a4paper,border shrink=3mm,landscape]
+%  \setbeamercolor{background canvas}{bg=black!5}
+%  \def\shadow{false}
+%}
+
+%\mode<presentation>{
+%  \setbeamertemplate{blocks}[rounded][shadow=true]
+%}
+%\mode<handout>{
+%  \setbeamertemplate{blocks}[rounded]
+%}
+%\setbeamertemplate{items}[square]
+%\setbeamertemplate{sections/subsections in toc}[square]
+
+\usepackage[utf8]{inputenc}   % Umlaute in vrb/*  
+\usepackage[T1]{fontenc} 
+%\usepackage{ngerman} 
+\usepackage{soul}
+\usepackage{graphicx,color}
+\usepackage{color, colortbl}
+\usepackage[]{svg} 
+\usepackage{xcolor}
+\usepackage{psfrag}
+\usepackage{pgfplots}
+\usepackage{framed}
+\selectcolormodel{rgb}
+\usepackage{epic} % package texlive-eepic
+\usepackage{hyperref}
+\usepackage{url}
+\usepackage{movie15}
+% \usepackage{multimedia}
+\usepackage{array,colortbl,multirow,bigdelim}
+\usepackage{chappg} % package texlive-chappg
+\usepackage{ifpdf}
+\usepackage{tikz}
+\usepackage{subfig}
+\usepackage{listings}
+\usepackage{algorithmic} % package texlive-algorithms; vertraegt sich nicht mit struktex und pgfpages
+\usepackage[english,curves]{struktex} % verwende altes 'curves' statt 'pict2e', sonst funktioniert \cancel nicht mehr!
+\usepackage{cancel}
+\usepackage{copyrightbox}
+%\usepackage{latexsym}
+%\usepackage{eurosym}
+\usepackage{pifont}
+%\usepackage[sans]{dsfont} % package texlive-doublestroke, texlive-doublestroke-fonts
+\usepackage{amsmath}
+\usepackage{amssymb}
+%\newcommand\hmmax{0}
+%\newcommand\bmmax{0}
+\usepackage{nicefrac}   % package texlive-units
+\usepackage{bm}
+\pgfplotsset{compat=1.16}
+
+%\setbeameroption{hide notes}
+%\setbeameroption{show notes}
+
+%\hypersetup{pdftex=true, colorlinks=true, breaklinks=true, linkcolor=black, menucolor=black, pagecolor=black, urlcolor=black}
+
+\usetikzlibrary{patterns,decorations.pathreplacing}
+\captionsetup{textfont={scriptsize}, labelfont={scriptsize}, format=hang}
+
+
+% Verwendung des pdf-Formats bei ps-Bildern, wenn mit pdflatex übersetzt wird
+\ifpdf
+  \def\jpg{jpg} \def\jpgdir{./jpg}
+  \def\png{png} \def\pngdir{./png}
+  \def\texfig{pdf} \def\texfigdir{./texfig_c}
+  \def\ps{pdf}  \def\psdir{./eps_c}
+%  \def\gif{jpg} \def\gifdir{./gif_c}
+%  \def\fig{pdf} \def\figdir{./fig_c}
+\else
+  \def\jpg{eps} \def\jpgdir{./jpg_c}
+  \def\png{eps} \def\pngdir{./png_c}
+  \def\texfig{pstex} \def\texfigdir{./texfig_c}
+   \def\ps{eps}  \def\psdir{./eps}
+%   \def\gif{eps} \def\gifdir{./gif_c}
+%   \def\fig{eps} \def\figdir{./fig_c}
+\fi
+
+
+% Zähler
+\newcounter{chapter}
+
+% Folienstil
+\makeatletter
+\renewcommand{\CRB@setcopyrightfont}{\tiny \color{black!33}}
+\def\beamer@calltheme#1#2#3{\def\beamer@themelist{#2}
+	\@for\beamer@themename:=\beamer@themelist\do
+	{\usepackage[{#1}]{\beamer@themelocation/#3\beamer@themename}}}
+\def\usefolder#1{\def\beamer@themelocation{#1}}
+\def\beamer@themelocation{}
+\usefolder{theme}
+
+\usetheme[longtitle]{fau-tf-lme}
+%\setbeamertemplate{navigation symbols}{
+%  \insertslidenavigationsymbol
+%  \insertsubsectionnavigationsymbol
+%  \insertbackfindforwardnavigationsymbol
+%}
+%\mode<handout>{
+%  \setbeamertemplate{navigation symbols}{}
+%}
+%\setbeamertemplate{frametitle continuation}[from second][{\tiny (cont.)}]{}
+
+
+%\AtBeginPart{%
+%  \setcounter{framenumber}{0}
+%  \setcounter{chapter}{\thepart}
+%  \pagenumbering[\Roman{part}]{bychapter}
+%  \setcounter{page}{0}
+%  \frame{\partpage}
+%}
+
+%\AtBeginSection{%
+%  \setcounter{framenumber}{0}
+%%  \setcounter{page}{0}
+%  \frame{\frametitle{Overview}\tableofcontents[sectionstyle=show,hideothersubsections]}
+%%  \frame{\frametitle{\"Uberblick}\tableofcontents[hideothersubsections]}
+%%  \frame{\frametitle{\"Uberblick}\tableofcontents[sectionstyle=show/hide,subsectionstyle=show/show/hide]}
+%}
+
+   
+\input{commands}
+
+
+\title[Lecture \emph{Pattern Recognition}]{Pattern Recognition (PR)}
+\date{Winter Term 2020/21}
+
+%\pgfdeclareimage[height=.5cm]{logo}{lme}
+%\logo{\pgfuseimage{logo}}
+
+\author[\symb{227}~2005--2020 Hornegger, Hahn, Steidl, Nöth, Maier]{Prof. Dr.-Ing. Andreas Maier}
+\institute[Pattern Recognition Lab]{Pattern Recognition Lab (CS 5), Friedrich-Alexander-Universität Erlangen-Nürnberg}
+
+%\date[WS\,2011/12]{WS\,2011/12}
+
+\newboolean{nosummary}
+\setboolean{nosummary}{true}
+
+
+\begin{document}
+
+  %\frame[plain,c]{\titlepage} % plain-Option deaktiviert Kopf- und Fusszeile
+  \input{00_cover}
+
+% \setcounter{section}{0} \input{00_organization}
+% \setcounter{section}{1} \input{01_introduction}
+% \setcounter{section}{2} \input{02_bayes_classifier} 
+% \setcounter{section}{3} \input{03_logistic_regression}
+% \setcounter{section}{4} \input{04_logistic_regression_2}
+% \setcounter{section}{5} \input{05_naive_bayes}
+% \setcounter{section}{6} \input{06_discriminant_analysis}
+% \setcounter{section}{7} \input{07_discriminant_analysis_2}
+% \setcounter{section}{8} \input{08_norms}
+\setcounter{section}{9} \input{09_perceptron}
+% \setcounter{section}{10} \input{10_mlp}
+% \setcounter{section}{11} \input{11_optimization}
+% \setcounter{section}{12} \input{12_svm}
+% \setcounter{section}{13} \input{13_optimization_2}
+% \setcounter{section}{14} \input{14_svm_2}
+% \setcounter{section}{15} \input{15_kernels}
+% \setcounter{section}{16} \input{16_lapsvm}
+% Ab hier struktex
+% \setcounter{section}{17} \input{17_em}
+% \setcounter{section}{18} \input{18_em_applications}
+% \setcounter{section}{19} \input{19_ica}
+% \setcounter{section}{20} \input{20_model_assessment}
+% \setcounter{section}{21} \input{21_adaboost}
+
+% \setbeamercolor{background canvas}{bg=black!0}
+% \begin{frame}[plain]
+% \end{frame}
+% \begin{frame}[plain]
+% \end{frame}
+% \begin{frame}[plain]
+% \end{frame}
+% \begin{frame}[plain]
+% \end{frame}
+% \begin{frame}[plain]
+% \end{frame}
+% \setbeamercolor{background canvas}{bg=black!5}
+
+ \addtocounter{framenumber}{-1}
+
+
+%   \input{22_exam}
+
+\end{document}

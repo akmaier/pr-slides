@@ -1,0 +1,525 @@
+\section{Adaptive Segmentation of MRI Data}
+
+\subsection{Introduction}
+
+\begin{frame}
+  \frametitle{Introduction}
+
+  \structure{Magnetic Resonance Imaging (MRI)} is an important acquisition technique. \\[.5cm]
+
+  It features:
+
+  \begin{itemize}
+    \item high spatial resolution
+    \item good soft tissue contrast
+    \item does not incorporate ionizing radiation (as computed tomography) \\[.75cm]
+  \end{itemize}
+  \pause
+
+  Several applications require the \structure{segmentation} (classification) of the acquired images into \structure{tissue types}.
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Introduction \cont}
+
+  Difficulties arise from:
+
+  \begin{itemize}
+    \item missing intensity normalization (like Hounsfield units in CT) \pause 
+    \item \structure{intensity inhomogeneities}, also known as bias field \\
+      (RF coils, acquisition sequences)
+  \end{itemize}
+  \pspread
+  
+  \begin{figure}
+    \centering
+    \subfloat[with bias field]{
+      \includegraphics[width=.23\linewidth]{\pngdir/MRI_bias.\png}
+    }
+    \qquad
+    \subfloat[corrected]{
+      \includegraphics[width=.23\linewidth]{\pngdir/MRI_nobias.\png}
+    }
+    \caption{MRI intensity inhomogeneity (Courtesy of F. J{\"a}ger)}
+  \end{figure}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Introduction \cont}
+  
+  Effect of the bias field on ML segmentation:
+
+  \begin{figure}
+    \centering
+    \subfloat[]{
+      \label{syn-a}
+      \includegraphics[width=.22\linewidth]{\pngdir/SyntheticBiased.\png} 
+    }
+    \onslide<2->
+    \subfloat[]{
+      \label{syn-b}
+      \includegraphics[width=.22\linewidth]{\pngdir/SyntheticBiasField.\png}
+    }
+    \onslide<3->
+    \subfloat[]{
+      \label{syn-c}
+      \includegraphics[width=.22\linewidth]{\pngdir/SyntheticBadSegmentation.\png}
+    }
+    \onslide<4>
+    \subfloat[]{
+      \label{syn-d}
+      \includegraphics[width=.22\linewidth]{\pngdir/SyntheticGoodSegmentation.\png}
+    }
+    \onslide<1->
+    \caption{Synthetic image \subref{syn-a} overlaid with artificial bias field \subref{syn-b}, result of ML segmentation \subref{syn-c}, result after modeling bias field within segmentation \subref{syn-d} (Courtesy of W. Wells).}
+  \end{figure}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Introduction \cont}
+
+  W.\,M.\,Wells et al. presented an approach to improve MR brain segmentation (1996):
+
+  \begin{itemize}
+    \item statistical approach to intensity-based segmentation of MRI
+    \item statistical modeling of bias field (smoothness constraint)
+    \item usage of EM algorithm for simultaneous computation of tissue classification and intensity inhomogeneity correction
+  \end{itemize}
+  \pspread
+
+  \structure{Typical EM problem:}
+
+  \begin{itemize}
+    \item The missing data is the tissue class assignment for each pixel. \pause 
+    \item If the tissue was classified, the bias field could easily be computed. \pause
+    \item If the bias field was known, the tissue classification would be much easier. 
+  \end{itemize}
+\end{frame}
+
+
+\subsection{Bias Field Model}
+
+\begin{frame}
+  \frametitle{Bias Field Model}
+
+  \begin{itemize}
+    \item Let $\tilde{X}_i$ be the (unknown) intensity of the $i$-th voxel of the MRI data and \\
+      $B_i$ the corresponding bias field. \pause
+    \item The bias field is assumed to be multiplicative:
+      \begin{displaymath}
+        X_i = \tilde{X}_i \cdot B_i
+      \end{displaymath}
+      \pause
+    \item Using a log-transform on the intensities yields an additive bias field model:
+      \begin{displaymath}
+        Y_i = \log X_i = \log \tilde{X}_i + \beta_i ~,~\mbox{with}~ \beta_i = \log B_i
+      \end{displaymath}
+      \pause
+    \item The bias field is then:
+      \begin{displaymath}
+        \vec \beta = \left(\beta_0, \beta_1, \ldots, \beta_{n-1}\right)^T
+      \end{displaymath}
+      with $n$ being the number of voxels.
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Bias Field Model \cont}
+
+  \begin{itemize}
+    \item The bias field is assumed to change smoothly over the entire image domain.
+    \item It is modeled by an $n$-dimensional zero mean Gaussian prior:
+      \begin{displaymath}
+        p(\vec \beta) = {\mathcal N}(\vec{\beta} ; \vec{0}, \mat{\Psi}_{\vec{\beta}})
+      \end{displaymath}
+  \end{itemize}
+  \pspread 
+  
+  \structure{Notes:}
+
+  \begin{itemize}
+    \item $\mat{\Psi}_{\vec{\beta}}$ is a $n \times n$-dimensional covariance matrix \pause
+    \item $\mat{\Psi}_{\vec{\beta}}$ is too large to compute directly in practice \pause
+    \item Instead of the full covariance matrix, a banded estimate is chosen in practice.
+  \end{itemize}
+\end{frame}
+
+
+\subsection{Bayesian Approach}
+
+\begin{frame}
+  \frametitle{Bayesian Approach}
+
+  \structure{Variables:}
+
+  \begin{eqnarray*}
+    Y_i         &\phantom{=}& \mbox{log-transformed observed intensity at $i$-th voxel} \\
+    \Gamma_i    &\phantom{=}& \mbox{tissue class of the $i$-th voxel} \\
+    \mu_\Gamma  &\phantom{=}& \mbox{mean intensity for tissue class $\Gamma$} \\
+    \psi_\Gamma &\phantom{=}& \mbox{variance of tissue class $\Gamma$}
+  \end{eqnarray*}
+
+  The intensities are assumed to be scalar values, therefore: $\mu_\Gamma, \psi_\Gamma \in \real$ 
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Bayesian Approach \cont}
+
+  Assuming \structure{statistical independence} of the intensities, the probability density for the entire image $\vec Y = \left(Y_0, Y_1, \ldots, Y_{n-1} \right)^T$ is: \pause
+  
+  \begin{displaymath}
+    p(\vec Y | \vec \beta) = \prod_i p(Y_i | \beta_i)
+  \end{displaymath}
+  \pause 
+  
+  The probability of the observations is modeled as a \structure{Gaussian mixture} over the tissue classes:
+  \begin{displaymath}
+    p(Y_i | \beta_i) = \pause \sum_{\Gamma} p(Y_i, \Gamma | \beta_i) = \pause 
+    \sum_{\Gamma} p(\Gamma) \, p(Y_i | \Gamma, \beta_i) 
+  \end{displaymath}
+  \pause 
+  
+  with 
+  \begin{displaymath}
+    p(Y_i | \Gamma, \beta_i) = {\mathcal N}(Y_i ; \mu_\Gamma + \beta_i, \psi_{\Gamma})
+  \end{displaymath}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Bayesian Approach \cont}
+  
+  \structure{Observations so far:}
+
+  \begin{itemize}
+    \item Each tissue class is modeled with a normal distribution. \\[.25cm] \pause
+    \item The modeling of the observed intensity distribution yields a Gaussian mixture model. \\[.25cm] \pause
+    \item $p(\Gamma)$ is a stationary prior probability for the tissue class. \\[.25cm] \pause
+    \item The estimators for the GMM are non-linear!
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Bayesian Approach \cont}
+
+  Using \structure{Bayes rule} to derive an objective function for the bias field:
+  \begin{displaymath}
+    p(\vec \beta | \vec Y) = \frac{p(\vec Y | \vec \beta) \, p(\vec \beta)} {p(\vec Y)}
+  \end{displaymath}
+  \pspread
+
+  Applying the \structure{MAP principle} yields an estimator for the bias field:
+
+  \begin{eqnarray*}
+    \hat{\vec \beta} &=& \argmax_{\vec \beta} p(\vec \beta | \vec Y) \\ \pause 
+                     &=& \argmax_{\vec \beta} \log p(\vec \beta | \vec Y) \\ \pause 
+                     &=& \argmax_{\vec \beta} \big( \log p(\vec Y | \vec \beta) + \log p(\vec \beta) \big)
+  \end{eqnarray*}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Gradient Computation}
+  
+  At the optimum, the gradient w.\,r.\,t.\ $\vec \beta$ has to be zero:
+
+  \begin{eqnarray*}
+    \frac{\partial}{\partial \beta_i} \log p(\vec \beta | \vec Y) 
+    &=& \frac{\partial}{\partial \beta_i} \left( \log p(\vec Y | \vec \beta) + \log p(\vec \beta) \right) \\ \pause 
+    &=& \frac{\partial}{\partial \beta_i} \left( \sum_j \log p(Y_j | \beta_j) + \log p(\vec \beta) \right) \\ \pause 
+    &=& \frac{\frac{\partial}{\partial \beta_i} p(Y_i | \beta_i)}{p(Y_i | \beta_i)} + \frac{\frac{\partial}{\partial \beta_i} p(\vec \beta)}{p(\vec \beta)} \\
+    &\stackrel{!}{=}& 0.
+  \end{eqnarray*}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Gradient Computation \cont}
+
+  {\footnotesize
+  \begin{eqnarray*}
+    \frac{\frac{\partial}{\partial \beta_i} p(Y_i | \beta_i)}{p(Y_i | \beta_i)} 
+    &=& \underbrace{
+          \frac{\sum_{\Gamma} p(\Gamma) \, \frac{\partial}{\partial \beta_i} {\mathcal N}(Y_i ; \mu_\Gamma + \beta_i, \psi_{\Gamma}) }
+               {\sum_{\Gamma} p(\Gamma) \, {\mathcal N}(Y_i ; \mu_\Gamma + \beta_i, \psi_\Gamma)}
+        }_{\mbox{\small substitute GMM}} \\[.25cm] \pause
+    &=& \frac{\sum_{\Gamma} p(\Gamma) \, {\mathcal N}(Y_i ; \mu_\Gamma + \beta_i, \psi_\Gamma) \, \psi_\Gamma^{-1} \, (Y_i - \mu_\Gamma - \beta_i)}
+             {\sum_\Gamma p(\Gamma) \, {\mathcal N}(Y_i ; \mu_\Gamma + \beta_i, \psi_\Gamma) } \\[.25cm] \pause 
+    &=& \sum_\Gamma W_{i\Gamma} \left( \psi_\Gamma^{-1} (Y_i - \mu_\Gamma - \beta_i) \right)
+  \end{eqnarray*}
+  }
+
+  Weight for the $i$-th voxel and tissue class $\Gamma$:
+  {\footnotesize
+  \begin{eqnarray*}
+    W_{i\Gamma} := 
+      \frac{p(\Gamma) \cdot \mathcal{N}(Y_i ; \mu_\Gamma + \beta_i, \psi_\Gamma) }
+           {\sum_{\Gamma} p(\Gamma) \cdot \mathcal{N}(Y_i ; \mu_\Gamma + \beta_i, \psi_\Gamma)} 
+  \end{eqnarray*}
+  }
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Gradient Computation \cont}
+
+  Rewriting the equation:
+
+  {\footnotesize
+  \begin{eqnarray*}
+    \frac{\frac{\partial}{\partial \beta_i} p(Y_i | \beta_i)}
+         {p(Y_i | \beta_i)} 
+    &=& \sum_\Gamma W_{i\Gamma} \left( \psi_\Gamma^{-1} (Y_i - \mu_\Gamma - \beta_i) \right) \\ \pause 
+    &=& \sum_\Gamma W_{i\Gamma} \, \psi_j^{-1} \, (Y_i - \mu_\Gamma) - \sum_\Gamma W_{i\Gamma} \, \psi_\Gamma^{-1} \, \beta_i \\ \pause 
+    &=& \overline{R_i} - \overline{\psi^{-1}}_i ~\beta_i
+  \end{eqnarray*}
+  }
+  
+  Mean residual:
+  {\footnotesize
+  \begin{displaymath}
+    \overline{R_i} := \sum_\Gamma W_{i\Gamma} \, \psi_\Gamma^{-1} \, (Y_i - \mu_\Gamma)
+  \end{displaymath}
+  }
+  
+  Mean inverse variance:
+  {\footnotesize
+  \begin{displaymath}
+    \overline{\psi^{-1}}_i := \sum_\Gamma W_{i\Gamma} \, \psi_\Gamma^{-1}
+  \end{displaymath}
+  }
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Gradient Computation \cont}
+
+  Finishing gradient computation:
+
+  {\small
+  \begin{eqnarray*}
+    \nabla_{\vec \beta} \log p(\vec \beta | \vec Y) 
+      &=& \overline{\vec R} - \overline{\mat{\Psi}^{-1}} \vec \beta + \frac{\nabla_{\vec \beta} p(\vec \beta)}{p(\vec \beta)} \\
+      &=& \overline{\vec R} - \overline{\mat{\Psi}^{-1}} \vec \beta - \mat{\Psi}_{\vec{\beta}}^{-1} \vec \beta \\
+      &\stackrel{!}{=}& \vec{0}
+  \end{eqnarray*}
+  }
+  \pause 
+  
+  It follows that:
+  {\small
+  \begin{displaymath}
+    \hat{\vec \beta} = \mat{H} \overline{\vec R} \quad \mbox{with}~ 
+    \mat{H} \equiv \left[\overline{\mat{\Psi}^{-1}} + \mat{\Psi}_{\vec{\beta}}^{-1} \right]^{-1}
+  \end{displaymath}
+  }
+  \pause 
+  
+  $\mat{H}$ is a linear operator that is applied to the mean residual field. \\
+  In fact, $\hat{\vec{\beta}}$ can be obtained by low pass filtering of $\overline{\vec R}$ and $\overline{\mat{\Psi}^{-1}}$.
+\end{frame}
+
+
+\subsection{EM-Algorithm}
+
+\begin{frame}
+  \frametitle{EM-Algorithm}
+
+  \structure{EM-Algorithm for the adaptive segmentation problem:}
+
+  \begin{eqnarray}
+    W_{i\Gamma} 
+    &\leftarrow& \frac{p(\Gamma) \cdot \mathcal{N}(Y_i | \mu_\Gamma + \beta_i, \psi_\Gamma)}
+                      {\sum_\Gamma p(\Gamma) \cdot \mathcal{N} (Y_i | \mu_\Gamma + \beta_i, \psi_\Gamma)} \label{eq:E} \\[.3cm]
+    \hat{\vec \beta} 
+    &\leftarrow& \mat{H} \overline{\vec R} \label{eq:M}
+  \end{eqnarray}
+  \pause 
+  
+  \begin{itemize}
+    \item \structure{E-step:} equation \eqref{eq:E} yields the posterior tissue class probabilities for a known bias field \pause 
+    \item \structure{M-step:} equation \eqref{eq:M} yields the new bias field for the current estimates for the tissue probabilities \pause
+    \item \structure{Result:} iterating 5-10 times between the E- and the M-step is usually sufficient
+  \end{itemize}
+\end{frame}
+
+
+\subsection{Results}
+
+\begin{frame}
+  \frametitle{Results}
+
+  \begin{figure}
+    \centering
+    \subfloat[]{
+      \label{brain-a}
+      \includegraphics[width=.22\linewidth]{\pngdir/BrainInput.\png}
+    }
+    \subfloat[]{
+      \label{brain-b}
+      \includegraphics[width=.22\linewidth]{\pngdir/BrainBadSegment.\png}
+    }
+    \subfloat[]{
+      \label{brain-c}
+      \includegraphics[width=.22\linewidth]{\pngdir/BrainBiasField.\png}
+    }
+    \subfloat[]{
+      \label{brain-d}
+      \includegraphics[width=.22\linewidth]{\pngdir/BrainAdaptiveSegment.\png}
+    }
+    \caption{\footnotesize Results of conventional segmentation \subref{brain-b} compared to adaptive segmentation \subref{brain-d} with computed bias field \subref{brain-c} on brain image \subref{brain-a}
+(Courtesy of W. Wells).}
+  \end{figure}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Results \cont}
+
+  \begin{figure}
+    \centering
+    \subfloat[]{
+      \label{surf-a}
+      \includegraphics[width=.3\linewidth]{\pngdir/BrainGrayMatter.\png}
+    }
+    \subfloat[]{
+      \label{surf-b}
+      \includegraphics[width=.3\linewidth]{\pngdir/BrainBadWhiteMatter.\png}
+    }
+    \subfloat[]{
+      \label{surf-c}
+      \includegraphics[width=.3\linewidth]{\pngdir/BrainAdaptiveWhiteMatter.\png}
+    }
+    \caption{\footnotesize Gray matter surface \subref{surf-a} for the previous image example, white matter surface of the conventional algorithm \subref{surf-b} and for the adaptive segmentation  \subref{surf-c} (Courtesy of W. Wells).}
+  \end{figure}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Results \cont}
+
+  \begin{figure}
+    \centering
+    \subfloat[]{
+      \label{bias-a}
+      \includegraphics[width=.3\linewidth]{\pngdir/MRIBrainBias.\png}
+    }
+    \subfloat[]{
+      \label{bias-b}
+      \includegraphics[width=.3\linewidth]{\pngdir/MRIBrainBiasField.\png}
+    }
+    \subfloat[]{
+      \label{bias-c}
+      \includegraphics[width=.3\linewidth]{\pngdir/MRIBiasCorrected.\png}
+    }
+    \caption{\footnotesize MRI image with bias field \subref{bias-a}, computed bias field \subref{bias-b} and image corrected at the brain region \subref{bias-c} (Courtesy of W. Wells).}
+  \end{figure}
+\end{frame}
+
+
+\subsection{Model Extensions}
+
+\begin{frame}
+  \frametitle{Model Extensions}
+
+  \structure{Drawbacks} of initial adaptive segmentation algorithm:
+
+  \begin{itemize}
+    \item brains should be extracted from entire data \pause
+    \item algorithm does not incorporate neighborhood of pixels \pause
+    \item purely intensity-based model
+  \end{itemize}
+  \pspread
+
+  \structure{Extensions} of the algorithm:
+
+  \begin{itemize}
+    \item incorporation of atlases for spatial probability maps of tissue classes \pause
+    \item definition of vector space for probabilistic atlases to get shape models \pause
+    \item voxel neighborhood relations modeled by Markov random fields \pause
+    \item incorporation into Bayesian model that is solved by EM approach
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Model Extensions \cont}
+
+  Result using an extended model:
+
+  \begin{figure}
+    \includegraphics[width=.8\linewidth]{\pngdir/MRIBrainAtlasSegmentation.\png}
+    \caption{\footnotesize MRI segmentation of the thalamus and caudate using an atlas-based EM segmentation algorithm (Courtesy of K. Pohl).}
+  \end{figure}
+\end{frame}
+
+
+\subsection{Lessons Learned}
+
+\begin{frame}
+  \frametitle{Lessons Learned}
+ 
+  \begin{itemize}
+    \item Bayesian approach for MRI data segmentation \\[.25cm]
+    \item incorporation of bias field estimation \\[.25cm]
+    \item nonlinear problem is solved iteratively using EM algorithm \\[.25cm]
+    \item improvement of results by incorporating atlases
+  \end{itemize}
+\end{frame}
+
+\input{nextTime.tex}
+
+\subsection{Further Readings}
+
+\begin{frame}
+  \frametitle{Further Readings}
+ 
+  \begin{itemize}
+    \item Original paper on adaptive MRI segmentation: \\[.15cm]
+      W.\,M.\ Wells, R.\,Kikinis, W.\,E.\,L.\ Grimson, F.\ Jolesz: \\
+      \structure{Adaptive segmentation of MRI data}, \\
+      IEEE Transactions on Medical Imaging, 15:429-442, 1996. \\[.3cm]
+    \item F.\ J{\"a}ger, J.\ Hornegger: \\
+      \structure{Nonrigid registration of joint histograms for intensity standardization \\ in magnetic resonance imaging}, \\
+      IEEE Transactions on Medical Imaging, 28(1):137-150, 2009.
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Further Readings \cont}
+
+  Extensions of the model with shape models, atlas registration and MRFs: \\[.15cm]
+  
+  \begin{itemize}
+    \item K.\,M.\ Pohl, J.\ Fisher, J.\,J.\ Levitt, M.\,E.\ Shenton, R.\ Kikinis, W.\,E.\,L.\ Grimson, W.\,M.\ Wells: \\
+      \structure{A Unifying Approach to Registration, Segmentation, and \\ Intensity Correction}, \\
+      Proc. MICCAI, pp.\ 310-318, 2005. \\[.3cm]
+      % In Proc. MICCAI 2005: Eighth International Conference on Medical Image Computing and Computer Assisted Intervention, Palm Springs, CA, U.\,S.\,A.,
+      %Springer-Verlag, Part I, vol. 3749 of Lecture Notes in Computer Science, 
+    \item K.\,M.\ Pohl, J.\ Fisher, S.\ Bouix, M.\,E.\ Shenton, R.\,W.\ McCarley, W.\,E.\,L.\ Grimson, R.\ Kikinis, W.\,M.\ Wells: \\
+      \structure{Using the logarithm of odds to define a vector space on \\ probabilistic atlases}, \\
+      Medical Image Analysis, 11(6), pp.\ 465-477, 2007.
+  \end{itemize}
+\end{frame}
+
+
+\subsection{Comprehensive Questions}
+
+\begin{frame}
+  \frametitle{Comprehensive Questions}
+
+  \begin{itemize}
+    \item What is the idea of combined MR segmentation and \\ 
+      bias field correction? \\[.5cm]
+    \item What is the E-step in this context? \\[.5cm]
+    \item What is the M-step? \\[.5cm]
+    \item How can the update formulas be derived?
+  \end{itemize}
+\end{frame}

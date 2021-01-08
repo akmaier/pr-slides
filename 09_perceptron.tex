@@ -1,0 +1,310 @@
+\section{Rosenblatt's Perceptron (1957)}
+
+\subsection{Motivation}
+
+\begin{frame}
+  \frametitle{Motivation}
+
+  \begin{itemize}
+    \item We want to compute a linear decision boundary. \\[.5cm]
+    \item We assume that classes are linearly separable. \\[.5cm]
+    \item Computation of a linear separating hyperplane that\\
+      minimizes the distance of misclassified feature vectors \\
+      to the decision boundary.
+  \end{itemize}
+\end{frame}
+
+
+\subsection{Objective Function}
+
+\begin{frame}
+  \frametitle{Objective Function}
+
+  Assume the following:
+
+  \begin{itemize}
+    \item Class numbers are $y=\pm 1$.
+    \item The decision boundary is a linear function:
+      \begin{displaymath}
+        y^* = \mbox{sgn}(\vec \alpha^T\vec x + \alpha_0).
+      \end{displaymath}
+      \pause
+    \item Parameters $\alpha_0$ and $\vec \alpha$ are chosen according to the optimization problem \\[.2cm]
+
+      \begin{center}
+        \tikz[baseline]{ 
+          \node[fill=bl1!100,anchor=base,rounded corners=3pt] (d1) {
+            \color{bl3} 
+            $\displaystyle \mbox{minimize} \quad \bigg\{ D(\alpha_0, \vec \alpha)= -\sum_{\vec x_i\in {\cal M}} y_i \cdot (\vec \alpha^T\vec x_i + \alpha_0) \bigg\}$
+          };  
+        }\\[.2cm]
+      \end{center}
+
+      where $\cal M$ includes the misclassified feature vectors.
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Objective Function \cont}
+
+  \begin{itemize}
+    \item The elements of the sum in the objective function depend on \\
+      the set of misclassified feature vectors $\cal M$. \\[.5cm] \pause
+    \item In each iteration step the cardinality of $\cal M$ might change. \\[.5cm] \pause
+    \item The cardinality of $\cal M$ is a discrete variable. \\[.5cm] \pause
+    \item \structure{Competing variables:} continuous parameters of linear decision boundary and the discrete cardinality of $\cal M$.
+  \end{itemize}
+\end{frame}
+
+
+\subsection{Minimization of Objective Function}
+
+\begin{frame}
+  \frametitle{Minimization of Objective Function}
+
+  Remember the objective function $D(\alpha_0, \vec \alpha)$:
+  \begin{displaymath}
+    \mbox{minimize} \quad \quad D(\alpha_0, \vec \alpha)= -\sum_{\vec x_i\in {\cal M}} y_i \cdot (\vec \alpha^T\vec x_i + \alpha_0)
+  \end{displaymath}
+  \pause
+ 
+  The gradient of the objective function is: \pause
+  \begin{eqnarray*}
+    \frac{\partial}{\partial \alpha_0} \ D(\alpha_0, \vec \alpha)&=&  -\sum_{\vec x_i\in {\cal M}} y_i \\ \pause
+    \frac{\partial}{\partial \vec\alpha} \ D(\alpha_0, \vec \alpha)&=& -\sum_{\vec x_i\in {\cal M}} y_i\cdot  \vec x_i \\
+  \end{eqnarray*}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Minimization of Objective Function \cont}
+
+  We want to take an update step right after having visited each misclassified observation.
+  The update rule in the $(k+1)$-st iteration step is:
+
+  \begin{displaymath}
+    { \alpha_0^{(k+1)} \choose \vec \alpha^{(k+1)}} = \pause  { \alpha_0^{(k)} \choose \vec \alpha^{(k)}} + \lambda {y_i \choose y_i\cdot \vec x_i}
+  \end{displaymath} 
+
+  Here $\lambda$ is the learning rate which can be set to $1$ without loss of generality.
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Minimization of Objective Function \cont}
+
+  \begin{algorithmic}
+    \STATE  \structure{Input:} training data:  $S = \{ (\vec x_1, y_1), (\vec x_2, y_2), (\vec x_3, y_3), \dots, (\vec x_m, y_m) \}$ \pause
+    \STATE initialize  $k=0$, $\alpha^{(0)}_0=0$ and $\vec \alpha^{(0)}=  \vec 0$
+    \REPEAT 
+      \STATE select pair $(\vec x_i, y_i)$ from training set. \pause
+      \IF {$y_i\cdot (\vec x_i^T \vec\alpha^{(k)} + \alpha_0^{(k)})\leq 0$} 
+        \STATE \
+        \STATE $\displaystyle{ \alpha_0^{(k+1)} \choose \vec \alpha^{(k+1)}} =  { \alpha_0^{(k)} \choose \vec \alpha^{(k)}} +  {y_i \choose y_i\cdot \vec x_i}$
+        \STATE \
+        \STATE $k\leftarrow k+1$
+      \ENDIF
+      \pause
+    \UNTIL{$y_i\cdot (\vec x_i^T \vec\alpha^{(k)} + \alpha_0^{(k)})> 0 \quad \mbox {for all} \quad i$}
+    \STATE \structure{Output:} $\alpha_0^{(k)}$ and $\vec \alpha^{(k)}$
+  \end{algorithmic}
+\end{frame}
+
+
+\subsection{Remarks on Perceptron Learning}
+
+\begin{frame}
+  \frametitle{Remarks on Perceptron Learning}
+
+  \begin{itemize}
+    \item The update rule is extremely simple. \\[.3cm]
+    \item Nothing happens if we classify all $\vec x_i$ correctly using the given linear decision boundary. \\[.3cm]
+    \item The parameter $\vec \alpha$ of the decision boundary is a linear combination of feature vectors. \\[.3cm] \pause
+    \item The decision boundary thus is:
+    \begin{displaymath}
+       F(\vec x) = \left (\sum_{i\in \cal E} y_i\cdot \vec x_i \right)^T \vec x + \sum_{i\in \cal E} y_i \quad 
+                 = \quad \sum_{i\in \cal E} y_i\cdot \langle \vec x_i, \vec x\rangle + \sum_{i\in \cal E} y_i 
+    \end{displaymath}
+    where $\cal E$ is the list of indices that required an update \\
+	(indices may appear more than once). 
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Remarks on Perceptron Learning \cont}
+
+  \begin{itemize}
+    \item The final linear decision boundary depends on the initialization, \\
+      i.\,e.\ $\alpha_0^{(0)}$ and $\vec \alpha^{(0)}$. \\[.5cm]
+    \item The number of iterations can be rather large. \\[.5cm]
+    \item If data are not linearly separable, the proposed learning algorithm will not converge. The algorithm will end up in hard to detect cycles.
+  \end{itemize}
+\end{frame}
+
+
+\subsection{Convergence of Learning Algorithm}
+
+\begin{frame}
+  \frametitle{Convergence of Learning Algorithm}
+
+  \begin{theorem}[Convergence Theorem of Rosenblatt and Novikoff]
+    Assume that for all $i=1,2, \dots, m$
+    \begin{displaymath}
+      y_i(\vec x_i^T\vec \alpha^* +\alpha^*_0)\geq \rho
+    \end{displaymath}
+    where $\rho>0$ and $\|\vec \alpha^*\|=1$.
+    Let $M= \max_i \|\vec x_i\|_2$. \\[.3cm]
+    
+    The perceptron learning algorithm converges to a linear decision boundary after $k$ iterations, where $k$ is bounded by
+    \begin{displaymath}
+      k \leq \frac{(\alpha_0^{*2}+1)(1+M^2)}{\rho^2}.
+    \end{displaymath}
+  \end{theorem}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Convergence of Learning Algorithm \cont}
+
+  Let us look at the estimated parameters after $k$ iterations and \
+  how the parameters change with iterations:
+
+  \begin{eqnarray*}
+    {\alpha_0^{(k)} \choose \vec \alpha^{(k)}}^T{\alpha_0^* \choose \vec \alpha^*} 
+      &=& \pause \left( { \alpha_0^{(k-1)} \choose \vec \alpha^{(k-1)}} +  {y_i \choose y_i\cdot \vec x_i}\right)^T {\alpha_0^* \choose \vec \alpha^*}\\ \pause
+      &=& { \alpha_0^{(k-1)} \choose \vec \alpha^{(k-1)}} ^T{\alpha_0^* \choose \vec \alpha^*} +  {y_i \choose y_i\cdot \vec x_i}^T {\alpha_0^* \choose \vec \alpha^*} \\ \pause
+      &\geq& { \alpha_0^{(k-1)} \choose \vec \alpha^{(k-1)}} ^T{\alpha_0^* \choose \vec \alpha^*} + \rho \\ \pause
+      &\geq& k\rho
+  \end{eqnarray*}
+
+  \structure{Conclusion:} The more iterations (i.\,e.\ misclassifications) we have, \\
+  the more the vectors are aligned.
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Convergence of Learning Algorithm \cont}
+
+  Now we apply Cauchy-Schwartz inequality for inner products:
+
+  \begin{eqnarray*}
+    {\alpha_0^{(k)} \choose \vec \alpha^{(k)}}^T{\alpha_0^* \choose \vec \alpha^*} 
+      &\leq& \left\|  {\alpha_0^{(k)} \choose \vec \alpha^{(k)}}\right\|_2\cdot  \left\| {\alpha_0^* \choose \vec \alpha^*}\right\|_2 \\[.5cm] \pause
+      &=&\left \|  {\alpha_0^{(k)} \choose \vec \alpha^{(k)}}\right\|_2\cdot  \sqrt{\alpha_0^{*2}+1}
+  \end{eqnarray*}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Convergence of Learning Algorithm \cont}
+
+  The norm of the vector estimated in the $k$-th iteration step is:
+
+  \begin{eqnarray*}
+    & &  \left \|  {\alpha_0^{(k)} \choose \vec \alpha^{(k)}}\right\|_2^2 =
+   \left\| { \alpha_0^{(k-1)} \choose \vec \alpha^{(k-1)}} +  {y_i \choose y_i\cdot \vec x_i}\right\|_2^2 \\[.5cm] \pause
+   & & \vspace*{-2cm} = { \alpha_0^{(k-1)} \choose \vec \alpha^{(k-1)}} ^T{ \alpha_0^{(k-1)} \choose \vec \alpha^{(k-1)}} 
+           + 2 { \alpha_0^{(k-1)} \choose \vec \alpha^{(k-1)}}^T{y_i \choose y_i\cdot \vec x_i}
+          + {y_i \choose y_i\cdot \vec x_i}^T{y_i \choose y_i\cdot \vec x_i}
+  \end{eqnarray*}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Convergence of Learning Algorithm \cont}
+
+  We only go into iteration step $(k+1)$ if we did a mistake in iteration $k$. \\
+  A misclassification implies:
+  
+  \begin{displaymath}
+    { \alpha_0^{(k)} \choose \vec \alpha^{(k)}}^T{y_i \choose y_i\cdot \vec x_i} 
+    = y_i\cdot (\vec x_i^T \vec\alpha^{(k)} + \alpha_0^{(k)})\quad < \quad 0
+  \end{displaymath}
+  \pause 
+
+  And thus we get
+  
+  \begin{displaymath}
+    \left \|  {\alpha_0^{(k)} \choose \vec \alpha^{(k)}}\right\|_2^2 
+    \leq { \alpha_0^{(k-1)} \choose \vec \alpha^{(k-1)}} ^T{ \alpha_0^{(k-1)} \choose \vec \alpha^{(k-1)}} 
+           + {y_i \choose y_i\cdot \vec x_i}^T{y_i \choose y_i\cdot \vec x_i}
+    \leq k(1+M^2)
+  \end{displaymath}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Convergence of Learning Algorithm \cont}
+
+  Wrap-up:
+  
+  \begin{displaymath}
+    k\rho 
+    \leq {\alpha_0^{(k)} \choose \vec \alpha^{(k)}}^T{\alpha_0^* \choose \vec \alpha^*} 
+    \leq \left \|  {\alpha_0^{(k)} \choose \vec \alpha^{(k)}}\right\|_2\cdot  \sqrt{\alpha_0^{*2}+1}
+  \end{displaymath}
+  \pause
+
+  Using Cauchy-Schwartz:
+  
+  \begin{displaymath}
+    k\rho\quad
+    \leq \quad \left \| {\alpha_0^{(k)} \choose \vec \alpha^{(k)}}\right\|_2\cdot  \sqrt{\alpha_0^{*2}+1}\quad \leq \quad  \sqrt{k(1+M^2)(\alpha_0^{*2}+1)}
+  \end{displaymath}
+  \pause
+
+  shows:
+  
+  \begin{displaymath}
+    k \quad \leq\quad \frac{(\alpha_0^{*2}+1)(1+M^2)}{\rho^2}
+  \end{displaymath}
+\end{frame}
+
+
+\subsection{Lessons Learned}
+
+\begin{frame}
+  \frametitle{Lessons Learned}
+
+  \begin{itemize}
+    \item Objective function changes in each iteration step. \\[.5cm]
+    \item Optimization problem is discrete. \\[.5cm]
+    \item Very simple learning rule. \\[.5cm]
+    \item \vorsicht \structure{Very important:} Number of iterations does \structure{not} depend on the \\
+      dimension of the feature vectors.
+  \end{itemize}
+\end{frame}
+
+\input{nextTime.tex}
+
+\subsection{Further Readings}
+
+\begin{frame}
+  \frametitle{Further Readings}
+
+  \begin{itemize}
+    \item Brian D. Ripley: \\
+      \structure{Pattern Recognition and Neural Networks}, \\
+      Cambridge University Press, Cambridge, 1996.\\[.3cm]
+    \item T. Hastie, R. Tibshirani, and J. Friedman: \\
+      \structure{The Elements of Statistical Learning --}\\
+      \structure{ Data Mining, Inference, and Prediction},\\
+      2nd edition, Springer, New York, 2009.
+  \end{itemize}
+\end{frame}
+
+
+\subsection{Comprehensive Questions}
+
+\begin{frame}
+  \frametitle{Comprehensive Questions}
+
+  \begin{itemize}
+    \item What is Rosenblatt's perceptron? \\[1cm]
+    \item What is the objective function for Rosenblatt's perceptron? \\[1cm]
+    \item Why is the optimization of the objective function nonlinear? \\[1cm]
+    \item When and how does Rosenblatt's perceptron algorithm converge?
+  \end{itemize}
+\end{frame}

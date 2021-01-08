@@ -1,0 +1,1216 @@
+\def\kurt{\mathop{\mathsf{kurt}}}
+\def\MI{\mathop{\mathsf{MI}}}
+\def\KL{\mathop{\mathsf{D}_{\mathsf{KL}}}}
+
+\section{Independent Component Analysis}
+
+\subsection{Motivation}
+
+\begin{frame}
+  \frametitle{Cocktail-Party Problem}
+
+  \begin{ovalblock}{Example}
+  
+  Imagine the following situation:
+
+    \begin{itemize}
+      \item You have two microphones in a room at different locations.
+      \item The microphones record time signals $x_1(t), x_2(t)$. \pause
+      \item Each recorded signal is a weighted sum of two speakers $s_1(t), s_2(t)$: \pause 
+    \end{itemize}
+%
+    \begin{eqnarray*}
+      x_1(t) &=& a_{11} s_1(t) + a_{12} s_2(t) \\
+      x_2(t) &=& a_{21} s_1(t) + a_{22} s_2(t)
+    \end{eqnarray*}
+
+    Parameters $a_{ij}$ depend on the distance of the microphones to the speakers.
+  \end{ovalblock}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Cocktail-Party Problem}
+
+  \begin{ovalblock}{Example}
+  
+  For simplicity, we assume just a very simple mixing model without any time delays or other factors. \\[.5cm]
+    \pause
+
+    \structure{Observations:}
+
+    \begin{itemize}
+      \item If we knew the $a_{ij}$, the problem of reconstructing $s_i$ is to solve the linear equations by classical methods. \pause 
+      \item \structure{But:} We do not know the $a_{ij}$! Thus, the problem is considerably more difficult!
+    \end{itemize}
+  \end{ovalblock}
+\end{frame}
+
+
+\mode<presentation>{
+
+
+\begin{frame}
+  \frametitle{Cocktail-Party Problem}
+
+  \begin{ovalblock}{Example}
+
+    \footnotesize
+    Original sound sources:
+    \vspace*{-0.25cm}
+    \begin{figure}
+      \centering
+      \movie[]{\includegraphics[width=1cm]{\jpgdir/maier.\jpg}}{./audio/sourceX.wav} \qquad
+      \movie[]{\includegraphics[width=1cm]{\jpgdir/piano.\jpg}}{./audio/sourceY.wav} \qquad
+    \end{figure}
+    \pause 
+%    
+    Samples at the cocktail-party:
+    \vspace*{-0.25cm}
+    \begin{figure}
+      \centering
+      \movie[]{\includegraphics[width=1cm]{\jpgdir/microphone.\jpg}}{./audio/mixedX.wav} \qquad
+      \movie[]{\includegraphics[width=1cm]{\jpgdir/microphone.\jpg}}{./audio/mixedY.wav} \qquad
+    \end{figure}
+    \pause 
+%        
+    Reconstructed sound sources:
+    \vspace*{-0.25cm}
+    \begin{figure}
+      \centering
+      \movie[]{\includegraphics[width=1cm]{\jpgdir/speaker.\jpg}}{./audio/separateX.wav} \qquad
+      \movie[]{\includegraphics[width=1cm]{\jpgdir/speaker.\jpg}}{./audio/separateY.wav} \qquad
+    \end{figure}
+  \end{ovalblock}
+\end{frame}
+
+}
+
+
+\begin{frame}
+  \frametitle{Cocktail-Party Problem}
+
+  The principle for solving the cocktail-party problem has a lot of \\
+  \structure{other interesting applications}: \\[.25cm]
+
+  \begin{itemize}
+    \item speech signal recovery: telecommunications \\[.25cm]
+    \item recovery of images from mixed signals: MRI, fMRI \\[.25cm]
+    \item electrical recordings of brain activity:
+      \begin{itemize}
+        \item EEG (electroencephalography)
+        \item MEG (magnetoencephalography) \\[.25cm]
+      \end{itemize}
+    \item feature extraction \\[.25cm]
+    \item multispectral image analysis
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Separate Natural Images\cont}
+
+  \begin{figure}
+            \copyrightbox[b]{
+      \makebox[.6\linewidth]{
+          \includegraphics[width=0.70\linewidth]{\pngdir/fig6.\png}
+      }
+    }{Isomura, T., Toyoizumi, T. \href{https://doi.org/10.1038/srep28073}{A Local Learning Rule for Independent Component Analysis. Sci Rep 6, 28073 (2016)}}
+    %\caption{Final reconstructed images.}
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{MEG: Recovery of Brain Activity}
+
+  \begin{figure}
+    %\includegraphics[width=0.6\linewidth]{\pngdir/ica_meg.\png}
+    \copyrightbox[b]{
+      \makebox[.6\linewidth]{
+          \includegraphics[width=0.55\linewidth]{\pngdir/ica_meg.\png}
+      }
+    }{R. Vigário, V. Jousmäki, M. Hämäläinen, R. Hari, E. Oja. \href{https://papers.nips.cc/paper/1466-independent-component-analysis-for-identification-of-artifacts-in-magnetoencephalographic-recordings.pdf}{``Independent component analysis for identification of artifacts in magnetoencephalographic recordings, Advances in Neural Information Processing Systems''}}
+    \caption{Principle of MEG acquisition.}
+  \end{figure}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{MEG: Recovery of Brain Activity \cont}
+
+  \begin{figure}
+    %\includegraphics[height=0.8\textheight]{\pngdir/ica_meg_est.\png}
+        \copyrightbox[b]{
+      \makebox[.6\linewidth]{
+          \includegraphics[height=0.7\textheight]{\pngdir/ica_meg_est.\png}
+      }
+    }{R. Vigário, V. Jousmäki, M. Hämäläinen, R. Hari, E. Oja. \href{https://papers.nips.cc/paper/1466-independent-component-analysis-for-identification-of-artifacts-in-magnetoencephalographic-recordings.pdf}{``Independent component analysis for identification of artifacts in magnetoencephalographic recordings, Advances in Neural Information Processing Systems''}}
+    \caption{Recovered signals.}
+  \end{figure}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Common Framework}
+
+  \structure{Idea:}
+
+  \begin{itemize}
+    \item Use some information about the statistical properties of the signals $s_i(t)$ to estimate $a_{ij}$.
+  \end{itemize}
+  \pspread
+ 
+  Surprisingly, it turns out that the only statistical assumption that we have to make is that the $s_i(t)$ are \textit{statistically independent} at each time point $t$.
+  \pspread
+
+  Formulation in a unified mathematical framework (H\'{e}rault and Jutten, 1984-1991):
+  \begin{center}
+    \structure{ICA -- Independent Component Analysis}
+  \end{center}
+\end{frame}
+
+
+\subsection{Latent Variables and Factor Analysis}
+
+\begin{frame}
+  \frametitle{Latent Variables and Factor Analysis}
+
+  \structure{Statistical latent variables model:}
+
+  \begin{itemize}
+    \item Rewrite the time series into $n$ linear mixture observations $x_1, \ldots, x_n$ \pause
+    \item Each mixture $x_i$ as well as each component $s_j$ are random variables
+  \end{itemize}
+
+  \begin{displaymath}
+    x_i = \sum_{j=1}^m a_{ij} s_j ~, \qquad i = 1,\ldots,n
+  \end{displaymath}
+  \pause 
+  
+  In matrix notation:
+  \begin{displaymath}
+    \vec x = \mat A \vec s
+  \end{displaymath}
+
+  where
+
+  \begin{itemize}
+    \item $\mat A$ is a constant \textit{mixing} matrix
+    \item $s_j$ are latent random variables (independent components)
+    \item both $\mat A$ and $s_j$ have to be estimated based on observations $x_i$
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{First Approach: Decorrelation}
+
+  Assuming $\vec{\bar{x}} = \vec{0}$, we already know a latent variable representation \\
+  (see chapter \emph{Discriminant Analysis I}). \\[.5cm] \pause 
+
+  From:
+  \begin{displaymath}
+      E\{ \vec x \vec x^T \} = \mat \Sigma = \mat U \mat D \mat U^T
+  \end{displaymath}
+  \pause 
+
+  and
+  \begin{displaymath}
+    \mat{\Sigma}^{-1} 
+    = \mat{U}\mat{D}^{-1}\mat{U}^T
+    = (\mat{U}\mat{D}^{-\frac{1}{2}})\cdot \mat{I} \cdot(\mat{U}\mat{D}^{-\frac{1}{2}})^T
+  \end{displaymath}
+  \pause 
+
+  we compute a mapping:
+  \begin{displaymath}
+    \vec{\tilde{x}} = \mat D^{-\frac{1}{2}} \mat U^T \vec x
+  \end{displaymath}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{First Approach: Decorrelation}
+
+  For zero-mean vectors, the mapping:
+  \begin{displaymath}
+    \vec{\tilde{x}} = \mat D^{-\frac{1}{2}} \mat U^T \vec x
+  \end{displaymath}
+  is called \structure{\textit{Whitening Transform}}. \\[0.3cm] \pause
+
+  It has some \structure{interesting properties}:
+
+  \begin{itemize}
+    \item The mapped random variables $\tilde{x}_i$ are uncorrelated. \pause
+    \item $\vec{\tilde{x}}$ has unit variance:
+  \end{itemize}
+
+  \begin{eqnarray*}
+     E\{ \vec{\tilde{x}} \vec{\tilde{x}}^T \} 
+     &=& E\left\{ \Big( \mat D^{-\frac{1}{2}} \mat U^T \vec x \Big) \Big( \mat D^{-\frac{1}{2}} \mat U^T \vec x \Big)^T \right\} \pause 
+     = E\left\{ \mat D^{-\frac{1}{2}} \mat U^T \vec x \vec x^T \mat U \mat D^{-\frac{1}{2}} \right\} \\ \pause 
+     &=& \mat D^{-\frac{1}{2}} \mat U^T \mat \Sigma \mat U \mat D^{-\frac{1}{2}} = \mat D^{-\frac{1}{2}} \mat U^T \cdot \mat U \mat D \mat U^T \cdot \mat U \mat D^{-\frac{1}{2}} \\ \pause 
+     &=& \mat D^{-\frac{1}{2}} \mat D \mat D^{-\frac{1}{2}} \pause 
+     = \mat I
+  \end{eqnarray*}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{First Approach: Decorrelation}
+
+  We could interpret the mapped random variable $\vec{\tilde{x}}$ as an estimate of the latent variable model:
+  \begin{displaymath}
+    \vec s = \vec{\tilde x}
+  \end{displaymath}
+  But this would give poor results. \\[.3cm] \pause
+
+  \structure{Problem:} The whitening transform is not unique! \\[.3cm]
+  Consider for example an arbitrary orthogonal matrix $\mat R \in \real^{n \times n}$:
+%
+  \small
+  \begin{eqnarray*}
+    \vec{\hat x} 
+    &=& \mat R \vec{\tilde x} = \mat R \mat D^{-\frac{1}{2}} \mat U^T \vec x \\[.2cm] \pause 
+    E\{ \vec{\hat x} \vec{\hat x}^T \} 
+    &=& E\left\{ \mat R \left(\mat D^{-\frac{1}{2}} \mat U^T \vec x \right) \left( \mat D^{-\frac{1}{2}} \mat U^T \vec x \right)^T \mat R^T \right\} \\ \pause 
+    &=& \mat R \mat I \mat R^T \\ \pause 
+    &=& \mat I
+  \end{eqnarray*}
+\end{frame}
+
+\input{nextTime.tex}
+
+\begin{frame}
+  \frametitle{Second Approach: Independence}
+
+  \structure{Observations:}
+  
+  \begin{itemize}
+    \item Lack of correlation determines the second-degree cross-moments (covariances) of a multi-variate distribution.
+    \item Statistical independence is stronger, as it determines all of the cross-moments. \\[.3cm] \pause
+  \end{itemize}
+
+  Given 2 statistically independent random variables $y_1, y_2$ and 2 functions $h_1, h_2$:
+  \footnotesize
+  \begin{eqnarray*}
+    E\{ h_1(y_1) \, h_2(y_2) \}
+    &=& \iint h_1(y_1) \, h_2(y_2) \, p(y_1, y_2) \, \mathsf{d}y_1 \, \mathsf{d}y_2 \\ \pause 
+    &=& \iint h_1(y_1) \, p(y_1) \, h_2(y_2) \, p(y_2) \, \mathsf{d}y_1 \, \mathsf{d}y_2 \\ \pause
+    &=& \int h_1(y_1) \, p(y_1) \, \mathsf{d}y_1 \int h_2(y_2) \, p(y_2) \, \mathsf{d}y_2 \\ \pause 
+    &=& E\{ h_1(y_1) \} \, E\{ h_2(y_2) \}
+  \end{eqnarray*}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Second Approach: Independence}
+
+  These extra moment conditions allow us to identify the elements of $\mat A$ uniquely. \\[.5cm]
+
+  \structure{Case of Gaussian distribution:}
+  
+  \begin{itemize}
+    \item Gaussian distribution is determined by its second moments alone.
+    \item Any Gaussian independent components can be determined only \\
+      up to a rotation
+  \end{itemize}
+  \spread
+
+  Therefore, we assume that the $s_i$ are \structure{independent} and \structure{non-Gaussian}.
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Whitening Transform}
+
+  The whitening transform is usually done before ICA as a pre-processing step: \pause
+
+  \begin{itemize}
+    \item Mixing matrix $\mat A$ has $n^2$ degrees of freedom. \pause
+    \item Whitening transforms the mixing matrix $\mat A$ into $\mat{\tilde A}$:
+      \begin{displaymath}
+        \vec{\tilde x} = \mat D^{-\frac{1}{2}} \mat U^T \mat A \vec s = \mat{\tilde{A}} \vec s \pause
+      \end{displaymath}      
+    \item The new mixing matrix is \structure{orthogonal}:
+      \begin{displaymath}
+        E\{ \vec{\tilde x} \vec{\tilde x}^T \} = \mat{\tilde A} \, E\{\vec s \vec s^T \} \, \mat{\tilde A}^T = \mat I \pause
+      \end{displaymath}      
+    \item $\mat{\tilde A}$ is orthogonal and has \structure{$n (n-1) / 2$ degrees of freedom}
+  \end{itemize}
+
+  Thus, applying the whitening transform solves roughly half of the problem.
+\end{frame}
+
+
+\subsection{Illustration of ICA}
+
+\begin{frame}
+  \frametitle{Illustration of ICA}
+
+  Consider two independent components with the following uniform distributions:
+%
+  {\footnotesize
+  \begin{displaymath}
+    p(s_i) = \begin{cases}
+               \frac{1}{2\sqrt{3}} \quad &, ~\mbox{if}~|s_i| \leq \sqrt{3} \\
+               0 \quad &, ~\mbox{otherwise}
+             \end{cases}
+  \end{displaymath}
+  }
+
+  \begin{columns}
+    \pause
+    \column{.5\linewidth}
+      \vspace*{-.7cm}
+      \begin{center}
+        \resizebox{.9\linewidth}{!}{
+          \input{\texfigdir/ica1.pstex_t}
+        }
+      \end{center}
+    \column{.5\linewidth}
+      \pause
+      \structure{Properties of the joint pdf:}
+      \begin{itemize}
+        \item signal components are independent \pause
+        \item joint pdf is uniform on square \pause
+        \item zero mean \pause
+        \item variance is equal to one
+      \end{itemize}
+  \end{columns}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Illustration of ICA \cont}
+
+  The two independent components are mixed with the matrix:
+  {\footnotesize
+  \begin{displaymath}
+    \mat A = \left(
+               \begin{array}{cc}
+                 2 & 3 \\
+                 2 & 1
+               \end{array} 
+             \right) ~\normalsize ,~\mbox{which results in}~ \vec x = \mat A \vec s ~.
+  \end{displaymath}
+  }
+
+  \begin{columns}
+    \pause
+    \column{.5\linewidth}
+      \vspace*{-.7cm}
+      \begin{center}
+        \resizebox{0.9\linewidth}{!}{
+          \input{\texfigdir/ica2.pstex_t}
+        }
+      \end{center}
+    \column{.5\linewidth}
+      \pause
+      \structure{Properties of the mixed signal:}
+      \begin{itemize}
+        \item joint pdf of mixed signals is uniform on a parallelogram \\[.3cm] \pause 
+      \end{itemize}
+
+      \structure{More important:}
+      \begin{itemize}
+        \item $x_1, x_2$ are not independent any more
+      \end{itemize}
+  \end{columns}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Illustration of ICA \cont}
+
+  \structure{Intuitive way of estimating $\mat A$:}
+
+  \begin{itemize}
+    \item Edges of the parallelogram are in the directions of the columns of $\mat A$. \pause
+    \item In principle, we could first estimate the joint pdf of $x_1, x_2$. \pause 
+    \item If we locate the edges of the joint pdf, we can estimate $\mat A$.
+  \end{itemize}
+  \pspread
+
+  \structure{But:}
+
+  \begin{itemize}
+    \item Computationally quite expensive
+    \item This principle works only with \structure{exactly uniform} distributions.
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Illustration of ICA \cont}
+
+  \structure{Effect of the whitening transform applied to the data:} \\[.5cm]
+
+  \begin{columns}
+    \column{.5\linewidth}
+      \vspace*{-0.7cm}
+      \begin{center}
+        \resizebox{.9\linewidth}{!}{
+          \input{\texfigdir/ica_whitened.pstex_t}
+        }
+      \end{center}
+%
+    \column{.5\linewidth}
+      \pause 
+      \structure{Properties of the whitened observations:}
+      \begin{itemize}
+        \item Joint pdf of $\vec{\tilde x}$ is uniform on a square. \pause
+        \item Components are determined except for rotation. \pause
+        \item Problem of recovering $\mat{\tilde A}$ is much simpler.
+      \end{itemize}
+   \end{columns}
+\end{frame}
+
+
+\subsection{Properties of ICA}
+
+\begin{frame}
+  \frametitle{Basic Properties}
+
+  \structure{Assumptions for the ICA model:}
+
+  \begin{itemize}
+    \item We assume that the $s_j$ are mutually independent. \pause
+    \item The $s_j$ have to be non-Gaussian in order to determine them from the $x_i$. \pause
+    \item For simplicity, we assume that $\mat A$ is square.
+  \end{itemize}
+  \pspread
+
+  \structure{Ambiguities of the ICA model:}
+  
+  \begin{itemize} 
+    \item The $s_j$ are defined only up to a multiplicative constant.
+    \item The $s_j$ are not ordered.
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Ambiguities of ICA}
+
+  Writing the ICA model in terms of the colums of $\mat A$:
+  \begin{displaymath}
+    \vec x = \sum_{i=1}^n \vec a_i s_i \pause
+  \end{displaymath}
+  
+  \begin{itemize}
+    \item Any \structure{scalar multiplier} for $s_i$ can be eliminated by scaling $\vec a_i$ appropriately. \pause
+    \item The matrix $\mat A$ can be adapted to restrict the $s_i$ to have \structure{unit variance}. \pause
+    \item This still leaves the ambiguity of the \structure{sign}: \\
+      multiplying $s_i$ by $\pm 1$ does not affect the model. \pause
+    \item This ambiguity is usually \structure{insignificant} in most applications.
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Ambiguities of ICA \cont}
+
+  \structure{Ambiguity of the ordering:}
+  \begin{displaymath}
+    \vec x = \sum_{i=1}^n \vec a_i s_i
+  \end{displaymath}
+  \pspread
+  
+  \begin{itemize}
+    \item As both $\vec s$ and $\mat A$ are unknown we can change the order of the summation. \pause
+    \item Formalization using a \structure{permutation matrix $\mat P$}:
+      \begin{displaymath}
+        \vec x = \underbrace{\mat A \mat P}_{\mat A^{\ast}} \underbrace{\mat P^{-1} \vec s}_{\vec s^{\ast}} \pause
+      \end{displaymath}
+    \item $\mat A^{\ast}$ is just a new mixing matrix to be solved.
+  \end{itemize}
+\end{frame}
+
+
+\subsection{Basic Principle of ICA}
+
+\begin{frame}
+  \frametitle{Basic Principle of ICA}
+
+  So far, if we know $\mat A$, we could compute its inverse $\mat A^{-1}$ to obtain the independent components. Consider a linear combination of $x_i$ with a weight vector $\vec w$:
+  
+  \begin{displaymath}
+    y = \vec w^T \vec x
+  \end{displaymath}
+  \spread
+
+  Clearly, $y$ equals one of the independent components if $\vec w$ is one row of $\mat A^{-1}$.
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Basic Principle of ICA \cont}
+
+  Change in variables:
+
+  \begin{displaymath}
+    \vec z = \mat A^T \vec w
+  \end{displaymath}
+  
+  Applied to the linear combination:
+
+  \begin{displaymath}
+    y = \vec w^T \vec x = \vec w^T \mat A \vec s = \vec z^T \vec s
+  \end{displaymath}
+  \pspread
+
+  \structure{Result from the Central Limit Theorem:}
+
+  \begin{itemize}
+    \item The sum of a number of independent random variables tends toward a normal distribution. \pause
+    \item $\vec z^T \vec s$ is \textit{more Gaussian} than any of the $s_i$ \pause 
+    \item $\vec z^T \vec s$ is \textit{least Gaussian} when it equals one of the $s_i$
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Basic Principle of ICA \cont}
+
+  \structure{Key principle of ICA:} \\[.25cm]
+
+  Maximizing the non-Gaussianity of $\vec w^T \vec x$ results in the independent components!
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Basic Principle of ICA \cont}
+
+  \structure{Marginal distributions of the joint and the mixed signal:}
+
+  \begin{center}
+    \resizebox{\linewidth}{!}{%
+      \only<1>{\input{\texfigdir/ica1.pstex_t}}%
+      \only<1>{\hspace{0.5cm}\input{\texfigdir/ica1_marginal.pstex_t}}%
+      \only<2>{\input{\texfigdir/ica2.pstex_t}}%
+      \only<2>{\hspace{0.5cm}\input{\texfigdir/ica2_marginal.pstex_t}}%
+    }
+  \end{center}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Basic Principle of ICA \cont}
+
+  \structure{Reasons for the importance of the non-Gaussianity:} \pause 
+
+  \begin{itemize}
+    \item In case of Gaussian random variables, the ICA model can only be estimated up to an orthogonal transformation. \\[0.25cm]
+      \structure{Note:}\\
+      \quad If just one of the components is Gaussian, ICA still works. \\[0.25cm] \pause
+    \item The Gaussian is the \textit{most random} distribution within the family of pdfs with given mean and variance. \pause 
+    \item Therefore, it is the least informative pdf with respect to the underlying data.
+  \end{itemize}
+  \pspread
+
+  Distributions that have the \textit{least resemblance} to the Gaussian reveal more structure associated with the data.
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Importance of Non-Gaussianity}
+
+  The \textit{randomness} can be measured using the concept of entropy from Shannon's information theory:
+  
+  \begin{itemize}
+    \item Entropy is a measure of the uncertainty of an event, or the randomness of a measure.
+  \end{itemize}
+  \spread
+
+  \begin{citeblock}{Differential Entropy}
+  
+  The \textit{differential entropy} $H(X)$ of a continuous random variable $X$ with density $p(x)$ is defined as
+    \begin{displaymath}
+      H(p) = - \int p(x) \log p(x) \,\mathsf{d}x
+    \end{displaymath}
+  \end{citeblock}
+
+% The \textit{Kullback-Leibler distance} or \textit{relative entropy} between two densities $p$ and $q$ is:
+% $$
+%  D(p \| q) = \int p(x) \log \frac{p(x)}{q(x)} \mathsf{d}x
+% $$
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Importance of Non-Gaussianity \cont}
+
+  \begin{citeblock}{Theorem}
+
+    The Gaussian maximizes the entropy over all distributions with the same mean and the same covariance.
+  \end{citeblock}
+  \pspread
+
+  \structure{Proof:} \pause
+
+  \begin{itemize}
+    \item Let $x$ be the random variable, $p(x)$ the pdf that has the highest randomness. \pause
+    \item Rewrite moments $M_i$ equations using a set of polynomials $\{ r_i(x) \}$:
+      \begin{displaymath}
+        \int p(x) r_i(x) \,\mathsf{d}x = M_i ~,~\mbox{where}~M_i~\mbox{are called moments}. \pause 
+      \end{displaymath} 
+    \item Using $r_0(x) \equiv 1$, $M_0 = 1$ constrains $p(x)$ to be a pdf.
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Importance of Non-Gaussianity \cont}
+
+  \structure{Lagrangian functional for the maximum entropy problem:}
+
+  {\small
+  \begin{displaymath}
+    \argmin_{p(x)} J \equiv 
+    \argmin_{p(x)} \int p(x) \log p(x) \,\mathsf{d}x - \sum_{i = 0}^N \lambda_i \left( \int p(x) r_i(x) \,\mathsf{d}x - M_i \right)
+  \end{displaymath}
+  }
+  \pause 
+  
+  Taking the functional derivative with respect to $p(x)$ (G\^{a}teaux derivative) and setting it to zero:
+%
+  {\small
+  \begin{displaymath}
+    \frac{\delta J}{\delta p} = \log p(x) + 1 - \sum_{i=0}^N \lambda_i r_i(x) \stackrel{!}{=} 0
+  \end{displaymath}
+  }
+  \pause 
+%  
+  yields the family of exponential distributions:
+%
+  {\small
+  \begin{displaymath}
+    p(x) = \exp \left( -1 + \sum_{i=0}^N \lambda_i r_i(x) \right)
+  \end{displaymath}
+  }
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Importance of Non-Gaussianity \cont}
+
+  Result for using first and second moments for mean $\mu$ and variance $\sigma^2$:
+  \begin{displaymath}
+    p(x) = e^{-(1 - \lambda_0 - \lambda_1 x - \lambda_2 (x-\mu)^2)}
+  \end{displaymath}
+  \pause 
+  
+  Plug the form into the constraints:
+  \begin{eqnarray*}
+    \int e^{-(1 - \lambda_0 - \lambda_1 x - \lambda_2 (x-\mu)^2)} \,\mathsf{d}x &=& 1 \\
+    \int x e^{-(1 - \lambda_0 - \lambda_1 x - \lambda_2 (x-\mu)^2)} \,\mathsf{d}x &=& \mu \\
+    \int (x-\mu)^2 e^{-(1 - \lambda_0 - \lambda_1 x - \lambda_2 (x-\mu)^2)} \,\mathsf{d}x &=& \sigma^2
+  \end{eqnarray*}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Importance of Non-Gaussianity \cont}
+
+  Integrate analytically (non-trivial) and solve for Lagrangian multipliers:
+  \begin{eqnarray*}
+    \lambda_0 &=& 1 - \frac{1}{2} \log(2 \pi \sigma^2 ) \\
+    \lambda_1 &=& 0 \\
+    \lambda_2 &=& - \frac{1}{2 \sigma^2}  
+  \end{eqnarray*}
+  \pspread
+
+  Insert the results into the form of $p(x)$:
+  \begin{eqnarray*}
+    p(x) &=& e^{-(1 - \lambda_0 - \lambda_1 x - \lambda_2 (x-\mu)^2)} \\
+         &=& e^{-\frac{1}{2} \log(2 \pi \sigma^2)} e^{-\frac{(x-\mu)^2}{2 \sigma^2}} \\
+         &=& \frac{1}{\sqrt{2 \pi} \sigma} e^{- \frac{(x-\mu)^2}{2 \sigma^2}}
+  \end{eqnarray*}
+
+  \hfill \qed
+\end{frame}
+
+
+\subsection{ICA Estimation Algorithm}
+
+\begin{frame}
+  \frametitle{ICA Estimation Algorithm}
+
+  \structure{Basic ICA Estimation Algorithm:}
+  
+  \begin{centernss}
+    \resizebox{.9\linewidth}{!}{
+      \begin{struktogramm}(105,50)
+        \assign{Apply centering transform}
+        \assign{Apply whitening transform}
+        \assign{$i \gets 1$}
+        \until{$i > n$~ ($n$: number of independent components)}
+          \assign{Take a random vector $\vec w_i$}
+          \assign{Maximize non-Gaussianity of $\vec w_i^T \vec x$ subject to\\
+            $\| \vec w_i \| = 1$ \\
+            $\vec w_j^T \vec w_i = 0 ~,~ j < i$}
+          \assign{$i \gets i+1$}
+        \untilend
+        \assign{Use weight matrix: $\mat W = \left( \vec w_1^T, \vec w_2^T, \ldots, \vec w_n^T \right)$ to compute   $\vec s$}
+        \assign{Output: independent components $\vec s$}
+      \end{struktogramm}
+    }
+  \end{centernss}
+
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{ICA Estimation Algorithm \cont}
+
+  \structure{Notes:}
+
+  \begin{itemize}
+    \item Estimation by maximizing non-Gaussianity of independent components. \pause
+    \item There exist equivalent algorithms for solving the ICA:
+      \begin{itemize}
+        \item Gradient descent methods
+        \item Fast ICA
+      \end{itemize}
+      \pause
+    \item Relation to Projection Pursuit approach (Friedman and Tukey, 1974):
+      \begin{itemize}
+        \item Projection Pursuit is a method for visualization and exploratory data analysis.
+        \item Attempts to show clustering structure by finding \textit{interesting} projections.
+        \item Interestingness is usually measured by non-Gaussianity.
+      \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\input{nextTime.tex}
+
+\subsection{Measures of Non-Gaussianity}
+
+\begin{frame}
+  \frametitle{Measures of Non-Gaussianity}
+
+  \begin{itemize}
+    \item So far, we have seen that the key principle in estimating independent components is the non-Gaussianity. \pause
+    \item In order to optimize the independent components, we need a quantitative measure of non-Gaussianity.
+  \end{itemize}
+  \pspread
+
+  Consider the random variable $y$ and assume that it has zero mean and unit variance (enforced by pre-processing).\\[.5cm] \pause
+
+  We will consider \structure{three measures of non-Gaussianity}:
+
+  \begin{itemize}
+    \item \structure{Kurtosis}
+    \item \structure{Negentropy}
+    \item \structure{Mutual Information}
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Kurtosis}
+
+  \begin{citeblock}{Definition}
+ 
+   The \structure{\textit{Kurtosis}} of $y$ is defined as:
+    \begin{displaymath}
+      \kurt(y) = E \{ y^4 \} - 3 \left( E\{ y^2 \} \right)^2
+    \end{displaymath}
+    \pause
+%    
+    Since $y$ has unit variance, the equation simplifies to:
+    \begin{displaymath}
+      \kurt(y) = E \{ y^4 \} - 3
+    \end{displaymath}
+    \pause 
+%    
+    Linearity properties for independent random variables $y_1, y_2$:
+    \begin{eqnarray*}
+      \kurt(y_1 + y_2) &=& \kurt(y_1) + \kurt(y_2) \\
+      \kurt(\alpha y) &=& \alpha^4 \kurt(y) ~, \quad \alpha \in \real
+    \end{eqnarray*}
+  \end{citeblock}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Kurtosis \cont}
+
+  \structure{Kurtosis for a Gaussian distribution:}
+  
+  \begin{itemize}
+    \item The $n$-th central moment of a Gaussian distribution $p(y) = {\mathcal{N}}(y | \mu, \sigma^2)$ with mean $\mu$ and variance $\sigma^2$ is:
+      \begin{eqnarray*}
+        E \{ (y - \mu)^n \} = \begin{cases}
+                                (n-1) !! \cdot \sigma^n \quad &, ~n~ \mbox{even} \\
+                                0 \quad &, ~n~ \mbox{odd}
+                              \end{cases}
+      \end{eqnarray*}
+      \structure{Note:}
+      $(n)!!$ denotes the double factorial, i.\,e.\ the product of every odd \\ 
+      \hspace{0.85cm} number from 1 to $n$. \pause
+    \item Thus, for a zero mean, unit variance random variable $y$ that is normally distributed:
+      \begin{displaymath}
+        \kurt(y) = 0
+      \end{displaymath}
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Kurtosis \cont}
+
+  \structure{Properties of Kurtosis:}
+
+  \begin{itemize}
+    \item Kurtosis is zero for a Gaussian random variable. \pause
+    \item For most (but not all) non-Gaussian random variables, \\
+      Kurtosis is nonzero. \pause
+    \item Kurtosis can be positive or negative. \pause
+    \item Typically, non-Gaussianity is measured as:
+      \begin{itemize}
+        \item \structure{$| \kurt(y) |$} ~ or
+        \item \structure{$\kurt(y)^2$}
+      \end{itemize}
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Kurtosis \cont}
+  
+  \begin{ovalblock}{Example}
+    \begin{columns}
+      \column{.5\textwidth}
+        \structure{\small \hspace{.5cm} Subgaussian pdf:}
+        {\footnotesize
+        \begin{displaymath}
+          p(y) = \begin{cases}
+                   \frac{1}{2\sqrt{3}} \quad &, ~\mbox{if}~|y| \leq \sqrt{3} \\
+                   0 \quad &, ~\mbox{otherwise}
+                 \end{cases}
+        \end{displaymath}
+        }
+      \column{.5\textwidth}
+        \structure{\small \hspace{.5cm} Supergaussian pdf:}
+        {\footnotesize
+        \begin{displaymath}
+          p(y) = \frac{1}{\sqrt{2}} \exp(-\sqrt{2} |y|)
+        \end{displaymath}
+        }
+    \end{columns}
+
+    \vspace{-0.5cm}
+    \begin{columns}
+      \column{.5\textwidth}
+        \begin{center}
+          \resizebox{.85\linewidth}{!}{
+            \input{\texfigdir/subgaussian.pstex_t}
+          }
+        \end{center}
+%
+        \vspace{-0.3cm}
+        {\footnotesize
+        \begin{displaymath}
+          \kurt(y) < 0
+        \end{displaymath}
+        }
+
+      \column{.5\textwidth}
+        \begin{center}
+          \resizebox{.85\linewidth}{!}{
+            \input{\texfigdir/supergaussian.pstex_t}
+          }
+        \end{center}
+ %       
+        \vspace{-0.3cm}
+        {\footnotesize
+        \begin{displaymath}
+          \kurt(y) > 0
+        \end{displaymath}
+        }
+    \end{columns}
+  \end{ovalblock}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Kurtosis \cont}
+
+  \begin{itemize}
+    \item Consider 2-D case using the linear combination:
+      \begin{eqnarray*}
+        y        &=& \vec w^T \vec x = \vec w^T \mat A \vec s = \vec z^T \vec s = z_1 s_1 + z_2 s_2 \\
+        \kurt(y) &=& \kurt(z_1 s_1) + \kurt(z_2 s_2) = z_1^4 \kurt(s_1) + z_2^4 \kurt(s_2) \pause
+      \end{eqnarray*}
+    \item As $y$ has unit variance, concerning also $s_1, s_2$:
+      \begin{displaymath}
+        E\{ y^2 \} = z_1^2 + z_2^2 = 1
+      \end{displaymath}
+      which constrains $\vec z$ to the unit circle in the 2-D plane. \\[.25cm] \pause
+    \item Thus, we have to find the maximum of the following function on the unit circle w.\,r.\,t.\ $\vec z$:
+      \begin{displaymath}
+        | \kurt(y) | = | z_1^4 \kurt(s_1) + z_2^4 \kurt(s_2) |
+      \end{displaymath}
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Kurtosis}
+
+  \structure{Optimization landscape for Kurtosis in 2-D plane:}
+
+  \begin{center}
+    \resizebox{.4\linewidth}{!}{     
+      \input{\texfigdir/kurtosis_optimization.pstex_t}
+    }
+  \end{center}
+  
+  \begin{itemize}
+    \item Thick curve is the unit circle
+    \item Thin curves are isocontours of the objective function \pause
+    \item The maxima are located at sparse values of $\vec z$, i.\,e.\ when:
+      \begin{center}
+        \tikz[baseline]{
+          \node[fill=bl1!100, anchor=base, rounded corners=3pt, inner sep=2mm] (d1) {
+            \color{bl3}
+            $y = \pm s_i$
+          };
+        }
+      \end{center}
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Kurtosis \cont}
+
+  \structure{Maximizing the non-Gaussianity of a vector $\vec w$ in practice:}
+  
+  \begin{itemize}
+    \item Start with some initial vector $\vec w$. \pause
+    \item Use a gradient descent method to optimize:
+      \begin{displaymath}
+        \argmax_{\vec w} | \kurt (y) | = \argmax_{\vec{w}} | \kurt(\vec w^T \vec x) | \pause
+      \end{displaymath}
+    \item Plug this optimization into the ICA estimation algorithm (see above).
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Kurtosis \cont}
+
+  \structure{Kurtosis as a function of the direction of the projection:}
+
+  \begin{figure}
+    \centering
+    \resizebox{\linewidth}{!}{    
+      \resizebox{.3\linewidth}{!}{    
+        \input{\texfigdir/ica_kurtosis.pstex_t}
+      }
+      \resizebox{.4\linewidth}{!}{    
+        \quad
+        \input{\texfigdir/kurtosis.pstex_t}
+      }
+    }
+    \caption{\footnotesize Example for negative Kurtosis.}
+  \end{figure}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Kurtosis \cont}
+
+  \structure{Kurtosis as a function of the direction of the projection:}
+  
+  \begin{figure}
+    \centering
+    \resizebox{.9\linewidth}{!}{    
+      \resizebox{.3\linewidth}{!}{    
+        \input{\texfigdir/laplacian2D.pstex_t}
+      }
+      \resizebox{.43\linewidth}{!}{    
+        \quad
+        \input{\texfigdir/laplacian2D_kurtosis.pstex_t}
+      }
+    }
+    \caption{\footnotesize Example for positive Kurtosis.}
+  \end{figure}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Kurtosis \cont}
+  
+  Despite being a valid measure for non-Gaussianity, Kurtosis has some \structure{drawbacks in practice} when it is computed on a set of measurement samples:
+
+  \begin{itemize}
+    \item Kurtosis can be very sensitive to outliers due to higher order statistical moments. \pause
+    \item Not optimal for supergaussian variables even without outliers. \pause
+    \item It is not a robust measure of non-Gaussianity.
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Negentropy}
+  
+  \structure{Observations:}
+
+  \begin{itemize}
+    \item A Gaussian variable has the \structure{largest entropy} among all random variables of equal variance. \pause
+    \item Entropy is \structure{small} for distributions that are ``spiky''. \pause
+    \item Negentropy can be used as a measure for non-Gaussianity: \\
+      it is zero for Gaussian random variables and always non-negative.
+  \end{itemize}
+  \pspread
+
+  \begin{citeblock}{Negentropy}
+   
+ The \textit{Negentropy} $J(\vec{y})$ of a random variable $\vec{y}$ is defined as follows:
+    \begin{displaymath}
+      J(\vec{y}) = H(\vec{y}_{\mathsf{Gauss}}) - H(\vec{y})
+    \end{displaymath}
+    where $\vec{y}_{\mathsf{Gauss}}$ is a Gaussian random variable with the same covariance \\
+    as $\vec{y}$.
+  \end{citeblock}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Negentropy \cont}
+  
+  \structure{Properties of Negentropy:}
+
+  \begin{itemize}
+    \item Measure is well justified by statistical theory. \pause
+    \item In theory, negentropy is an optimal statistical estimator of non-Gaussianity. \pause
+    \item Computing the negentropy from a measured sample set requires the estimation of the pdf. \pause
+    \item The (non-parametric) estimation of a pdf from samples is non-trivial and often computationally expensive.
+  \end{itemize}
+  \pspread
+
+  \structure{Approximations} for negentropy exist that are both robust and computationally more efficient than the direct pdf-based approach.
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Mutual Information}
+
+  \structure{Information-theoretic approach:}
+
+  \begin{itemize}
+    \item Negentropy measures the difference in terms of information value to Gaussian random variables. \pause
+    \item Instead, we could measure the \structure{statistical dependency} between the random variables directly. \pause
+    \item \textit{Mutual Information} is a concept to measure the \structure{entire dependency structure} of random variables (and not only the covariance)
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Mutual Information}
+  
+  \begin{citeblock}{Mutual Information}
+  
+  The \textit{Mutual Information} between $n$ scalar random variables $\vec y = y_1, \ldots, y_n$ is defined as:
+    \begin{eqnarray*}
+      \MI(\vec y) &=& \sum_{i = 1}^n H(y_i) - H(\vec y) \\
+                  &=& \KL \left( p(\vec y) \| \prod_{i=1}^n p(y_i) \right)
+    \end{eqnarray*}
+    where $H$ denotes the (differential) entropy and $\KL$ the Kullback-Leibler divergence.
+  \end{citeblock}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Mutual Information \cont}
+  
+  \structure{Interpretation:}
+
+  \begin{itemize}
+    \item Entropy can be regarded as a measure for code length. \pause
+    \item $H(y_i)$ is a measure for the code length necessary to encode $y_i$. \pause
+    \item $H(\vec y)$ can be regarded as the code length necessary to encode the entire vector $\vec y$. \\[.5cm] \pause
+    \item In this context, $\MI$ shows the \structure{reduction in code length} obtained when encoding $\vec y$ instead of the components $y_i$ separately.
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Mutual Information \cont}
+
+  \structure{Properties of $\MI$:}
+
+  \begin{itemize}
+    \item For an \structure{invertible linear transform} $\vec y = \mat W \vec x$:
+      \begin{displaymath}
+        \MI(\vec y) = \sum_{i=1}^n H(y_i) - H(\vec x) - \log | \det \mat W | \pause
+      \end{displaymath}
+    \item For uncorrelated $y_i$ of unit variance, $\MI$ and negentropy differ only by a constant and a sign:
+      \begin{displaymath}
+        \MI(\vec y) = C - \sum_{i=1}^n J(y_i)
+      \end{displaymath}
+  \end{itemize}
+  \pspread
+
+  Therefore, instead of maximizing the negentropy we can \structure{minimize the \\Mutual Information} to compute the direction of highest non-Gaussianity.
+\end{frame}
+
+
+\subsection{Lessons Learned}
+
+\begin{frame}
+  \frametitle{Lessons Learned}
+  
+  \begin{itemize}
+    \item ICA is a simple model based on a linear non-Gaussian latent variables \\[.25cm]
+    \item Non-Gaussianity as key principle \\[.25cm]
+    \item Estimation by maximizing non-Gaussianity of independent components \\[.25cm]
+    \item Equivalence between Kurtosis, Negentropy and Mutual Information
+  \end{itemize}
+\end{frame}
+
+\input{nextTime.tex}
+
+\subsection{Further Readings}
+
+\begin{frame}
+  \frametitle{Further Readings}
+
+  Examples and various content have been taken mainly from \\
+  the overview paper:
+
+  \begin{itemize}
+    \item A.\ Hyv{\"a}rinen, E.\ Oja: \\
+      \structure{Independent Component Analysis: Algorithms and Applications}, \\
+      Neural Networks, 13(4-5):411-430, 2000. \\[.25cm]
+  \end{itemize}
+
+  \structure{Further reading:}
+  
+  \begin{itemize}
+    \item T.\ Hastie, R.\ Tibshirani, J.\ Friedman: \\
+      \structure{The Elements of Statistical Learning}, \\
+      2nd Edition, Springer, 2009. \\[.15cm]
+    \item T.\,M.\ Cover, J.\,A.\ Thomas: \\
+      \structure{Elements of Information Theory}, \\
+      2nd Edition, John Wiley \& Sons, 2006.
+  \end{itemize}
+\end{frame}
+
+
+\subsection{Comprehensive Questions}
+
+\begin{frame}
+  \frametitle{Comprehensive Questions}
+
+  \begin{itemize}
+    \item What is the latent variables model behind independent component analysis? \\[.5cm]
+    \item Why are whitening transformed observations not the independent components? \\[.5cm]
+    \item Why is non-Gaussianity so important for the independent components? \\[.5cm]
+    \item How can non-Gaussianity be measured?
+  \end{itemize}
+\end{frame}

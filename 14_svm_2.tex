@@ -1,0 +1,419 @@
+\section{Support Vector Machines II}
+
+\subsection{Hard Margin Problem}
+
+\begin{frame}
+  \frametitle{Hard Margin Problem}
+
+  The hard margin SVM optimization problem is formulated as:
+
+  \begin{eqnarray*}
+    & \mbox{minimize}   & \frac{1}{2} {\|\vec \alpha\|^2_2} \\[.3cm]
+    & \mbox{subject to} & \forall i: \quad y_i\cdot (\vec \alpha^T\vec x_i + \alpha_0) -1 \geq 0
+  \end{eqnarray*}
+\end{frame}
+
+
+\subsection{Soft Margin Problem}
+
+\begin{frame}
+  \frametitle{Soft Margin Problem}
+ 
+  The soft margin SVM optimization problem is formulated as:
+  
+  \begin{eqnarray*}
+    & \mbox{minimize}   & \frac{1}{2} {\|\vec \alpha\|^2_2} + \mu \sum_i \xi_i \\[.5cm]
+    & \mbox{subject to} & \forall i: \quad -(y_i\cdot (\vec \alpha^T\vec x_i + \alpha_0) -1+\xi_i) \leq 0~, \\[.3cm]
+    &                   & \forall i: \quad -\xi_i \leq 0
+  \end{eqnarray*}
+\end{frame}
+
+
+\subsection{Lagrangian}
+
+\begin{frame}
+  \frametitle{Lagrangian}
+
+  The solution of the \structure{constrained convex optimization problem} \\
+  requires the Lagrangian:
+ 
+  \begin{eqnarray*}
+    L(\vec \alpha, \alpha_0, \vec \xi, \vec \lambda, \vec \mu)
+     & = & \frac{1}{2} {\|\vec \alpha\|^2_2} + \mu \sum_i \xi_i  -\sum_i \mu_i \xi_i\\
+     &   & \quad - \sum_i \lambda_i (y_i\cdot (\vec \alpha^T\vec x_i + \alpha_0) -1+\xi_i)
+  \end{eqnarray*}
+\end{frame}
+
+\subsection{Lagrangian}
+
+\begin{frame}
+  \frametitle{Lagrangian}
+
+  The solution of the \structure{constrained convex optimization problem} \\
+  requires the Lagrangian:
+
+~\\ 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\bf{meta-}~~~~~~~~\bf{Lagrangian}\\
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\bf{parameter}~~~~\bf{multiplier}
+  \begin{eqnarray*}
+    L(\vec \alpha, \alpha_0, \vec \xi, \vec \lambda, \vec \mu)
+	  & = & \frac{1}{2} {\|\vec \alpha\|^2_2} + {\color{red} \mu} \sum_i \xi_i  -\sum_i {\color{red} \mu_i} \xi_i\\
+     &   & \quad - \sum_i \lambda_i (y_i\cdot (\vec \alpha^T\vec x_i + \alpha_0) -1+\xi_i)
+  \end{eqnarray*}
+\end{frame}
+
+\subsection{Lagrangian}
+
+\begin{frame}
+  \frametitle{Lagrangian}
+
+  The solution of the \structure{constrained convex optimization problem} \\
+  requires the Lagrangian:
+
+~\\ 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\bf{meta-}~~~~~~~~\bf{Lagrangian}\\
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\bf{parameter}~~~~\bf{multiplier}
+  \begin{eqnarray*}
+    L(\vec \alpha, \alpha_0, \vec \xi, \vec \lambda, \vec \mu)
+	  & = & \frac{1}{2} {\|\vec \alpha\|^2_2} + {\color{red} c} \sum_i \xi_i  -\sum_i {\color{red} \mu_i} \xi_i\\
+     &   & \quad - \sum_i \lambda_i (y_i\cdot (\vec \alpha^T\vec x_i + \alpha_0) -1+\xi_i)
+  \end{eqnarray*}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Lagrangian \cont}
+
+  \structure{Partial derivatives  I:}
+ 
+  \begin{displaymath}
+    \frac{\partial  L(\vec \alpha, \alpha_0, \vec \xi, \vec \lambda, \vec \mu)}{\partial \vec \alpha} ~=~ 
+    \vec \alpha - \sum_i \lambda_i y_i \vec x_i ~\stackrel{!}{=}~ 
+    \vec 0.
+  \end{displaymath}
+
+  Thus we have:
+
+  \begin{displaymath}
+    \vec \alpha = \sum_i \lambda_i y_i \vec x_i~. 
+  \end{displaymath}
+\end{frame}
+ 
+ 
+\begin{frame}
+
+  \frametitle{Lagrangian \cont}
+  
+  \structure{Partial derivatives  II:}
+  
+  \begin{displaymath}
+    \frac{\partial  L(\vec \alpha, \alpha_0, \vec \xi, \vec \lambda, \vec \mu)}{\partial \alpha_0} ~=~
+   -\sum_i \lambda_i y_i ~\stackrel{!}{=}~ 
+   0
+  \end{displaymath}
+  \pspread
+
+  \structure{Partial derivatives  III:}
+  
+  \begin{displaymath}
+    \frac{\partial  L(\vec \alpha, \alpha_0, \vec \xi, \vec \lambda, \vec \mu)}{\partial \xi_i} ~=~ 
+    c - \mu_i - \lambda_i ~\stackrel{!}{=}~ 
+    0
+  \end{displaymath}
+\end{frame}
+
+
+\subsection{Lagrange Dual}
+
+\begin{frame}
+  \frametitle{Lagrange Dual}
+ 
+  Let us consider the \structure{Lagrange function for the dual problem} for the hard margin case:
+  
+  \begin{eqnarray*}
+    L_\text{D}
+    &=& \frac{1}{2} {\vec \alpha^T \vec \alpha} -
+        \sum_i \lambda_i (y_i\cdot (\vec \alpha^T\vec x_i + \alpha_0) -1) \\[.3cm] \pause
+    &=& \frac{1}{2}{\vec \alpha^T \vec \alpha} - 
+        (\underbrace{\sum_i \lambda_i y_i\cdot \vec x_i)^T}_{{\vec \alpha^T}} \vec \alpha - 
+        \underbrace{ \sum_i \lambda_iy_i}_{ = 0}\ \alpha_0 + 
+        \sum_i \lambda_i \\[.3cm] \pause
+    &=& -\frac{1}{2} \sum_i \sum_j \lambda_i \lambda_j y_i y_j \cdot \vec x_i^T\vec x_j +  \sum_i \lambda_i
+  \end{eqnarray*}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{The Lagrange Dual Problem}
+ 
+  The Lagrange dual problem is given by the optimization problem: \\[.25cm]
+  
+  \begin{center}
+    \tikz[baseline]{
+      \node[fill=bl1!100,anchor=base,rounded corners=3pt] (d1) {
+        \color{bl3}
+        $\begin{aligned}
+           \displaystyle 
+           \mbox{maximize}   & \qquad -\frac{1}{2} \sum_i \sum_j \lambda_i \lambda_j y_i y_j \cdot \vec x_i^T\vec x_j + \sum_i \lambda_i \\[.3cm]
+           \mbox{subject to} & \qquad \vec{\lambda}\succeq 0 \\
+                             & \qquad \sum_{i} \lambda_i \, y_i = 0
+         \end{aligned}$
+      };
+    }
+  \end{center}
+  \pause
+
+  \structure{Benefits of the dual representation}
+  \begin{itemize}
+    \item The model can be reformulated using kernels.
+    \item SVMs can be applied efficiently to feature spaces whose dimensionality exceeds the number of samples.
+  \end{itemize}
+\end{frame}
+
+\note{
+  From Bishop: Pattern Recognition and Machine Learning
+
+  The solution to a quadratic programming problem in $d$ variables in general has computational complexity that is $\mathcal{O}(d^3)$.
+  In going to the dual formulation we have turned the original optimization problem, which involved minimizing
+  \begin{eqnarray*}
+    & \mbox{minimize}   & \frac{1}{2} {\|\vec \alpha\|^2_2} \\[.3cm]
+    & \mbox{subject to} & \forall i: \quad y_i\cdot (\vec \alpha^T\vec x_i + \alpha_0) -1 \geq 0
+  \end{eqnarray*}
+  over $d$ variables, into the dual problem, which has $m$ variables.
+  For a fixed set of basis functions whose number $d$ is smaller than the number $m$ of data points, the move to the dual problem appears disadvantageous. 
+  However, it allows the model to be reformulated using kernels, and so the maximum margin classifier can be applied efficiently to feature spaces whose dimensionality exceeds the number of data points, including infinite feature spaces.
+  The kernel formulation also makes clear the role of the constraint that the kernel function $k(\vec{x},\vec{x}')$ be positive definite, because this ensures that the Lagrangian function $L_\text{D}$ is bounded below, giving rise to a well-defined optimization problem.
+}
+
+
+\begin{frame}
+  \frametitle{Lagrange Dual Problem \cont}
+ 
+  For convex optimization problems with differentiable objective and constraint functions, the duality gap is zero,
+  if the KKT conditions are satisfied. \\[.5cm] \pause 
+
+  Especially the \structure{complementary slackness} condition is interesting for us:
+  \begin{displaymath}
+    \forall i: \quad \lambda_i \, f_i(\vec{x}) = 0 
+  \end{displaymath}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Lagrange Dual Problem \cont}
+ 
+  \structure{Complementary slackness for hard margin SVMs:}
+
+  \begin{displaymath}
+    \forall i: \quad \lambda_i \, (y_i\cdot (\vec \alpha^T\vec x_i + \alpha_0) - 1) = 0 \pause
+  \end{displaymath}
+ 
+  \structure{Implications:} \\[.2cm]
+  
+  \begin{enumerate}
+    \item If $\lambda_i>0$, then $y_i \, (\vec{\alpha}^T \vec{x}_i + \alpha_0) - 1=0$, and thus:
+      \begin{displaymath}
+        y_i(\vec{\alpha}^T \vec{x}_i + \alpha_0) = 1~.
+      \end{displaymath}
+      All $\vec x_i$ with $\lambda_i>0$  are elements at the boundary of the slab; \\
+      these samples are called \structure{\emph{support vectors}}. \\[.2cm] \pause
+    \item We have seen that $  \vec \alpha = \sum_i \lambda_i y_i \vec x_i $, thus the norm vector of the decision boundary is a linear combination of support vectors.
+  \end{enumerate}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Dual Representation}
+
+  The \structure{decision function} can also be rewritten using the duality:
+
+  \begin{center}
+    \tikz[baseline]{
+      \node[fill=bl1!100,anchor=base,rounded corners=3pt] (d1) {
+        \color{bl3}
+        $\begin{aligned}
+           \displaystyle 
+           f(\vec x) = 
+           \vec{\alpha}^T \vec{x} +\alpha_0 = 
+           \sum_{i=1}^m \lambda_i y_i \vec x_i^T \vec x + \alpha_0
+         \end{aligned}$
+      };
+    }
+  \end{center}
+  \pause
+
+  \vspace{.5cm}
+  \structure{Conclusion:} \\[.2cm]
+ 
+  Feature vectors only appear in inner products, both in the learning and the classification phase.
+\end{frame}
+
+
+\subsection{Feature Transforms}
+
+\begin{frame}
+  \frametitle{Feature Transforms}
+
+  \structure{Linear decision boundaries} in its current form have serious \structure{limitations}: \\[.2cm]
+  
+  \begin{itemize}
+    \item  Non-linearly separable data cannot be classified. \\[.3cm]
+    \item  Noisy data cause problems. \\[.3cm]
+    \item  Formulation deals with vectorial data only.
+  \end{itemize}
+  \pspread
+
+  \structure{Possible solution:} \\[.2cm]
+
+  \begin{itemize}
+    \item Map data into richer feature space using non-linear feature transform, \\
+      then use a linear classifier.
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Feature Transforms \cont}
+ 
+  We select a feature transform 
+  \begin{displaymath}
+    \phi: \real^d \rightarrow \real^D, \quad D \ge d
+  \end{displaymath}
+  such that the resulting features 
+  \begin{displaymath}
+    \phi(\vec x_i), \quad i = 1, 2, \dots, m
+  \end{displaymath}
+  are linearly separable.
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Feature Transforms \cont}
+
+  \begin{ovalblock}{Example}
+    Assume the decision boundary is given by the quadratic function
+    \begin{displaymath}
+      f(\vec x) = a_0 + a_1 x_1^2 + a_2 x_2^2 + a_3 x_1 x_2 + a_4 x_1+a_5 x_2.
+    \end{displaymath}
+
+    Obviously this is not a linear decision boundary. \\[.25cm] \pause
+
+    By the following mapping, we get features that have a linear decision boundary:
+    \small
+    \begin{displaymath}
+      \phi(\vec x) = \left(\begin{array}{c}
+                             1 \\ x_1^2 \\ x_2^2 \\ x_1x_2 \\ x_1 \\ x_2
+                           \end{array}
+                     \right)
+    \end{displaymath}
+  \end{ovalblock}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Feature Transforms \cont}
+  
+  These feature transforms can be easily incorporated into SVMs:\\[.25cm]
+  
+  \begin{itemize}
+    \item \structure{Decision boundary:}
+      {\small
+        \begin{displaymath}
+          f(\vec x) = \sum_i \lambda_i y_i \cdot  \langle\phi(\vec x_i), \phi(\vec x) \rangle + \alpha_0 \pause
+        \end{displaymath}
+      }
+    \item The Lagrange dual problem is given by the \structure{optimization problem}:
+      {\small
+        \begin{eqnarray*}
+          \mbox{maximize}  & & -\frac{1}{2} \sum_i \sum_j \lambda_i \lambda_j y_i y_j \cdot \langle\phi(\vec x_i),\phi(\vec x_j)\rangle + \sum_i \lambda_i \\[.5cm]
+          \mbox{subject to} & &\vec{\lambda}\succeq 0, \quad \sum_{i} \lambda_i \, y_i = 0
+        \end{eqnarray*}
+      }
+  \end{itemize}
+\end{frame}
+
+
+\subsection{Kernel Functions}
+
+\begin{frame}
+  \frametitle{Kernel Functions}
+  
+  We now define \structure{kernel functions}:
+  \begin{displaymath}
+    k(\vec x, \vec x') =  \langle \phi(\vec x), \phi(\vec x') \rangle
+  \end{displaymath}
+  \pspread
+ 
+  Typical kernel functions are: \\[.25cm]
+ 
+  \small
+  \begin{itemize}
+    \item \structure{Linear:} 
+      \begin{displaymath}
+        k(\vec x, \vec x') =~ \langle\vec x, \vec x'\rangle
+      \end{displaymath}
+    \item \structure{Polynomial:} 
+      \begin{displaymath}
+        k(\vec x, \vec x') = (\langle\vec x, \vec x'\rangle + 1)^k
+      \end{displaymath}
+    \item \structure{Radial basis function:} 
+      \begin{displaymath}
+        k(\vec x, \vec x') = e^{-\gamma\|\vec x- \vec x'\|_2^2}
+      \end{displaymath}
+    \item \structure{Sigmoid kernel:} 
+      \begin{displaymath}
+        k(\vec x, \vec x') =\mbox{tanh}({ \alpha \langle\vec x, \vec x'\rangle + \beta})
+      \end{displaymath}
+  \end{itemize}
+\end{frame}
+
+
+\subsection{Lessons Learned}
+
+\begin{frame}
+  \frametitle{Lessons Learned}
+  
+  \begin{itemize}
+    \item Lagrangian formulation of the hard and soft margin problems \\[.5cm]
+    \item Langrange dual representation \\[.5cm]
+    \item Idea of feature transforms
+  \end{itemize}
+\end{frame}
+
+\input{nextTime.tex}
+
+\subsection{Further Readings}
+
+\begin{frame}
+  \frametitle{Further Readings}
+  
+  \begin{itemize}
+    \item Bernhard Sch{\"o}lkopf, Alexander J. Smola: \\
+      \structure{Learning with Kernels}, \\
+      The MIT Press, Cambridge, 2003. \\[.15cm]
+    \item Vladimir N. Vapnik: \\
+      \structure{The Nature of Statistical Learning Theory}, \\
+      Information Science and Statistics, Springer, Heidelberg, 2000. \\[.15cm]
+    \item S.~Boyd, L.~Vandenberghe: \\
+      \structure{Convex Optimization}, \\
+      Cambridge University Press, 2004. \\
+      \point{\small \url{http://www.stanford.edu/~boyd/cvxbook/}} \\[.15cm]
+    \item Christopher M.\ Bishop: \\
+      \structure{Pattern Recognition and Machine Learning}, \\ 
+      Springer, New York, 2006
+  \end{itemize}
+\end{frame}
+
+
+\subsection{Comprehensive Questions}
+
+\begin{frame}
+  \frametitle{Comprehensive Questions}
+
+  \begin{itemize}
+    \item What is the Lagrangian of the hard margin SVM? \\[1cm]
+    \item What are the KKT optimality conditions for the hard margin SVM? \\[1cm]
+    \item How do we apply the KKT conditions to the Lagrange Dual? \\[1cm]
+    \item What can we conclude from this reformulated Lagrange Dual?
+  \end{itemize}
+\end{frame}

@@ -1,0 +1,859 @@
+\def\err{{\mathop{\overline{\mathsf{err}}}}}
+
+\section{AdaBoost}
+
+%\subsection{Boosting}
+
+\begin{frame}
+  \frametitle{Boosting Methods}
+
+  \begin{itemize}
+    \item Boosting is one of the most powerful learning techniques introduced in the last twenty years.
+    \item Combines output of many \structure{\textit{weak} classifiers} to produce a powerful committee.
+    \item The most popular boosting algorithm is called \structure{\textit{AdaBoost}} \\
+      (Freund and Schapire, 1997).
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Boosting Methods \cont}
+
+  \begin{citeblock}{Definition}
+
+    A \structure{weak classifier} is one whose error rate is only slightly better than random guessing.
+  \end{citeblock}
+  \pspread
+
+  \structure{Idea of boosting:}
+
+  \begin{itemize}
+    \item Sequentially apply the \emph{weak} classifier to repeatedly modified versions of the data.
+    \item This produces a sequence of classifiers.
+    \item Weighted majority vote yields the final prediction.
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Boosting Methods \cont}
+
+  \begin{itemize}
+    \item Consider a two-class problem with $y \in \{ -1, +1\}$. \\[.25cm] %\pause
+    \item Given a set of observations $\mathcal{D} = \{(\vec{x}_i, y_i); \quad i=1,\ldots,N\}$ and a classifier $G(\vec x)$, the \structure{error rate} on the training sample is:
+      \begin{displaymath}
+        \err = \frac{1}{N} \sum_{i=1}^N I(y_i \neq G(\vec{x}_i))
+      \end{displaymath}
+      where $I$ is the \structure{indicator function}.
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Boosting Methods \cont}
+
+  \begin{itemize}
+    \item Sequentially applied weak classifiers produce a sequence $G_m(\vec x)$ with $m=1,2,\ldots,M$ %\pause
+    \item The \structure{combined prediction} is then:
+      \begin{displaymath}
+        G(\vec x) = \sign \left( \sum_{m=1}^M \alpha_m G_m(\vec x) \right)
+      \end{displaymath}
+      %\pause
+    \item The weighting factors $\alpha_1, \ldots, \alpha_M$ are computed by the boosting algorithm. %\pause
+    \item Each $\alpha_m$ weights the output of the corresponding classifier $G_m(\vec x)$.
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Boosting Methods}
+
+  \structure{Schematic of boosting procedure:}
+
+  \begin{center}
+    \resizebox{.35\linewidth}{!}{
+      \input{\texfigdir/boosting_schematic.pstex_t}
+    }
+  \end{center}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Boosting Methods \cont}
+
+  \structure{Modifications on the data:}
+
+  \begin{itemize}
+    \item Each boosting step consists of applying weights $w_1, w_2, \ldots, w_N$ to the training samples. %\pause
+    \item Initially, the weights are set to $w_i = 1/N$. %\pause
+    \item Thus the first classifier in the sequence is trained the usual way. %\pause
+    \item For $m \geq 2$ the weights are individually modified. %\pause
+    \item The classifiers $G_m$, with $m \geq 2$ are trained on differently-weighted samples.
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Boosting Methods}
+
+  \structure{Weighting scheme:}
+
+  \begin{itemize}
+    \item At step $m$ the misclassified observations from $G_{m-1}$ have increased weights.
+    \item The weights for correctly classified samples from $G_{m-1}$ have decreased weights.
+  \end{itemize}
+  \pspread
+
+  \structure{Effects of the weighting scheme:}
+
+  \begin{itemize}
+    \item Observations that are difficult to classify correctly get ever-increasing influence.
+    \item Each successive classifier is forced to concentrate more on those observations that were misclassified by the previous one.
+  \end{itemize}
+\end{frame}
+
+
+\subsection{AdaBoost}
+
+\begin{frame}
+  \frametitle{AdaBoost}
+
+  \structure{AdaBoost algorithm:}
+%
+  \begin{centernss}
+    \small
+    \resizebox{.85\linewidth}{!}{
+      \begin{struktogramm}(100,50)
+        \assign{Initialize weights: $w_i =\gets 1/N ~,~i=1, \ldots, N$}
+        \assign{$m \gets 1$}
+        \until{$ m = M$}
+          \assign{\structure{Fit classifier $G_m(\vec x)$ to training data using $\vec w$}}
+          \assign{\structure{Compute classification error:}\\
+            $ \mathsf{err}_m = \frac{\sum_{i=1}^N w_i I(y_i \neq G_m(x_i))}{\sum_{i=1}^N w_i}$
+          }
+          \assign{\structure{Compute classifier weights:}\\
+            $ \alpha_m = \log \left( \frac{1- \mathsf{err}_m}{\mathsf{err}_m} \right) $
+          }
+          \assign{\structure{Compute new sample weights:}\\
+            $ w_i \leftarrow w_i \exp \left[ \alpha_m I(y_i \neq G_m(x_i)) \right] ~,~ i = 1, \ldots, N $
+          }
+          \assign{$m \gets m + 1$}
+        \untilend
+        \assign{\structure{Output:} $G(\vec x) = \sign \left( \sum_{m=1}^M \alpha_m G_m(\vec x) \right) $}
+      \end{struktogramm}
+    }
+  \end{centernss}
+
+%   \begin{center}
+%     \small
+%     \begin{struktogramm}{10cm}{0.7cm}
+%       \BLOCK {Initialize weights: $w_i = 1/N ~,~i=1, \ldots, N$}
+%       \BLOCK {Set $m:=1$}
+%       \REPEAT {
+%         \BLOCK {\structure{Fit classifier $G_m(\vec x)$ to training data using $\vec w$}}
+%         \BLOCK {\structure{Compute classification error:}\\
+%           $ \mathsf{err}_m = \frac{\sum_{i=1}^N w_i I(y_i \neq G_m(x_i))}{\sum_{i=1}^N w_i}$
+%         }
+%         \BLOCK {\structure{Compute classifier weights:}\\
+%           $ \alpha_m = \log \left( \frac{1- \mathsf{err}_m}{\mathsf{err}_m} \right) $
+%         }
+%         \BLOCK {\structure{Compute new sample weights:}\\
+%           $ w_i \leftarrow w_i \exp \left[ \alpha_m I(y_i \neq G_m(x_i)) \right] ~,~ i = 1, \ldots, N $
+%         }
+%         \BLOCK {Set $m:= m + 1$}
+%       }
+%       UNTIL {$ m = M$}
+%       \BLOCK {\structure{Output:} $G(\vec x) = \sign \left( \sum_{m=1}^M \alpha_m G_m(\vec x) \right) $}
+%     \end{struktogramm}
+%   \end{center}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{AdaBoost \cont}
+
+  \structure{Notes:}
+
+  \begin{itemize}
+    \item This version of AdaBoost is called \structure{discrete}, because each $G_m(\vec x)$ returns a discrete class label. %\pause
+    \item AdaBoost can be modified to return also a real-valued prediction in the interval $[-1,+1]$.  %\pause
+    \item Instead of taking just any classifier for $G_m(\vec x)$, that classifier may be used that results in the smallest error at step $m$.
+  \end{itemize}
+  \pspread
+
+  AdaBoost dramatically increases the performance of even a very weak classifier.
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{AdaBoost \cont}
+
+  \structure{Example from J.\ Matas and J.\ \v{S}ochman \\(Centre for Machine Perception, Technical University, Prague):}
+%
+  \begin{center}
+    \resizebox{!}{6.5cm}{
+      \input{\texfigdir/adaboost1.pstex_t}
+    }
+  \end{center}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{AdaBoost \cont}
+
+  \structure{Example from J.\ Matas and J.\ \v{S}ochman \\(Centre for Machine Perception, Technical University, Prague):}
+
+  \begin{center}
+    \resizebox{!}{6.5cm}{
+      \alt<2->{
+        \input{\texfigdir/adaboost3.pstex_t}
+      }{
+        \input{\texfigdir/adaboost2.pstex_t}
+      }
+    }
+  \end{center}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{AdaBoost \cont}
+
+  \structure{Example from J.\ Matas and J.\ \v{S}ochman \\(Centre for Machine Perception, Technical University, Prague):}
+%
+  \begin{center}
+    \resizebox{!}{6.5cm}{
+      \input{\texfigdir/adaboost4.pstex_t}
+    }
+  \end{center}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{AdaBoost \cont}
+
+  \structure{Example from J.\ Matas and J.\ \v{S}ochman \\(Centre for Machine Perception, Technical University, Prague):}
+
+  \begin{columns}[c, onlytextwidth]
+    \begin{column}{0.5\textwidth}
+      \begin{figure}
+        \centering
+        \resizebox{.7\linewidth}{!}{
+          \alt<8->{
+            \input{\texfigdir/adaboost-classifier.pstex_t}
+          }{\alt<7>{
+            \input{\texfigdir/adaboost-classifier7.pstex_t}
+          }{\alt<6>{
+            \input{\texfigdir/adaboost-classifier6.pstex_t}
+          }{\alt<5>{
+            \input{\texfigdir/adaboost-classifier5.pstex_t}
+          }{\alt<4>{
+            \input{\texfigdir/adaboost-classifier4.pstex_t}
+          }{\alt<3>{
+            \input{\texfigdir/adaboost-classifier3.pstex_t}
+          }{\alt<2>{
+            \input{\texfigdir/adaboost-classifier2.pstex_t}
+          }{
+            \input{\texfigdir/adaboost-classifier1.pstex_t}
+          }}}}}}}
+        }
+        \caption{\footnotesize Final classifier (based on a perceptron).}
+      \end{figure}
+    \end{column}\begin{column}{0.5\textwidth}
+      \begin{figure}
+        \centering
+        \resizebox{\linewidth}{!}{
+          \alt<8->{
+            \input{\texfigdir/adaboost-error.pstex_t}
+          }{\alt<7>{
+            \input{\texfigdir/adaboost-error7.pstex_t}
+          }{\alt<6>{
+            \input{\texfigdir/adaboost-error6.pstex_t}
+          }{\alt<5>{
+            \input{\texfigdir/adaboost-error5.pstex_t}
+          }{\alt<4>{
+            \input{\texfigdir/adaboost-error4.pstex_t}
+          }{\alt<3>{
+            \input{\texfigdir/adaboost-error3.pstex_t}
+          }{\alt<2>{
+            \input{\texfigdir/adaboost-error2.pstex_t}
+          }{
+            \input{\texfigdir/adaboost-error1.pstex_t}
+          }}}}}}}
+        }
+        \caption{\footnotesize Reduction of the classification error w.\,r.\,t.\ the sequence length.}
+      \end{figure}
+  \end{column}
+  \end{columns}
+\end{frame}
+
+\input{nextTime.tex}
+
+\subsection{Exponential Loss}
+
+\begin{frame}
+  \frametitle{Exponential Loss}
+
+  \begin{itemize}
+    \item Boosting fits an \structure{additive model} in a \structure{set of elementary basis functions}: \\[.1cm]
+      \begin{center}
+        \tikz[baseline]{
+          \node[fill=bl1!100, anchor=base, rounded corners=3pt, inner sep=1mm] (d1) {
+            \color{bl3}
+            $
+              \displaystyle
+              f_M(\vec x) = 
+              \sum_{m=1}^M \beta_m \, b(\vec x ; \vec \gamma_m)
+            $
+          };
+        }
+      \end{center}
+      \vspace{.1cm}
+      where $\beta_m$ are expansion coefficients and $b(\vec x ; \vec \gamma_m)$ is a basis function given a set of parameters $\vec \gamma_m$. \\[.3cm] \pause
+    \item Additive expansions are very popular in learning techniques:
+      \begin{itemize}
+        \item single-hidden-layer neural networks (perceptron)
+        \item wavelets
+        \item classification trees
+        \item etc.
+      \end{itemize}
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Exponential Loss \cont}
+
+  \begin{itemize}
+    \item Expansion models are typically fit by \structure{minimizing a loss function $L$} averaged over the training data:
+      \begin{equation} 
+        \label{eq:loss}
+        \min_{\{ \beta_m, \vec \gamma_m \}_1^M } ~ 
+        \left\{
+          \sum_{i=1}^N L \big( y_i, f_M(\vec{x}_i) \big) =
+          \sum_{i=1}^N L \left( y_i, \sum_{m=1}^M \beta_m \, b(\vec{x}_i ; \vec \gamma_m) \right)
+        \right\}
+      \end{equation}
+      \\[.3cm] \pause
+    \item \structure{Forward stagewise modeling} approximates the solution to \eqref{eq:loss}: \\[.1cm]
+      \begin{itemize}
+        \item New basis functions are sequentially added. \\[.1cm] %\pause
+        \item Parameters and coefficients of already added functions are not changed. \\[.1cm] %\pause
+        \item At each iteration, the subproblem of fitting just a single basis function is solved.
+      \end{itemize}
+%       \begin{displaymath}
+%         \min_{\beta, \vec \gamma} ~\sum_{i=1}^N L(y_i, \beta b(\vec{x}_i ; \vec{\gamma}))
+%        \end{displaymath}
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Exponential Loss \cont}
+
+  \begin{itemize}
+    \item The \structure{$m$-th subproblem} may be rewritten as: \\[.3cm]
+      \begin{center}
+        \tikz[baseline]{
+          \node[fill=bl1!100, anchor=base, rounded corners=3pt, inner sep=1mm] (d1) {
+            \color{bl3}
+            $
+              \displaystyle
+              (\beta_m, \vec \gamma_m) = \argmin_{\beta, \vec \gamma} ~\sum_{i=1}^N L\big(y_i, f_{m-1}(\vec{x}_i) + \beta \, b(\vec{x}_i ; \vec{\gamma})\big)
+            $
+          };
+        }
+      \end{center}
+      \vspace{.3cm} \pause
+    \item AdaBoost is equivalent to a forward stagewise additive modeling using an \structure{exponential loss function}:
+      \begin{displaymath}
+        L(y, f(\vec x)) = \exp (-y \, f(\vec x))
+      \end{displaymath}
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Exponential Loss \cont}
+
+  \structure{Proof:}
+
+  \begin{itemize}
+    \item For AdaBoost, the basis functions are the classifiers $G_m(\vec x) \in \{-1,+1\}$. %\pause
+    \item Using the \structure{exponential loss function}, one must solve at each step:
+      \begin{eqnarray*}
+        (\beta_m, G_m) = \argmin_{\beta, G} ~\sum_{i=1}^N \exp \left[ -y_i \big(f_{m-1}(\vec{x}_i) + \beta G(\vec{x}_i)\big) \right]
+      \end{eqnarray*}
+      %\pause
+    \item Using the weight $w_i^{(m)} = \exp(-y_i \, f_{m-1}(\vec{x}_i))$ this can be rewritten as:
+      \begin{eqnarray*}
+        (\beta_m, G_m) = \argmin_{\beta, G} ~\sum_{i=1}^N w_i^{(m)} \exp (-\beta y_i G(\vec{x}_i))
+      \end{eqnarray*}
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Exponential Loss \cont}
+
+  \structure{Observations:}
+
+  \begin{itemize}
+    \item Since $w_i^{(m)}$ is independent of $\beta$ and $G(\vec x)$, it can be seen as a weight applied to each observation. %\pause
+    \item However, this weight depends on $f_{m-1}$, so the weights change with \\
+      each iteration $m$.
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Exponential Loss \cont}
+
+  \vspace{-.5cm}
+  \begin{eqnarray*}
+    (\beta_m, G_m) 
+      &=& \argmin_{\beta, G} ~\sum_{i=1}^N w_i^{(m)} \exp (-\beta y_i G(\vec{x}_i)) \\ %\pause
+      &=& \argmin_{\beta, G} ~ e^{-\beta} \sum_{y_i = G(\vec{x}_i)} w_i^{(m)} + e^{\beta} \sum_{y_i \neq G(\vec{x}_i)} w_i^{(m)} \\ %\pause
+      &=& \argmin_{\beta, G} ~ \left( e^{\beta} - e^{-\beta} \right) \sum_{i=1}^N w_i^{(m)} I(y_i \neq G(\vec{x}_i)) + e^{-\beta} \sum_{i=1}^N w_i^{(m)}
+  \end{eqnarray*}
+  \pause
+
+  \begin{itemize}
+    \item Thus, for any value $\beta > 0$ the solution for $G_m(\vec x)$ is: \\[.25cm]
+      \begin{center}
+        \tikz[baseline]{
+          \node[fill=bl1!100, anchor=base, rounded corners=3pt, inner sep=1mm] (d1) {
+            \color{bl3}
+            $
+              \displaystyle
+              G_m = \argmin_G \sum_{i=1}^N w_i^{(m)} \, I(y_i \neq G(\vec{x}_i))
+            $
+          };
+        }
+      \end{center}
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Exponential Loss \cont}
+
+  \begin{itemize}
+    \item Plugging the reformulated $G_m(\vec x)$ into the objective function and solving for $\beta_m$ yields: \\[.15cm]
+      \begin{center}
+        \tikz[baseline]{
+          \node[fill=bl1!100, anchor=base, rounded corners=3pt, inner sep=1mm] (d1) {
+            \color{bl3}
+            $
+              \displaystyle
+              \beta_m = \frac{1}{2} \log \frac{1 - \mathsf{err}_m}{\mathsf{err}_m}
+            $
+          };
+        }
+      \end{center}
+      \vspace{.25cm}
+      
+      with $\mathsf{err}_m$ being the \structure{minimized weighted error rate}: \\[.15cm]
+      
+      \begin{displaymath}
+        \mathsf{err}_m = \frac{\sum_{i=1}^N w_i^{(m)} I(y_i \neq G_m(\vec{x}_i))}{\sum_{i=1}^N w_i^{(m)}}
+      \end{displaymath}
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Exponential Loss \cont}
+
+  \begin{itemize}
+    \item From the update formula of the approximation:
+      \begin{eqnarray*}
+        f_m(\vec x) = f_{m-1}(\vec x) + \beta_m \, G_m(\vec x)
+      \end{eqnarray*}
+      we can calculate the \structure{weights for the next iteration}:
+      \begin{eqnarray*}
+        w_i^{(m+1)} 
+          &=& w_i^{(m)} ~ e^{-\beta_m y_i G_m(\vec{x}_i)} \\ \vspace{1cm} %\pause
+          & & \mbox{\small(using: $-y_i G_m(\vec{x}_i) = 2 I (y_i \neq G_m(\vec{x}_i)) - 1$)} \\[.5cm] %\pause
+          &=& w_i^{(m)} e^{\alpha_m I(y_i \neq G_m(\vec{x}_i))} e^{-\beta_m}
+      \end{eqnarray*}
+      with $\alpha_m = 2 \beta_m$.
+  \end{itemize}
+
+  \hfill \qed
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Exponential Loss \cont}
+
+  \structure{Compare result to initial AdaBoost algorithm:}
+
+  \begin{itemize}
+    \item \structure{Exponential loss:}
+      \begin{eqnarray*}
+        \beta_m     &=& \frac{1}{2} \log \frac{1 - \mathsf{err}_m}{\mathsf{err}_m} \\
+        \alpha_m    &=& 2 \beta_m \\
+        w_i^{(m+1)} &=& w_i^{(m)} ~ e^{\alpha_m I(y_i \neq G_m(\vec{x}_i))} ~ e^{-\beta_m}
+      \end{eqnarray*}
+      \pspread
+    \item \structure{AdaBoost:}
+      \begin{eqnarray*}
+        \alpha_m &=&          \log \frac{1- \mathsf{err}_m}{\mathsf{err}_m} \\
+        w_i      &\leftarrow& w_i \, e^{\alpha_m I(y_i \neq G_m(\vec{x}_i))}
+      \end{eqnarray*}
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Exponential Loss \cont}
+
+  \begin{center}
+    \resizebox{.85\linewidth}{!}{
+      \alt<4->{
+        \input{\texfigdir/exploss4.pstex_t}
+      }{\alt<3>{
+        \input{\texfigdir/exploss3.pstex_t}
+      }{\alt<2>{
+        \input{\texfigdir/exploss2.pstex_t}
+      }{
+        \input{\texfigdir/exploss1.pstex_t}
+      }}}
+    }
+  \end{center}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Exponential Loss \cont}
+
+  \structure{Discussion:}
+
+  \begin{itemize}
+    \item The equivalence of AdaBoost to forward stagewise additive modeling was discovered five years after its invention. %\pause
+    \item The AdaBoost criterion yields a monotone decreasing function of the \structure{margin}: $y\,f(\vec x)$. \\[.5cm] %\pause
+    \item In $\{-1, 1\}$ classification, the margin plays a role similar to the \\
+      residuals $y - f(\vec x)$ in regression:
+      \begin{itemize}
+        \item Observations with $y_i \, f(\vec{x}_i) > 0$ are classified correctly
+        \item Observations with $y_i \, f(\vec{x}_i) < 0$ are misclassified 
+        \item The decision boundary is at $f(\vec x) = 0$
+     \end{itemize}
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Exponential Loss \cont}
+
+  \structure{Discussion (cont.):}
+
+  \begin{itemize}
+    \item The goal of the classification algorithm is to produce positive margins as frequently as possible. %\pause
+    \item Thus, any loss criterion should penalize negative margins more heavily than positive ones! %\pause
+    \item The exponential criterion concentrates much more influence on observations with large negative margins.
+  \end{itemize}
+  \pspread
+
+  Due to the exponential loss, AdaBoost performance is known to degrade rapidly:
+  \begin{itemize}
+    \item in situations of noisy data
+    \item when there are wrong class labels in the training data
+  \end{itemize}
+\end{frame}
+
+\input{nextTime.tex}
+
+%\subsection{Face Detection}
+
+\begin{frame}
+  \frametitle{Face Detection}
+
+  Famous algorithm developed by \structure{Viola and Jones} in 2001.
+  \spread
+
+  \structure{Contributions:}
+
+  \begin{itemize}
+    \item Integral images for feature computation.
+    \item Usage of AdaBoost for boosting.
+    \item Classifier cascade for fast rejection of non-face regions.
+  \end{itemize}
+  \spread
+
+  Various implementations available: for example look into \textit{OpenCV FaceDetector} sample code.
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Face Detection \cont}
+
+  \structure{Features:}
+
+  \begin{itemize}
+    \item Features are adapted from Haar basis functions. %\pause
+    \item They are calculated by subtracting the sum of the pixels in the white from the sum of the pixels in the gray rectangles: \\[.3cm] %\pause
+  \end{itemize}
+
+  \structure{4 types of features used:}
+
+  \begin{center}
+    \resizebox{.4\linewidth}{!}{
+      \input{\texfigdir/haar_features.pstex_t}
+    }
+  \end{center}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Face Detection \cont}
+
+  \begin{itemize}
+    \item The exhaustive set of features is very large: $> 45\,000$ for a 380x280 image. %\pause
+    \item Rectangle features can be efficiently computed using an \\
+     \structure{Integral Image $II$}:
+      \begin{displaymath}
+        II(x,y) = \sum_{x' \leq x, y' \leq y} I(x', y')
+      \end{displaymath}
+  \end{itemize}
+  \spread
+
+  \begin{center}
+    \resizebox{.4\linewidth}{!}{
+      \input{\texfigdir/integral_image.pstex_t}
+    }
+  \end{center}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Face Detection \cont}
+
+  \structure{Computation of the sum of intensities for any rectangle D  with just \\ 3 basis operations based on the integral image:} \\[.5cm]
+
+  \begin{center}
+    \resizebox{.4\linewidth}{!}{
+      \input{\texfigdir/integral_image2.pstex_t}
+    }
+  \end{center}
+
+  \begin{itemize}
+    \item Value at 1: A %\pause
+    \item Value at 2: A + B %\pause
+    \item Value at 3: A + C %\pause
+    \item Value at 4: A + B + C + D %\pause
+    \item Sum within D: $4 + 1 - (2 + 3)$
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Face Detection \cont}
+
+  \structure{Boosting:}
+
+  \begin{itemize}
+    \item The classification functions are restricted to each depend on a single feature only. %\pause
+    \item This way, AdaBoost can be interpreted as an effective feature selecting algorithm:
+      \begin{itemize}
+        \item The single rectangle feature is selected which best separates the observations. %\pause
+        \item For each feature, the weak learner determines the optimal threshold classification function.
+      \end{itemize}
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Face Detection \cont}
+
+  \begin{itemize}
+    \item A weak classifier $G_j(\vec x)$ consists of a \structure{feature $x_j$}, an \structure{optimal threshold $\theta_j$}, and a \structure{parity $s_j$} to indicate the direction of the inequality:
+      \begin{displaymath}
+        G_j(\vec x) = \begin{cases}
+                        1 \quad \mbox{if} ~s_j f_j(\vec x) < s_j \theta_j \\
+                        0 \quad \mbox{otherwise}
+                      \end{cases}
+      \end{displaymath}
+      with $\vec x$ being a sub-window of an image.
+      \pspread
+    \item Very aggressive process to discard the vast majority of features.
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Face Detection \cont}
+
+  \begin{itemize}
+    \item Best feature selected by AdaBoost:
+  \end{itemize}
+
+  \begin{center}
+    \begin{figure}
+            \copyrightbox[b]{
+      \makebox[.6\linewidth]{
+          \includegraphics[width=0.4\linewidth]{\pngdir/bestfeature.\png}
+      }
+    }{Christian Hacker, Anton Batliner, and Elmar Noeth. \href{https://www5.informatik.uni-erlangen.de/Forschung/Publikationen/2006/Hacker06-AYL.pdf}{Are You Looking at Me, Are You Talking with Me: Multimodal Classification of the Focus of Attention.}}
+  \end{figure}
+  \end{center}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Face Detection \cont}
+
+  \structure{Classifier Cascade:}
+
+  \begin{itemize}
+    \item Despite the efficiency of the feature computation, the complexity of the problem is still huge. %\pause
+    \item Evaluating the full AdaBoost sequence on all sub-windows of the image takes too much time.
+    \pspread
+    \item Idea of cascaded classifiers:
+    \begin{itemize}
+      \item Simpler classifiers used to reject the majority of sub-windows. %\pause
+      \item Each stage is again created by AdaBoost. %\pause
+      \item Stage 1 uses the two features shown before; detects 100\,\% faces with \\ false positive rate (FPR) of around 40\,\%.
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Face Detection \cont}
+
+  \begin{itemize}
+    \item The cascade has the overall shape of a degenerated decision tree: \\[.5cm]
+      \begin{center}
+        \resizebox{.7\linewidth}{!}{
+          \input{\texfigdir/cascade.pstex_t}
+        }
+      \end{center}
+      \pspread
+    \item A negative classification at any stage yields an immediate rejection of the sub-window.
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Face Detection \cont}
+
+  \begin{itemize}
+    \item Structure of cascade reflects the (usually) overwhelming majority of negative sub-windows in an image. %\pause
+    \item Goal is to reject as many negatives as possible at the earliest stage of the processing.
+  \end{itemize}
+  \spread
+
+  \structure{Training of the cascade:}
+
+  \begin{itemize}
+    \item Subsequent classifiers are trained using only those examples which pass through all the previous stages. %\pause
+    \item The next classifier faces a more difficult task than the previous one. %\pause
+    \item Trade-off between more features achieving higher detection rates and lower false positive rates while requiring more computation time.
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Face Detection \cont}
+
+  \structure{Final classifier:}
+
+  \begin{itemize}
+    \setlength\itemsep{0.5cm}
+    \item 32 layer cascade of increasingly strong boosted classifiers
+    
+    \begin{center}
+      \begin{tabular}{r@{}l r c c}
+        \multicolumn{2}{c}{\structure{Layer}} & 
+        \structure{\# Features} & 
+        \structure{TPR} &
+        \structure{FPR}\\
+        \hline
+           &1  &   2~~~~~ & 100\,\% & 40\,\% \\
+           &2  &   5~~~~~ & 100\,\% & 20\,\% \\
+         3-&5  &  20~~~~~ & \\
+         6-&7  &  50~~~~~ & \\
+         8-&12 & 100~~~~~ & \\
+        13-&32 & 200~~~~~ & \\ %\pause
+      \end{tabular}
+    \end{center}
+
+    \item Number of stages and features adapted until false positive rate on validation was nearly zero while maintaining high correct rate.
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Face Detection \cont}
+
+  \structure{Example images from the training set:}
+
+  \begin{center}
+  \begin{figure}
+            \copyrightbox[b]{
+      \makebox[.6\linewidth]{
+          \includegraphics[width=0.45\linewidth]{\pngdir/FaceTraining.\png}
+      }
+    }{Paul Viola and Michael Jones. \href{https://www.researchgate.net/publication/3940582_Rapid_Object_Detection_using_a_Boosted_Cascade_of_Simple_Features}{Rapid Object Detection using a Boosted Cascade of Simple Features. IEEE Conf Comput Vis Pattern Recognit.}}
+  \end{figure}
+  \end{center}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Face Detection \cont}
+
+  \structure{Results on test set:}
+  \begin{center}
+  \begin{figure}
+            \copyrightbox[b]{
+      \makebox[.6\linewidth]{
+          \includegraphics[width=0.5\linewidth]{\pngdir/facedetection.\png}
+      }
+    }{Christian Hacker, Anton Batliner, and Elmar Noeth. \href{https://www5.informatik.uni-erlangen.de/Forschung/Publikationen/2006/Hacker06-AYL.pdf}{Are You Looking at Me, Are You Talking with Me: Multimodal Classification of the Focus of Attention.}}
+  \end{figure}
+  \end{center}
+\end{frame}
+
+
+%\subsection{Lessons Learned}
+
+\begin{frame}
+  \frametitle{Lessons Learned}
+
+  \begin{itemize}
+    \item Boosting of weak classifiers can yield a powerful combined classifier \\[.3cm]
+    \item AdaBoost algorithm \\[.3cm]
+    \item Weights of the classifiers and on the data are adjusted \\[.3cm]
+    \item AdaBoost minimizes an exponential loss function \\[.3cm]
+    \item Viola \& Jones face detection algorithm
+  \end{itemize}
+\end{frame}
+
+
+\subsection{Further Reading}
+
+\begin{frame}
+  \frametitle{Further Reading}
+
+  Most of the content of this lecture has been taken from: \\[.25cm]
+
+  \small
+  \begin{itemize}
+    \item T.\ Hastie, R.\ Tibshirani, J.\ Friedman: \\
+      \structure{The Elements of Statistical Learning}, \\
+      2nd Edition, Springer, 2009.\\%[.15cm]
+    \item Y.\ Freund, R.\,E.\ Schapire: \\
+      \structure{A decision-theoretic generalization of on-line learning and \\
+	    an application to boosting},\\
+      Journal of Computer and System Sciences, 55(1):119-139, 1997.\\%[.15cm]
+    \item P.\,A.\ Viola, M.\,J.\ Jones: 
+      \structure{Robust Real-Time Face Detection}, \\
+      International Journal of Computer Vision 57(2): 137-154, 2004.\\%[.15cm]
+    \item J.\ Matas and J.\ \v{S}ochman:
+      \structure{AdaBoost}, \\
+      Centre for Machine Perception, Technical University, Prague. \\%[.15cm]
+      \structure{\point\url{http://cmp.felk.cvut.cz/~sochmj1/adaboost_talk.pdf}}
+  \end{itemize}
+\end{frame}

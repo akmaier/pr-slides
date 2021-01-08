@@ -1,0 +1,331 @@
+\section{Logistic Regression II}
+
+\subsection{Parameterization}
+
+\begin{frame}
+  \frametitle{Parameterization}
+  
+  \begin{itemize}
+    \item Until now, $F(\vec x)$ was some arbitrary function in $\vec x$ \\[.1cm]
+      \structure{Example:} $ F(\vec x) = \vec x^T \mat A \vec x + \vec \alpha^T\vec x + \alpha_0 $ with components defined by Gaussian distributions \\[.25cm] \pause
+    \item We can express a nonlinear $F(\vec x)$ as a scalar product by lifting $\vec x$ into a higher dimensional space: \\
+      Given \\
+      \hspace{0.5cm} $\vec x = \left(x_1, x_2\right)^T \in \real^2,~ \mat A = \left( \begin{array}{cc} a_{11} & a_{12} \\ a_{21} & a_{22} \end{array} \right), ~ \vec \alpha = \left(\alpha_1, \alpha_2 \right)^T, ~\alpha_0 $\,, \\
+      then \\
+      \hspace{0.5cm} $F(\vec x) = a_{11} x_1^2 + (a_{12} + a_{21}) x_1 x_2 + a_{22} x_2^2 + \alpha_1 x_1 + \alpha_2 x_2 + \alpha_0$\,.\\[.25cm] \pause
+    \item Rewrite $F(\vec x) = \vec \theta^T \vec x'$ with $\vec \theta, \vec x' \in \real^6$: \\ \pause
+      \hspace{0.5cm} $\vec \theta = (a_{11}, a_{12} + a_{21}, a_{22}, \alpha_1, \alpha_2, \alpha_0)^T$ \\
+      \hspace{0.5cm} $\vec x' = ( x_1^2, x_1 x_2, x_2^2, x_1, x_2, 1)^T$
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Parameterization \cont}
+
+  \begin{citeblock}{Definition}
+
+    We write the parameterized logistic function in the following:
+    \begin{eqnarray*}
+      g(\vec \theta^T \vec x) &=& \frac{1}{1+e^{-\vec \theta^T \vec x}}
+    \end{eqnarray*}
+    where $\vec \theta, \vec x$ are the lifted parameters of the original decision function $F$ \\
+    (if it was not already linear).
+  \end{citeblock}
+\end{frame}
+
+
+\subsection{Learning in Logistic Regression}
+
+\subsubsection{Log-Likelihood Function}
+
+\begin{frame}
+  \frametitle{Log-Likelihood Function}
+ 
+  \begin{itemize}
+    \item Let us assume the posteriors are given by
+      \begin{eqnarray*}
+        p(y=0|\vec x) &=&  1-g(\vec \theta^T\vec x) \\
+        p(y=1|\vec x) &=&  g(\vec \theta^T\vec x)
+      \end{eqnarray*}
+      where $g(\vec \theta^T\vec x)$ is the sigmoid function parameterized in $\vec \theta$. \\[.3cm]
+    \item The parameter vector $\vec{\theta}$ has to be estimated from a set $S$ of $m$ training samples:
+      \begin{eqnarray*}
+        S &=& \{ (\vec x_1, y_1), (\vec x_2, y_2), (\vec x_3, y_3), \dots, (\vec x_m, y_m) \}\quad .
+      \end{eqnarray*}
+      \pause
+    \item Method of choice: Maximum Likelihood Estimation
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Log-Likelihood Function \cont}
+ 
+  Before we work on the formulas of the ML-estimator, we rewrite the posteriors
+  using Bernoulli probability:
+
+  \begin{eqnarray*}
+    p(y|\vec x) &=& \pause g(\vec \theta^T\vec x)^{y}(1-g(\vec \theta^T\vec x))^{1-y}\\[.3cm] 
+  \end{eqnarray*}
+
+  which shows the great benefit of the chosen notation for class numbers.
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Log-Likelihood Function \cont}
+ 
+  Now we can compute the log-likelihood function \\
+  (assuming that the training samples are mutually independent):
+ 
+  \begin{eqnarray*}
+    \mathcal{L} (\vec \theta) &=& \log \left( \prod_{i=1}^m p(y_i|\vec x_i) \right) \\ \pause
+                              &=& \sum_{i=1}^m \log \left( g(\vec \theta^T\vec x_i)^{y_i}\,\big(1-g(\vec \theta^T\vec x_i)\big)^{1-y_i} \right) \\ \pause
+                              &=& \sum_{i=1}^m \left(y_i \log g(\vec \theta^T\vec x_i) + (1-y_i)\log\big(1-g(\vec \theta^T\vec x_i)\big) \right)
+  \end{eqnarray*}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Log-Likelihood Function \cont}
+ 
+  Simplification of the log-likelihood function:
+ 
+  \begin{eqnarray*}
+    \mathcal{L} (\vec \theta) 
+      &=& \sum_{i=1}^m \left( y_i \log g(\vec \theta^T\vec x_i) + (1-y_i)\log\big(1-g(\vec \theta^T\vec x_i)\big) \right) \\ \pause
+      &=& \sum_{i=1}^m \left( y_i \log \frac{e^{\vec \theta^T \vec x_i}}{1 + e^{\vec \theta^T \vec x_i}} + (1 - y_i) \log \frac{1}{1 + e^{\vec \theta^T \vec x_i}} \right) \\ \pause
+      &=& \sum_{i=1}^m \left( y_i \vec \theta^T \vec x_i + \log \frac{1}{1 + e^{\vec \theta^T \vec x_i}} \right) \\ \pause
+      &=& \sum_{i=1}^m \left( y_i \vec \theta^T \vec x_i + \log \big( 1 - g(\vec \theta^T \vec x_i) \big) \right)
+  \end{eqnarray*}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Log-Likelihood Function \cont}
+
+  \structure{Notes for the expert:} 
+
+  \begin{itemize}
+    \item The negative of the log-likelihood function is the cross entropy of\\
+      $y$ and $g(\vec \theta^T\vec x)$. \\[.5cm]
+    \item The negative of the log-likelihood function is a convex function.
+  \end{itemize}
+\end{frame}
+
+
+\input{nextTime.tex}
+
+\subsubsection{Newton-Raphson Iteration}
+
+\begin{frame}
+  \frametitle{Maximization of the log-likelihood function}
+
+  \begin{itemize}
+    \item The log-likelihood function is concave. 
+    \item We use the \point\href{http://www.stat.washington.edu/quinn/classes/560/Newton.pdf}{\structure{Newton-Raphson}} algorithm to solve the unconstrained optimization problem:
+      \spread
+
+      For the $(k+1)$-st iteration step, we get:
+%
+      \begin{eqnarray*}
+        \vec \theta^{(k+1)} &=& \vec \theta^{(k)} - \left(  \frac{\partial^2}{\partial\vec \theta \partial \vec \theta^T} \mathcal{L} \left(\vec \theta^{(k)} \right)  \right)^{-1}   
+       \frac{\partial}{\partial\vec \theta} \mathcal{L}\left(\vec \theta^{(k)}\right)
+      \end{eqnarray*}
+  \end{itemize}
+  \spread
+ 
+  \structure{Note:} If you write the Newton-Raphson iteration in matrix form, you will end up with a weighted least squares iteration scheme.
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Newton-Raphson Iteration}
+
+  \structure{Taylor's Theorem:}\\[.3cm]
+   
+  Approximation of a $k$-times differentiable function $f(x)$ \\
+  around a given point $x_0$:
+ 
+  {\small
+  \begin{displaymath}
+    f(x_0+h) = f(x_0) + f'(x_0) h + \frac{f''(x_0)}{2!} h^2 + \ldots +
+           \frac{f^{(k)}(x_0)}{k!} h^k + r_k(x_0 + h) h^k, 
+           \quad \lim_{h \rightarrow 0} r_k(x_0 + h) = 0
+  \end{displaymath}
+  }
+  \pspread
+
+  \structure{Second order Taylor polynomial:}
+  \begin{displaymath}
+    f(x_0 + h) \approx f(x_0) + f'(x_0) h + \frac{1}{2} f''(x_0) h^2
+  \end{displaymath}
+\end{frame}
+  
+
+\begin{frame}
+  \frametitle{Newton-Raphson Iteration \cont}
+
+  \structure{Extremum:}
+
+  \begin{eqnarray*}
+    f'(x_0 + h)         & = & f'(x_0) + f''(x_0) h ~\stackrel{!}{=}~ 0 \\[.3cm]
+                \hat{h} & = & - \frac{f'(x_0)}{f''(x_0)} \\[.3cm]
+    x_1 = x_0 + \hat{h} & = & x_0 - \frac{f'(x_0)}{f''(x_0)} 
+  \end{eqnarray*}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Newton-Raphson Iteration \cont}
+
+  \begin{center}
+    \resizebox{.7\linewidth}{!}{
+      \alt<8->{
+        \input{\texfigdir/newton-raphson8.pstex_t}
+      }{\alt<7>{
+        \input{\texfigdir/newton-raphson7.pstex_t}
+      }{\alt<6>{
+        \input{\texfigdir/newton-raphson6.pstex_t}
+      }{\alt<5>{
+        \input{\texfigdir/newton-raphson5.pstex_t}
+      }{\alt<4>{
+        \input{\texfigdir/newton-raphson4.pstex_t}
+      }{\alt<3>{
+        \input{\texfigdir/newton-raphson3.pstex_t}
+      }{\alt<2>{
+        \input{\texfigdir/newton-raphson2.pstex_t}
+      }{
+        \input{\texfigdir/newton-raphson1.pstex_t}
+      }}}}}}}
+    }
+  \end{center}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Gradient of the Log-Likelihood Function}
+
+  \structure{The gradient:}
+ %
+  {\small
+  \begin{eqnarray*}
+    \frac{\partial}{\partial \theta_j} \mathcal{L}(\vec \theta)
+      &=& \frac{\partial}{\partial \theta_j} \left( \sum_{i=1}^m \left( y_i \vec \theta^T \vec x_i + \log \big( 1 - g(\vec \theta^T \vec x_i) \big) \right) \right)\\ \pause
+      &=& \sum_{i=1}^m \left( y_i x_{i,j} - \frac{1}{1-g(\vec \theta^T\vec x_i)} \frac{\partial}{\partial \theta_j}g(\vec \theta^T \vec x_i) \right)
+  \end{eqnarray*}
+  }
+  \pause 
+%  
+  Now we use the derivative of the sigmoid function and get
+%
+  {\small
+  \begin{eqnarray*}
+     \frac{\partial}{\partial \theta_j} \mathcal{L}(\vec \theta) 
+       &=& \sum_{i=1}^m \left( y_i x_{i,j} - \frac{1}{1-g(\vec \theta^T\vec x_i)} g(\vec \theta^T \vec x_i) \big(1-g(\vec \theta^T \vec x_i)\big) x_{i,j} \right) \\ \pause
+       &=& \sum_{i=1}^m \left( y_i - g(\vec \theta^T\vec x_i) \right) x_{i,j}
+  \end{eqnarray*}
+  }
+% 
+   where $x_{i,j}$ is the $j$-th component of the $i$-th training feature vector.
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Gradient of the Log-Likelihood Function \cont}
+  
+  Finally, we have a quite simple gradient: 
+  
+  {\small
+  \begin{eqnarray*}
+    \frac{\partial}{\partial \theta_j} \mathcal{L}(\vec \theta) 
+    &=& \sum _{i=1}^m  \left( y_i - g(\vec \theta^T\vec x_i) \right) x_{i,j}
+  \end{eqnarray*}
+  }
+
+  where $x_{i,j}$ is the $j$--th component of the $i$--th training feature vector. \\[.3cm]
+ 
+  Or in vector notation:
+  {\small
+  \begin{eqnarray*}
+    \frac{\partial}{\partial\vec \theta} \mathcal{L}(\vec \theta) 
+    &=& \sum _{i=1}^m  \left( y_i-g(\vec \theta^T\vec x_i) \right)\vec x_{i}
+  \end{eqnarray*}
+  }
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Hessian of the Log-Likelihood Function}
+
+  \begin{itemize}
+    \item The Newton-Raphson algorithm requires the Hessian matrix.
+    \item Remember the derivative of the sigmoid function!
+  \end{itemize}
+
+  \begin{eqnarray*}
+    \frac{\partial^2}{\partial\vec \theta \partial \vec \theta^T} \mathcal{L}(\vec \theta) &=& -
+    \sum _{i=1}^m  g(\vec \theta^T\vec x_i) \left(1-g(\vec \theta^T\vec x_i)\right)\vec x_i \vec x_i^T
+  \end{eqnarray*}  
+\end{frame}
+
+
+\subsection{Perceptron and Logistic Regression}
+
+\begin{frame}
+   \frametitle{Perceptron and Logistic Regression}
+   
+   \begin{center}
+     \resizebox{.7\linewidth}{!}{
+       \input{\texfigdir/perceptron.pstex_t}
+     }
+   \end{center}
+\end{frame}
+
+
+\subsection{Lessons Learned}
+
+\begin{frame}
+  \frametitle{Lessons Learned}
+   
+  \begin{itemize}
+    \item Posteriors can be rewritten in terms of a logistic function.\\[.5cm]
+    \item Given the decision boundary $F(\vec x)=0$, we can write down the posterior $p(y|\vec x)$ right away.\\[.5cm]
+    \item Decision boundary for normally distributed feature vectors for each class is a quadratic function.\\[.5cm]
+    \item If Gaussians share the same covariances, the decision boundary is a linear function.
+  \end{itemize}
+\end{frame}
+
+\input{nextTime.tex}
+
+\subsection{Further Readings}
+
+\begin{frame}
+  \frametitle{Further Readings}
+
+  \begin{itemize}
+    \item T. Hastie, R. Tibshirani, and J. Friedman: \\
+      \structure{The Elements of Statistical Learning --}\\
+      \structure{ Data Mining, Inference, and Prediction},\\
+      2nd edition, Springer, New York, 2009. \\[.3cm]
+    \item David W. Hosmer, Stanley Lemeshow: \\
+      \structure{Applied Logistic Regression}, 2nd Edition, \\
+      John Wiley \& Sons, Hoboken, 2000.
+  \end{itemize}
+\end{frame}
+
+
+\subsection{Comprehensive Questions}
+
+\begin{frame}
+  \frametitle{Comprehensive Questions \cont}
+
+  \begin{itemize}
+    \item How can a nonlinear function be written as a scalar product? \\[.7cm] \pause
+    \item What is the objective function for the ML-estimation of the logistic regression parameters? \\[.7cm] \pause
+    \item What is the difference between a gradient descent and Newton-Raphson numerical optimization scheme? \\[.7cm] \pause
+    \item What is the parameter update rule for the logistic regression parameters using the Newton-Raphson scheme?
+  \end{itemize}
+\end{frame}
+

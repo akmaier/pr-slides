@@ -1,0 +1,676 @@
+\section{Logistic Regression I}
+
+\begin{frame}
+  \frametitle{Logistic Regression}
+
+  Logistic Regression is a \structure{discriminative model}, because it models \\
+  the posterior probabilities $p(y|\vec{x})$ directly.
+\end{frame}
+
+
+\subsection{Posteriors and the Logistic Function}
+
+\begin{frame}
+  \frametitle{Posteriors and the Logistic Function}
+ 
+  For two classes $y\in\{0, 1\}$ we get:
+  
+  \begin{eqnarray*}
+    p(y=0| \vec x) 
+      &=& \pause \frac{p(y=0) \cdot p(\vec x | y=0)}{p(\vec x)} \\[.5cm] \pause 
+      &=& \frac{p(y=0) \cdot p(\vec x | y=0)}{p(y=0)p(\vec x |y=0)+p(y=1)p(\vec x| y=1)} \\[.5cm] \pause
+      &=& \frac{1}{1+\frac{p(y=1)p(\vec x| y=1)}{p(y=0)p(\vec x| y=0)}}
+  \end{eqnarray*}
+\end{frame}
+ 
+ 
+\begin{frame}
+  \frametitle{Posteriors and the Logistic Function \cont}
+
+  \begin{eqnarray*}
+    p(y=0| \vec x) 
+      &=& \frac{1}{1+\frac{p(y=1)p(\vec x| y=1)}{p(y=0)p(\vec x| y=0)}} \\[.3cm] \pause
+      &\phantom{=}& \mbox{\small (\structure{Trick:} extend with exponential and logarithm)} \\[.3cm] \pause
+      &=& \frac{1}{1+e^{\log \frac{p(y=1)p(\vec x| y=1)}{p(y=0)p(\vec x| y=0)} } } \\[.3cm] \pause
+      &=& \frac{1}{1+e^{-\log\frac{p(y=0)}{p(y=1)} - \log\frac{p(\vec x| y=0)}{p(\vec x|y=1)}}}\\[0.3cm] \pause
+      &=& \frac{1}{1+e^{-\log\frac{p(y=0|\vec x)}{p(y=1|\vec x)}}}
+  \end{eqnarray*}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Posteriors and the Logistic Function \cont}
+
+  We see that the posterior for class $y = 0$ can be written in terms of \\
+  a \structure{logistic function}:
+%
+  \begin{eqnarray*}
+    p(y=0| \vec x) &=& \frac{1}{1+e^{-F(\vec{x})}}
+  \end{eqnarray*}
+  \pause
+
+  And thus the posterior for the other class $y = 1$:
+%
+  \begin{eqnarray*}
+    p(y=1| \vec x) &=& \pause 1- p(y=0| \vec x) \\[.3cm] \pause
+                   &=& \frac{e^{-F(\vec x)}}{1+e^{-F(\vec{x})}} \\[.3cm] \pause
+                   &=&  \frac{1}{1+e^{F(\vec{x})}}
+  \end{eqnarray*}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Posteriors and the Logistic Function \cont}
+
+  \begin{citeblock}{Definition}
+
+    The {\em logistic function} (also called {\em sigmoid function}) is defined by
+    \begin{eqnarray*}
+      g(x) &=& \frac{1}{1+e^{-x}}
+    \end{eqnarray*}
+    where $x\in \real$.
+  \end{citeblock}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Posteriors and the Logistic Function \cont}
+
+  The derivative of the sigmoid function fulfills the nice property:
+
+  \begin{eqnarray*}
+    g'(x) &=& \left( \frac{1}{1+e^{-x}} \right)' = \pause \left( (1+e^{-x})^{-1}\right)'= \pause \frac{1}{(1+e^{-x})^2}\cdot e^{-x} \\[.3cm] \pause
+          &=& \frac{1}{(1+e^{-x})} \cdot \frac{e^{-x}}{(1+e^{-x})} \\[.3cm] \pause
+          &=& \frac{1}{(1+e^{-x})} \cdot \frac{1}{(1+e^{x})} \\[.3cm] \pause
+          &=& g(x)g(-x) \\[.3cm] \pause
+          &=& g(x)(1-g(x)) \quad.
+  \end{eqnarray*}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Posteriors and the Logistic Function \cont}
+ 
+  \begin{figure}
+    \resizebox{.85\linewidth}{!}{
+      \alt<4->{
+        \input{\texfigdir/sigmoid4.pstex_t}
+      }{\alt<3>{
+        \input{\texfigdir/sigmoid3.pstex_t}
+      }{\alt<2>{
+        \input{\texfigdir/sigmoid2.pstex_t}
+      }{
+        \input{\texfigdir/sigmoid1.pstex_t}
+      }}}
+    }
+    \caption{Sigmoid function: $g(ax)=1/(1+e^{-ax})$ for $a=1,2,3,4$}
+    \label{f:sigmoid}
+  \end{figure}
+\end{frame}
+
+
+\input{nextTime.tex}
+
+\subsection{Decision Boundary}
+
+\begin{frame}
+  \frametitle{Decision Boundary}
+
+  The \structure{decision boundary} $\delta(\vec x)=0$ (zero level set) in feature space separates the two classes. \\[.3cm]
+  Points $\vec x$ on the decision boundary satisfy:
+ 
+  \begin{eqnarray*}
+    {p(y=0|\vec{x})}&=& {p(y=1|\vec x)}
+  \end{eqnarray*}
+ 
+  and thus
+ 
+  \begin{eqnarray*}
+    \log \frac{p(y=0|\vec{x})}{p(y=1|\vec x)} &=& \pause \log 1 = 0 \quad.
+  \end{eqnarray*}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Decision Boundary \cont}
+ 
+  \begin{lemma}
+    The decision boundary is given by $F(\vec x) = 0$.
+  \end{lemma}
+  \pspread
+ 
+  \structure{Proof:}
+%
+  \begin{eqnarray*}
+    \log \frac{p(y=0|\vec{x})}{p(y=1|\vec x)} &=& F(\vec x) = 0\\[.3cm] \pause
+    \frac{p(y=0|\vec{x})}{p(y=1|\vec x)} &=& e^{F(\vec x)} \\[.3cm] \pause
+    {p(y=0|\vec{x})}&=& e^{F(\vec x)} {p(y=1|\vec x)} \\[.3cm]
+    % {p(y=0|\vec{x})}&=& e^{F(\vec x)}\left( {1-p(y=0|\vec x)}\right)
+  \end{eqnarray*} 
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Decision Boundary \cont}
+ 
+  Now we use that the posteriors sum up to one:
+  
+  \begin{eqnarray*}
+    {p(y=0|\vec{x})}&=& e^{F(\vec x)}\left( {1-p(y=0|\vec x)}\right) \\ \\
+    \pause {p(y=0|\vec{x})}&=& \frac{e^{F(\vec x)}}{1+e^{F(\vec x)}} \\ \\
+    \pause {p(y=0|\vec{x})}&=& \frac{1}{1+e^{-F(\vec x)}} 
+  \end{eqnarray*} 
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Decision Boundary \cont}
+ 
+  \begin{figure}
+    \resizebox{1\linewidth}{!}{
+      \alt<4->{
+        \input{\texfigdir/logit3.pstex_t}
+      }{\alt<3>{
+        \input{\texfigdir/logit2.pstex_t}
+      }{\alt<2>{
+        \input{\texfigdir/logit1.pstex_t}      
+      }{
+        \input{\texfigdir/logit0.pstex_t}
+      }}}
+    }
+    \caption{Two Gaussians and their posteriors: {\color{bl3} $\sigma_0$}={\color{gr3}$ \sigma_1$}= 0.25,  {\color{bl3} $\mu_0=-2$},
+              {\color{gr3} $\mu_1=1$}}
+    \label{f:logit}
+  \end{figure}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Decision Boundary \cont}
+  
+  \begin{ovalblock}{Example}
+    \footnotesize
+    Let us assume both classes have normally distributed $d$-dimensional feature vectors:
+ 
+    \begin{eqnarray*}
+      p(\vec x | y) &=& \frac{1}{ \sqrt{ \det{(2 \pi \mat{\Sigma}_y})} } 
+                        e^{-\frac{1}{2} (\vec{x} - \vec{\mu}_y)^T \mat{\Sigma}_y^{-1} (\vec{x} - \vec{\mu}_y)  }
+    \end{eqnarray*}
+    \pause
+ 
+    Then we can write the posterior of $y=0$ in terms of a logistic function:
+ 
+    \begin{eqnarray*}
+      p(y=0|\vec x) &=& \frac{1}{1+e^{-F(\vec x)}} = \frac{1}{1+e^{ - \left( \vec x^T \mat A \vec x + \vec \alpha^T\vec x + \alpha_0 \right) } } \\ \\
+      \pause F(\vec x) &=& \log \frac{p(y=0|\vec x)}{p(y=1|\vec x)} = \log \frac{p(y=0)p(\vec x | y=0) }{p(y=1)p(\vec x|y =1)}
+    \end{eqnarray*}
+  \end{ovalblock}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Decision Boundary \cont}
+
+  \begin{ovalblock}{Example cont.}
+    \footnotesize
+    \begin{eqnarray*}
+      F(\vec x) &=&
+        \log\frac{p(y=0)}{p(y=1)} +
+        \log
+        \frac{
+          \frac{1}{ \sqrt{ \det{( 2 \pi \mat{\Sigma}_0)}} }
+          e^{ -\frac{1}{2} (\vec{x} - \mat{\mu}_0)^T \mat{\Sigma}_0^{-1} (\vec{x} - \vec{\mu}_0) }         
+        }{
+          \frac{1}{ \sqrt{ \det{(2 \pi \mat{\Sigma}_1)}} }
+          e^{ -\frac{1}{2} (\vec{x} - \vec{\mu}_1)^T \mat{\Sigma}_1^{-1} (\vec{x} - \vec{\mu}_1)}
+        }
+    \end{eqnarray*}
+    \pause
+ 
+    This function has the constant component:
+% 
+    \begin{eqnarray*}
+      c &=& \log \frac{p(y=0)}{p(y=1)}+\frac{1}{2}
+            \log \frac{ { \det{(2\pi\mat{\Sigma}_1)}}}
+                      { { \det{(2\pi\mat{\Sigma}_0)}}}
+    \end{eqnarray*}
+    \pause 
+    
+    We observe:
+    \begin{itemize}
+      \small
+      \item Priors imply a constant offset of the decision boundary. 
+      \item If priors and covariance matrices of both classes are identical, this offset is $c=0$.
+    \end{itemize}
+  \end{ovalblock}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Decision Boundary \cont}
+
+  \begin{ovalblock}{Example cont.}
+    \small
+    Furthermore we have:
+    \begin{eqnarray*}
+      \log{ 
+        \frac{e^{ - \frac{1}{2} (\vec{x} - \vec{\mu}_0)^T \mat{\Sigma}_0^{-1} (\vec{x} - \vec{\mu}_0)} }
+             {e^{ - \frac{1}{2} (\vec{x} - \vec{\mu}_1)^T \mat{\Sigma}_1^{-1} (\vec{x} - \vec{\mu}_1)} }
+      } & = & \\[.3cm]
+      & & \pause \hspace{-5cm} =
+      \frac{1}{2} 
+      \left(
+        (\vec{x} - \vec{\mu}_1)^T \mat{\Sigma}_1^{-1} (\vec{x} - \vec{\mu}_1) - (\vec{x} - \vec{\mu}_0)^T \mat{\Sigma}_0^{-1} (\vec{x} - \vec{\mu}_0)
+      \right) \\[.3cm]
+      & & \hspace{-5cm} \pause =
+      \frac{1}{2} 
+      \left(
+        \vec{x}^T (\mat{\Sigma}_1^{-1} - \mat{\Sigma}_0^{-1}) \vec{x} 
+        -2 (\vec{\mu}_1^T \mat{\Sigma}_1^{-1} - \vec{\mu}_0^T \mat{\Sigma}_0^{-1} ) \vec{x} + \right.\\
+        & & \left. \hspace{-4cm} 
+        + \vec{\mu}_1^T \mat{\Sigma}_1^{-1} \vec{\mu}_1 - \vec{\mu}_0^T \mat{\Sigma}_0^{-1} \vec{\mu}_0
+      \right)
+    \end{eqnarray*}
+  \end{ovalblock}
+\end{frame}
+ 
+ 
+\begin{frame}
+  \frametitle{Decision Boundary \cont}
+  
+  \begin{ovalblock}{Example cont.}
+    \small
+    Now we have:
+    \begin{eqnarray*}
+      \mat{A}        &=& \frac{1}{2} (\mat{\Sigma}_1^{-1} - \mat{\Sigma}_0^{-1}) \\[.5cm]
+      \vec{\alpha}^T &=& \vec{\mu}_0^T \mat{\Sigma}_0^{-1} - \vec{\mu}_1^T \mat{\Sigma}_1^{-1} \\[.5cm]
+      \alpha_0       &=& \log \frac{p(y=0)}{p(y=1)} + \frac{1}{2}
+                         \left(
+                           \log
+                             \frac{ \det{( 2 \pi \mat{\Sigma}_1)}}
+                                  { \det{( 2 \pi \mat{\Sigma}_0)}} + 
+                             \vec{\mu}_1^T \mat{\Sigma}_1^{-1} \vec{\mu}_1 -
+                             \vec{\mu}_0^T \mat{\Sigma}_0^{-1} \vec{\mu}_0
+                         \right)
+    \end{eqnarray*}
+  \end{ovalblock}
+\end{frame}
+  
+  
+\begin{frame}
+  \frametitle{Decision Boundary \cont}
+  
+  \begin{figure}
+    
+    \resizebox{.6\linewidth}{!}{
+      \alt<4->{
+        \input{\texfigdir/plot_decision_boundary.pstex_t}
+      }
+{\alt<3>{
+        \input{\texfigdir/gaussian2.pstex_t}
+      }{\alt<2>{
+        \input{\texfigdir/gaussian1.pstex_t}
+      }{
+        \input{\texfigdir/gaussian0.pstex_t}
+      }}}
+    }
+    \caption{Two Gaussian sample sets and the decision boundary}
+  \end{figure}
+\end{frame}
+ 
+ 
+\begin{frame}
+  \frametitle{Decision Boundary \cont}
+
+  \structure{Quadratic polynomials in the 2 variables $x_1$ and $x_2$}
+
+  \begin{eqnarray*}
+    F(\vec{x}) 
+      &=& \vec x^T \mat A \vec x + \vec \alpha^T\vec x + \alpha_0 \\
+      &=& a x_1^2 + b x_1 x_2 + c x_2^2 + d x_1 + e x_2 + f \stackrel{!}{=} 0
+  \end{eqnarray*}
+  \vspace{-0.75cm}
+
+  \begin{figure}
+  \copyrightbox[b]{
+    \subfloat[circles and ellipses]{
+      \makebox[.3\linewidth]{
+        \href{http://en.wikipedia.org/wiki/File:Conic_sections_with_plane.svg}{
+          \includegraphics[height=3cm]{\pngdir/conic_section_circle_ellipse.\png}
+        }
+      }
+    }
+    \subfloat[parabolas]{
+      \makebox[.3\linewidth]{
+        \href{http://en.wikipedia.org/wiki/File:Conic_sections_with_plane.svg}{
+          \includegraphics[height=3cm]{\pngdir/conic_section_parabola.\png}
+        }
+      }
+    }
+    \subfloat[hyperbolas]{
+      \makebox[.3\linewidth]{
+        \href{http://en.wikipedia.org/wiki/File:Conic_sections_with_plane.svg}{
+          \includegraphics[height=3cm]{\pngdir/conic_section_hyperbola.\png}
+        }
+      }
+    }
+  }{Pbroks13,  \href{https://creativecommons.org/licenses/by/3.0} {CC BY 3.0}, via Wikimedia Commons}
+  \end{figure}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Decision Boundary \cont}
+
+  \structure{Posterior probability}
+
+  \begin{center}
+    \resizebox{.85\linewidth}{!}{
+      \input{\texfigdir/plot_posterior.pstex_t}
+    }
+  \end{center}
+\end{frame}
+
+\input{nextTime.tex}
+ 
+\begin{frame}
+  \frametitle{Decision Boundary in Distributions with Equal Dispersion}
+ 
+  \begin{ovalblock}{Example cont.}
+    \small
+    If both classes share the same covariances i.\,e.\ $\mat\Sigma= \mat\Sigma_0=\mat\Sigma_1$, then the argument of the sigmoid function is linear in the components of $\vec{x}$.
+   
+    \begin{eqnarray*}
+      \mat{A}        &=& \mat{0} \\[.5cm]
+      \vec{\alpha}^T &=& (\vec{\mu}_0 - \vec{\mu}_1)^T \mat{\Sigma}^{-1} \\[.5cm]
+      \alpha_0       &=& \log \frac{p(y=0)}{p(y=1)} + 
+                         \frac{1}{2}(\vec{\mu}_1 - \vec{\mu}_0)^T \mat{\Sigma}^{-1} (\vec{\mu}_1 - \vec{\mu}_0)  
+     \end{eqnarray*}
+  \end{ovalblock}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Decision Boundary in Distributions with Equal Dispersion \cont}
+   
+  \begin{figure}
+    \resizebox{.6\linewidth}{!}{
+      \alt<2>{
+        \input{\texfigdir/gaussian3.pstex_t}
+      }{
+        \input{\texfigdir/gaussian5.pstex_t}
+      }
+    }    
+    \caption{Identical covariances lead to linear decision boundary}
+  \end{figure}
+\end{frame}
+
+
+% \begin{frame}
+%   \frametitle{Decision Boundary \cont}
+%   
+%   \begin{figure}
+%     \includegraphics[width=0.7\textwidth]{\psdir/gauss_both.\ps}
+%     \caption{Quadratic and linear decision boundary in comparison}
+%   \end{figure}
+% \end{frame}
+
+
+\begin{frame}
+  \frametitle{Decision Boundary in Distributions with Equal Dispersion \cont}
+
+  \structure{Note:}
+  
+  \begin{itemize}
+    \item If the class conditionals are Gaussians and share the same covariance, the argument of the exponential function is affine in $\vec x$.
+    \item This result is even true for a more general family of pdfs and not limited to Gaussians.
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Decision Boundary in Distributions with Equal Dispersion \cont}
+
+  \begin{citeblock}{Definition}
+    
+The {\em exponential family} is a class of pdf's that can be written in the following canonical form
+    \begin{eqnarray*}
+      p(\vec x;\vec \theta, \phi) &=& e^{\frac{\vec\theta^T \cdot \vec  x -b(\vec \theta)}{a(\phi)}+c(\vec x,\phi)}
+    \end{eqnarray*}
+    where $\vec \theta\in \real^d$ is the {\em location parameter vector}, $\phi$ the {\em dispersion parameter}.
+  \end{citeblock}
+\end{frame}
+
+
+%  \begin{ovalblock}{Example}
+%     Binomial, Poisson, hypergeometric, exponential probability density functions or Gaussians belong to the exponential family.
+%  \end{ovalblock}
+
+
+\begin{frame}
+  \frametitle{Exponential Family}
+
+  \structure{Gaussian Probability Density Function \phantom{\cont}}
+
+  \begin{displaymath}
+    \mathcal{N}(\vec{x}; \vec{\mu},\mat{\Sigma}) = \frac{1}{ \sqrt{ \det{(2 \pi \mat{\Sigma}_y})} } 
+                    e^{-\frac{1}{2} (\vec{x} - \vec{\mu})^T \mat{\Sigma}^{-1} (\vec{x} - \vec{\mu})  } 
+  \end{displaymath}
+%
+  \begin{figure}
+    \centering
+    \subfloat{
+      \resizebox{.3\linewidth}{!}{
+        \input{\texfigdir/gauss1.pstex_t}       
+      }
+    }
+    \quad
+    \subfloat{
+      \resizebox{.3\linewidth}{!}{
+        \input{\texfigdir/gauss2.pstex_t}
+      }
+    }
+    \quad
+    \subfloat{
+      \resizebox{.3\linewidth}{!}{
+        \input{\texfigdir/gauss3.pstex_t}
+      }
+    }
+
+    \caption{Gaussian probability density functions with $\vec\mu = (0, 0)^T$}
+  \end{figure}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Exponential Family}
+
+  \structure{Gaussian Probability Density Function \cont}
+%
+  \begin{displaymath}
+    \mathcal{N}(\vec{x}; \vec{\mu},\mat{\Sigma}) = \frac{1}{ \sqrt{ \det{(2 \pi \mat{\Sigma}_y})} } 
+                    e^{-\frac{1}{2} (\vec{x} - \vec{\mu})^T \mat{\Sigma}^{-1} (\vec{x} - \vec{\mu})  } 
+  \end{displaymath}
+%
+  \begin{figure}
+    \centering
+    \subfloat{
+      \resizebox{.3\linewidth}{!}{
+        \input{\texfigdir/gauss4.pstex_t}
+      }
+    }
+    \quad
+    \subfloat{
+      \resizebox{.3\linewidth}{!}{
+        \input{\texfigdir/gauss5.pstex_t}
+      }
+    }
+    \quad
+    \subfloat{
+      \resizebox{.3\linewidth}{!}{
+        \input{\texfigdir/gauss6.pstex_t}
+      }
+    }
+
+    \caption{Gaussian probability density functions with $\vec\mu = (0, 0)^T$}
+  \end{figure}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Exponential Family \cont}
+
+  \structure{Exponential Probability Density Function}
+%
+  \begin{displaymath}
+    f_\lambda(x) = \left\{ 
+                 \begin{array}{ll}
+                   \lambda e^{-\lambda x} & x \ge 0 \\
+                   0                      & x < 0 \\
+                 \end{array}
+               \right.
+  \end{displaymath}
+%
+  \begin{figure}
+    \resizebox{.65\linewidth}{!}{
+      \alt<4->{
+        \input{\texfigdir/exponential4.pstex_t}
+      }{\alt<3>{
+        \input{\texfigdir/exponential3.pstex_t}
+      }{\alt<2>{
+        \input{\texfigdir/exponential2.pstex_t}
+      }{
+        \input{\texfigdir/exponential1.pstex_t}
+      }}}
+    }
+    \caption{Exponential probability density functions}
+  \end{figure}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Exponential Family \cont}
+
+  \structure{Binomial Probability Mass Function}
+%
+  \begin{displaymath}
+    B(k; p,n) = {n \choose k} p^k (1-p)^{n-k}
+  \end{displaymath}
+%
+  \begin{figure}
+    \resizebox{.65\linewidth}{!}{
+      \alt<3->{
+        \input{\texfigdir/binomial3.pstex_t}
+      }{\alt<2>{
+        \input{\texfigdir/binomial2.pstex_t}
+      }{
+        \input{\texfigdir/binomial1.pstex_t}
+      }}
+    }
+    \caption{Binomial probability mass functions for $n=20$}
+  \end{figure}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Exponential Family \cont}
+
+  \structure{Poisson Probability Mass Function}
+%
+  \begin{displaymath}
+    P_\lambda(X=k) = \frac{\lambda^k}{k!} e^{-\lambda}
+  \end{displaymath}
+%
+  \begin{figure}
+    \resizebox{.70\linewidth}{!}{
+      \alt<3->{
+        \input{\texfigdir/poisson3.pstex_t}
+      }{\alt<2>{
+        \input{\texfigdir/poisson2.pstex_t}
+      }{
+        \input{\texfigdir/poisson1.pstex_t}
+      }}
+    }
+    \caption{Poisson probability mass functions}
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Exponential Family \cont}
+
+  \structure{Hypergeometric Probability Mass Function}
+
+  \begin{displaymath}
+    h(k; N,M,n) = \frac{{M \choose k}{N-M \choose n-k}}{{N \choose n}}
+  \end{displaymath}
+%
+  \begin{figure}
+    \resizebox{.65\linewidth}{!}{
+      \alt<3->{
+        \input{\texfigdir/hypergeometric3.pstex_t}
+      }{\alt<2>{
+        \input{\texfigdir/hypergeometric2.pstex_t}
+      }{
+        \input{\texfigdir/hypergeometric1.pstex_t}
+      }}
+    }
+    \caption{Hypergeometric probability mass functions}
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+   \frametitle{Decision Boundary \cont}
+
+   \begin{lemma}
+     If all class-conditional densities are members of the same exponential family of probability density functions with equal dispersion $\phi$, the decision boundary $F(\vec x)=0$ is linear in the components of $\vec x$.
+   \end{lemma}
+\end{frame}
+
+
+\subsection{Lessons Learned}
+
+\begin{frame}
+  \frametitle{Lessons Learned}
+
+  \begin{itemize}
+    \item Posteriors can be rewritten in terms of a logistic function. \pause
+    \item Given the decision boundary $F(\vec x)=0$, we can write down the posterior $p(y|\vec x)$ right away. \pause
+    \item Decision boundary for normally distributed feature vectors for each class is a quadratic function. \pause
+    \item If Gaussians share the same covariances, the decision boundary is a linear function.
+  \end{itemize}
+\end{frame}
+
+\input{nextTime.tex}
+
+\subsection{Further Readings}
+
+\begin{frame}
+  \frametitle{Further Readings}
+  
+  \begin{itemize}
+    \item T. Hastie, R. Tibshirani, and J. Friedman: \\
+      \structure{The Elements of Statistical Learning --}\\
+      \structure{ Data Mining, Inference, and Prediction},\\
+      2nd edition, Springer, New York, 2009. \\[.3cm]
+    \item David W. Hosmer, Stanley Lemeshow: \\
+      \structure{Applied Logistic Regression}, 2nd Edition, \\
+      John Wiley \& Sons, Hoboken, 2000.
+  \end{itemize}
+\end{frame}
+
+
+\subsection{Comprehensive Questions}
+
+\begin{frame}
+  \frametitle{Comprehensive Questions}
+  
+  \begin{itemize}
+    \item How can we model the posterior probabilities? \\[1cm] \pause
+    \item Formulate the criterion for the decision boundary! \\[1cm] \pause
+    \item Describe the shape of the decision boundary for a Gaussian with different and same class covariances! \\[1cm] \pause
+    \item What effect does a change of the priors have on the decision boundary?
+  \end{itemize}
+\end{frame}
+
+
+

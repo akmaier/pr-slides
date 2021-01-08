@@ -1,0 +1,868 @@
+\section{Kernels}
+
+\subsection{Motivation}
+
+\begin{frame}
+	\frametitle{Motivation}
+
+	Linear decision boundaries in its current form have serious limitations: \pause
+
+	\begin{itemize}
+		\item too simple to provide good decision boundaries \\[.3cm] \pause
+		\item non-linearly separable data cannot be classified \\[.3cm] \pause
+		\item noisy data cause problems \\[.3cm] \pause
+		\item formulation deals with vectorial data only
+	\end{itemize}
+	\pspread
+
+	\structure{Possible solution:} \\
+
+	\begin{itemize}
+		\item Map data into a higher dimensional feature space using a \\
+		      \structure{non-linear feature transform},
+		      then use a linear classifier.
+	\end{itemize}
+\end{frame}
+
+
+\begin{frame}
+	\frametitle{Dual Representation}
+
+	\begin{itemize}
+		\item The SVM \structure{decision boundary} can be rewritten in dual form:
+		      {\small
+		      \begin{displaymath}
+			      f(\vec x) =
+			      \vec \alpha^T\vec x +\alpha_0 =
+			      \sum_i \lambda_i y_i \vec x_i^T \vec x + \alpha_0
+		      \end{displaymath}
+		      }
+		      where we have used the identity:
+		      {\small
+		      \begin{displaymath}
+			      \vec \alpha = \sum_i \lambda_i y_i \vec x_i~. \pause
+		      \end{displaymath}
+		      }
+		\item The Lagrange dual problem is given by the \structure{optimization problem}:
+		      {\small
+		      \begin{eqnarray*}
+			      \mbox{maximize}   & & -\frac{1}{2} \sum_i \sum_j \lambda_i \lambda_j y_i y_j \cdot \vec x_i^T\vec x_j + \sum_i \lambda_i \\
+			      \mbox{subject to} & & \vec{\lambda}\succeq 0, \quad \sum_{i} \lambda_i \, y_i = 0 \pause
+		      \end{eqnarray*}
+		      }
+	\end{itemize}
+
+	\structure{Conclusion:}
+	feature vectors $\vec x_i, \vec x_j$, and $\vec x$ only appear in \structure{inner products}, \\
+	both in the learning and the classification phase.
+\end{frame}
+
+
+\begin{frame}
+	\frametitle{Inner Product and the Perceptron}
+
+	The decision boundary that we get for the perceptron can also be written in terms of inner products:
+
+	\begin{eqnarray*}
+		F(\vec x) \pause
+		&=& \left (\sum_{i\in \cal E} y_i\cdot \vec x_i \right)^T \vec x + \sum_{i\in \cal E} y_i \quad \\[.5cm] \pause
+		&=& \sum_{i\in \cal E} y_i\cdot \langle \vec x_i, \vec x\rangle + \sum_{i\in \cal E} y_i
+	\end{eqnarray*}
+\end{frame}
+
+
+\subsection{Feature Transforms}
+
+\begin{frame}{Feature Transforms}
+
+	We select a \structure{feature transform $\phi: \real^d \rightarrow \real^D$}, $D \ge d$, such that \\
+	the resulting features $\phi(\vec x_i)$, $i=1,2,\dots, m$, are linearly separable. \pause
+
+	\begin{figure}
+		\resizebox{.95\linewidth}{!}{
+			\alt<4->{
+				\input{\texfigdir/quadratic_features1b.pstex_t}
+			}{
+				\input{\texfigdir/quadratic_features1.pstex_t}
+			}
+			\qquad \qquad \qquad \qquad \pause
+			\input{\texfigdir/quadratic_features2.pstex_t}
+		}
+		\caption{Application of the feature transform $\phi(\vec x) = \left({x_1}^2, {x_2}^2\right)^T$.}
+	\end{figure}
+\end{frame}
+
+
+\begin{frame}{Feature Transforms \cont}
+
+	\structure{Second Example:} data is not centered\\ \phantom{q}
+
+	\begin{figure}
+		\resizebox{1\linewidth}{!}{
+			\input{\texfigdir/quadratic_features3.pstex_t}
+			\qquad \qquad \qquad \qquad \pause
+			\alt<3->{
+				\input{\texfigdir/quadratic_features5.pstex_t}
+			}{
+				\input{\texfigdir/quadratic_features4.pstex_t}
+			}
+		}
+		\caption{Application of the feature transform
+			\alt<3->{
+				$\phi(\vec x) = \left({x_1}^2, {x_2}^2, x_2\right)^T$.
+			}{
+				$\phi(\vec x) = \left({x_1}^2, {x_2}^2\right)^T$.
+			}
+		}
+	\end{figure}
+\end{frame}
+
+
+\begin{frame}
+	\frametitle{Feature Transforms \cont}
+
+	\begin{ovalblock}{Example}
+		Assume the decision boundary is given by the quadratic function
+		\begin{displaymath}
+			f(\vec x) = a_0 + a_1 {x_1}^2 + a_2 {x_2}^2 + a_3 x_1 x_2 + a_4 x_1+a_5 x_2.
+		\end{displaymath}
+		Obviously this is not a linear decision boundary.\\[.25cm] \pause
+
+		By the following mapping, we get features that have a linear decision boundary:
+		\footnotesize
+		\begin{displaymath}
+			\phi(\vec x) = \left(
+			\begin{matrix}
+				%1 \\
+				{x_1}^2 \\[1mm] {x_2}^2 \\ x_1 \cdot x_2 \\ x_1 \\ x_2
+			\end{matrix}
+			\right)
+		\end{displaymath}
+	\end{ovalblock}
+\end{frame}
+
+
+\begin{frame}
+	\frametitle{Feature Transforms \cont}
+
+	Consider distances in the transformed feature space: \\
+	%
+	\begin{eqnarray*}
+		\| \phi(\vec x)-\phi (\vec x')\|_2^2 \pause
+		&=& \left\langle \big(\phi(\vec x)-\phi (\vec x')\big), \big(\phi(\vec x)-\phi (\vec x')\big)\right\rangle \\[.5cm] \pause
+		&=& \langle \phi(\vec x), \phi(\vec x)\rangle -
+		2 \langle \phi(\vec x), \phi(\vec x') \rangle +
+		\langle \phi(\vec x'), \phi(\vec x') \rangle
+	\end{eqnarray*}
+	\pause
+
+	\structure{Conclusion:} Distances can be computed by just evaluating inner products.
+\end{frame}
+
+
+\begin{frame}
+	\frametitle{Feature Transforms \cont}
+
+	These feature transforms can be easily incorporated into SVMs: \\[.25cm]
+
+	\begin{itemize}
+		\item \structure{Decision boundary:}
+		      \begin{center}
+			      \small
+			      \tikz[baseline]{
+				      \node[fill=bl1!100,anchor=base,rounded corners=3pt] (d1) {
+					      \color{bl3}
+					      $\displaystyle
+						      f(\vec x) = \sum_i \lambda_i \cdot y_i \cdot  \langle\phi(\vec x_i), \phi( \vec x)\rangle + \alpha_0
+					      $
+				      };
+			      }
+		      \end{center}
+		      \pause \vspace{.25cm}
+		\item The Lagrange dual problem is given by the \structure{optimization problem}:
+		      {\small
+		      \begin{eqnarray*}
+			      \mbox{maximize}   & & -\frac{1}{2} \sum_i \sum_j \lambda_i \lambda_j y_i y_j \cdot \langle\phi(\vec x_i),\phi(\vec x_j)\rangle + \sum_i \lambda_i \\[.5cm]
+			      \mbox{subject to} & & \vec{\lambda}\succeq 0, \quad \sum_{i} \lambda_i \, y_i = 0
+		      \end{eqnarray*}
+		      }
+	\end{itemize}
+\end{frame}
+
+
+\subsection{Kernel Functions}
+
+\begin{frame}
+	\frametitle{Kernel Functions}
+
+	\begin{citeblock}{Definition}
+
+		A \structure{\emph{kernel function}} $k: {\cal X} \times {\cal X}\rightarrow \real$ is a symmetric function that maps a pair of features to a real number. For a kernel function the following property holds:
+		\begin{displaymath}
+			k(\vec x, \vec x') = \langle\phi(\vec x), \phi(\vec x')\rangle
+		\end{displaymath}
+		for any feature mapping $\phi$.
+	\end{citeblock}
+	\pspread
+
+	\structure{Note:} \\[.2cm]
+
+	Usually the evaluation of the kernel function is much easier than the computation of transformed features followed by the inner product.
+\end{frame}
+
+
+\begin{frame}
+	\frametitle{Kernel Functions \cont}
+
+	\begin{citeblock}{Definition}
+
+		For a given set of feature vectors $\vec x_1, \vec x_2, \dots, \vec x_m$, we define the \\
+		\structure{\emph{kernel matrix}}
+		\begin{eqnarray*}
+			\mat K &=& [K_{i,j}]_{i,j=1,2,\dots,m}~, \quad \mbox{where} \quad K_{i,j} = \langle\phi(\vec x_i), \phi(\vec x_j)\rangle.
+		\end{eqnarray*}
+	\end{citeblock}
+	\pspread
+
+	\structure{Note:} \\[.2cm]
+	The entries of the matrix are similarity measures for transformed feature pairs.
+\end{frame}
+
+
+\begin{frame}
+	\frametitle{Kernel Functions \cont}
+
+	\begin{lemma}
+		The kernel matrix is positive semidefinite.
+	\end{lemma}
+	\pause
+
+	\vspace{.3cm}
+	\structure{Proof:} We need to show $\forall \vec{x}:~\vec x^T \mat K \vec x \geq 0$~: \pause
+
+	\small
+	\begin{eqnarray*}
+		\vec x^T \mat K \vec x  \pause
+		&=& \sum_{i,j=1}^m x_ix_j K_{i,j} \quad \pause
+		=  \quad \sum_{i,j=1}^m x_ix_j\ \langle\phi(\vec x_i), \phi(\vec x_j)\rangle \\ \pause
+		&=& \sum_{i,j=1}^m  \langle x_i\phi(\vec x_i), x_j\phi(\vec x_j)\rangle \\ \pause
+		&=& \left \langle \sum_{i=1}^m x_i\phi(\vec x_i), \sum_{j=1}^mx_j\phi(\vec x_j)\right\rangle \quad \pause
+		=  \quad \left\|\sum_{i=1}^m x_i\phi(\vec x_i)\right\|_2^2 \quad
+		\geq \quad 0
+	\end{eqnarray*}
+\end{frame}
+
+
+\begin{frame}
+	\frametitle{Kernel Functions \cont}
+
+	\structure{Typical kernel functions:} \pause
+
+	\begin{itemize}
+		\item Linear: $k(\vec x, \vec x') = \langle\vec x, \vec x'\rangle$ \\[.3cm] \pause
+		\item Polynomial: $k(\vec x, \vec x') = (\langle\vec x, \vec x'\rangle+1)^d$ \\[.3cm] \pause
+		\item Laplacian radial basis function: $k(\vec x, \vec x') = e^{-\frac{\|\vec x- \vec x'\|_1}{\sigma^2}}$ \\[.3cm] \pause
+		\item Gaussian radial basis function: $k(\vec x, \vec x') = e^{-\frac{\|\vec x- \vec x'\|_2^2}{\sigma^2}}$ \\[.3cm] \pause
+		\item Sigmoid kernel: $k(\vec x, \vec x') =\mbox{tanh}({ \alpha\langle\vec x, \vec x'\rangle+\beta})$
+	\end{itemize}
+	\pspread
+
+	\structure{Question:} \\[.1cm]
+	Can we compute for any kernel function $k(\vec x, \vec x')$ a feature mapping $\phi$ \\
+	such that the kernel function can be written as an inner product?
+\end{frame}
+
+
+\begin{frame}
+	\frametitle{Kernel Functions \cont}
+
+	\begin{theorem}[Mercer's Theorem]
+		For any symmetric function $k: {\cal X}\times {\cal X}\rightarrow \real$ that is square integrable on its domain and which satisfies
+
+		\begin{displaymath}
+			\int_{{\cal X}\times {\cal X}} f(\vec x)\,f(\vec x')\,k(\vec x, \vec x')\ \mathsf{d}\vec x\, \mathsf{d} \vec x' \geq 0
+		\end{displaymath}
+
+		for all square integrable functions $f$, there exist transforms $\phi_i: {\cal X}\rightarrow \real$ and $\lambda_i\geq 0$ such that:
+
+		\begin{displaymath}
+			k(\vec x, \vec x') = \sum_i \lambda_i \,\phi_i(\vec x)\,\phi_i(\vec x')
+		\end{displaymath}
+
+		for all $\vec x$ and $\vec x'$.
+	\end{theorem}
+\end{frame}
+
+
+\begin{frame}
+	\frametitle{Kernel Functions \cont}
+
+	\structure{The Kernel Trick} \\[.15cm]
+
+	In \emph{any} algorithm that is formulated in terms of a positive semidefinite kernel $k$, we can derive an alternative algorithm by replacing the kernel function $k$ by another positive semidefinite kernel $k'$.
+
+	\begin{center}%
+		\resizebox{1\linewidth}{!}{%
+			\alt<2->{%
+				\input{\texfigdir/kernel+linear-svm2.pstex_t}%
+			}{%
+				\input{\texfigdir/kernel+linear-svm1.pstex_t}%
+			}
+		}
+	\end{center}
+\end{frame}
+
+
+\mode<beamer>{
+	\begin{frame}
+		\frametitle{Kernel SVMs with Soft Margins}
+
+		\structure{Linear kernel $\langle\vec x, \vec x'\rangle$:}
+		\begin{itemize}
+			\item the complexity parameter $C$ controls the number of support vectors and
+			\item hence the width of the margin and
+			\item the orientation of the decision boundary \\[.25cm]
+		\end{itemize}
+
+		\begin{figure}
+			\centering
+			\resizebox{.45\linewidth}{!}{
+				\alt<3->{
+					\input{\texfigdir/svm-linear3.pstex_t}
+				}{\alt<2>{
+						\input{\texfigdir/svm-linear2.pstex_t}
+					}{
+						\input{\texfigdir/svm-linear1.pstex_t}
+					}}
+			}
+			\alt<3->{
+				\caption{$C=0.1$: 17 support vectors, 3 misclassifications}
+			}{\alt<2>{
+					\caption{$C=1$: 11 support vectors, 4 misclassifications}
+				}{
+					\caption{$C=10$: 8 support vectors, 3 misclassifications}
+				}}
+		\end{figure}
+	\end{frame}
+}
+
+\mode<handout>{
+	\begin{frame}
+		\frametitle{Kernel SVMs with Soft Margins}
+
+		\structure{Linear kernel $\langle\vec x, \vec x'\rangle$:}
+		\begin{itemize}
+			\item the complexity parameter $C$ controls the number of support vectors and
+			\item hence the width of the margin and
+			\item the orientation of the decision boundary
+		\end{itemize}
+
+		\begin{figure}
+			\subfloat[$C=10$: 8 support vectors, \newline 3 misclassifications]{
+				\resizebox{1\linewidth}{!}{
+					\input{\texfigdir/svm-linear1.pstex_t}
+				}
+			}
+			\subfloat[$C=1$: 11 support vectors, \newline 4 misclassifications]{
+				\resizebox{1\linewidth}{!}{
+					\input{\texfigdir/svm-linear2.pstex_t}
+				}
+			}
+			\subfloat[$C=0.1$: 17 support vectors, \newline 3 misclassifications]{
+				\resizebox{1\linewidth}{!}{
+					\input{\texfigdir/svm-linear3.pstex_t}
+				}
+			}
+		\end{figure}
+	\end{frame}
+}
+
+
+\mode<beamer>{
+	\begin{frame}
+		\frametitle{Kernel SVMs with Soft Margins \cont}
+
+		\structure{Polynomial kernel $\langle\vec x, \vec x'\rangle^2$:}{}
+
+		\begin{figure}
+			\centering
+			\resizebox{.55\linewidth}{!}{%
+				\alt<2->{%
+					\input{\texfigdir/svm-polynomial2.pstex_t}%
+				}{%
+					\input{\texfigdir/svm-polynomial1.pstex_t}%
+				}
+			}
+			\alt<2>{
+				\caption{$C=1$: 5 support vectors, 0 misclassifications}
+			}{
+				\caption{$C=10$: 4 support vectors, 0 misclassifications}
+			}
+		\end{figure}
+	\end{frame}
+}
+
+
+\mode<handout>{
+	\begin{frame}
+		\frametitle{Kernel SVMs with Soft Margins \cont}
+
+		\structure{Polynomial kernel $\langle\vec x, \vec x'\rangle^2$:}
+
+		\vspace{-.15cm}
+		\begin{figure}
+			\subfloat[$C=10$: 4 support vectors, 0 misclassifications]{
+				\resizebox{.55\linewidth}{!}{
+					\input{\texfigdir/svm-polynomial1.pstex_t}
+				}
+			}
+			\qquad
+			\subfloat[$C=1$: 5 support vectors, 0 misclassifications]{
+				\resizebox{.55\linewidth}{!}{
+				\input{\texfigdir/svm-polynomial2.pstex_t}
+				}
+			}
+		\end{figure}
+	\end{frame}
+}
+
+
+\begin{frame}
+	\frametitle{Kernel SVMs with Soft Margins \cont}
+
+	\structure{Gaussian RBF kernel $e^{-0.1 \cdot \langle\vec x, \vec x'\rangle^2}$:}{}
+
+	\begin{figure}
+		\centering
+		\resizebox{.7\linewidth}{!}{
+			\alt<2->{
+				\input{\texfigdir/svm-rbf2.pstex_t}
+			}{
+				\input{\texfigdir/svm-rbf1.pstex_t}
+			}
+		}
+		\caption{$C=10$: 18 support vectors, 3 misclassifications}
+	\end{figure}
+\end{frame}
+
+
+\input{nextTime.tex}
+%\subsection{Kernel PCA}
+
+\begin{frame}
+	\frametitle{Kernel PCA}
+
+	\structure{PCA revisited} \pause
+
+	\begin{itemize}
+		\item Let $\vec x_1, \vec x_2, \dots, \vec x_m\in \real^d$ be the feature vectors with zero mean. \pause
+		\item Compute the \structure{scatter matrix} (covariance matrix):
+		      \begin{displaymath}
+			      \mat \Sigma =
+			      \frac{1}{m}\sum_{i=1}^m \vec x_i \vec x_i^T \quad
+			      \in \quad \real^{d\times d} \pause
+		      \end{displaymath}
+		\item Compute the \structure{eigenvectors} and \structure{eigenvalues}:
+		      \begin{displaymath}
+			      \mat \Sigma \vec e_i = \lambda_i \vec e _i \pause
+		      \end{displaymath}
+		\item \structure{Sort} eigenvectors with decreasing eigenvalues. \pause
+		\item Subsequent \structure{projection} of features to the eigenvectors.
+	\end{itemize}
+\end{frame}
+
+
+\begin{frame}
+	\frametitle{Kernel PCA \cont}
+
+	\structure{Facts from linear algebra:} \\[.5cm] \pause
+
+	\begin{itemize}
+		\item The eigenvectors $\vec e_i$ span the same space as the feature vectors. \\[.5cm] \pause
+		\item Each eigenvector $\vec e_i$ can be written as a linear combination of \\
+		      feature vectors:
+		      \begin{displaymath}
+			      \vec e_i = \sum_{k} \alpha_{i,k} \vec x_k
+		      \end{displaymath}
+	\end{itemize}
+\end{frame}
+
+
+\begin{frame}
+	\frametitle{Kernel PCA \cont}
+
+	The eigenvector/-value problem for the PCA computation can now be rewritten:
+
+	\begin{eqnarray*}
+		\mat \Sigma \vec e_i
+		&=& \lambda_i \vec e _i \\[.5cm] \pause
+		\left( \frac{1}{m}\sum_{j=1}^m \vec x_j \vec x_j^T\right) \cdot \sum_k \alpha_{i,k} \vec x_k
+		&=& \lambda_i \sum_{k} \alpha_{i,k} \vec x_k \\[.5cm] \pause
+		\sum_{j,k} \alpha_{i,k} \vec x_j \vec x_j^T\vec x_k
+		&=& m \cdot \lambda_i \sum_{k} \alpha_{i,k} \vec x_k
+	\end{eqnarray*}
+\end{frame}
+
+
+\begin{frame}
+	\frametitle{Kernel PCA \cont}
+
+	\begin{itemize}
+		\item The following equations have to be fulfilled for all projections on $\vec x_l$ for all indices $l$:
+
+		      \begin{displaymath}
+			      \sum_{j,k} \alpha_{i,k}\vec x_l^T \vec x_j \vec x_j^T\vec x_k =
+			      m \cdot \lambda_i \sum_{k} \alpha_{i,k} \vec x_l^T\vec x_k \pause
+		      \end{displaymath}
+		      %
+		\item \structure{Wow} -- now all feature vectors show up in terms of inner products and the kernel trick can be applied, \structure{if \emph{transformed} features $\phi(\vec x)$ have zero mean}. \\[.5cm] \pause
+
+		\item For \emph{any} kernel $k(\vec x, \vec x')$, we get the \structure{key equation for Kernel PCA}: \\[.25cm]
+
+		      \begin{center}
+			      \tikz[baseline]{
+				      \node[fill=bl1!100,anchor=base,rounded corners=3pt] (d1) {
+					      \color{bl3}
+					      $\displaystyle \sum_{j,k} \alpha_{i,k} \cdot k(\vec x_l, \vec x_j) \cdot k( \vec x_j,\vec x_k) =
+						      m \cdot \lambda_i \cdot \sum_{k} \alpha_{i,k} \cdot k(\vec x_l, \vec x_k)$
+				      };
+			      }
+		      \end{center}
+
+	\end{itemize}
+\end{frame}
+
+
+\begin{frame}
+	\frametitle{Kernel PCA \cont}
+
+	This can be written in \structure{matrix notation} using the symmetric, \\
+	positive semi-definite kernel matrix $\mat K\in \real^{m\times m}$ and \\
+	the vector $\vec \alpha_i = (\alpha_{i,1}, \alpha_{i,2}, \dots, \alpha_{i,m})^T$:
+
+	\begin{eqnarray*}
+		\mat K^2 \vec \alpha_i        &=& m\cdot \lambda_i \mat K \vec \alpha_i\\
+		\mat K (\mat K \vec \alpha_i) &=& m\cdot \lambda_i ( \mat K \vec \alpha_i)
+	\end{eqnarray*}
+	\pause
+
+	This is equivalent to
+	\begin{displaymath}
+		\mat K (\mat K {\vec \alpha}_i - m\cdot \lambda_i \vec \alpha_i) = \vec 0
+	\end{displaymath}
+
+	\begin{itemize}
+		\item $\mat K \vec \alpha_i$ is an eigenvector of $\mat K$
+		\item $\vec \alpha_i$ is an eigenvector of $\mat K$
+	\end{itemize}
+\end{frame}
+
+
+\begin{frame}
+	\frametitle{Kernel PCA \cont}
+
+	The coefficient vector $\vec \alpha_i$ for the principal components can be computed by solving the \structure{eigenvalue/-vector problem} for $i$: \\[.25cm]
+
+	\begin{center}
+		\tikz[baseline]{
+			\node[fill=bl1!100,anchor=base,rounded corners=3pt] (d1) {
+				\color{bl3}
+				$\mat K {\vec \alpha}_i = m \lambda_i  \ \vec \alpha_i$
+			};
+		}
+	\end{center}
+	\pause
+
+	\structure{Note:}
+
+	\small
+	\begin{itemize}
+		\item Kernel PCA (and thus the classical PCA as well) can be computed by \\
+		      solving an eigenvector/-value problem for an $(m\times m)$-matrix, \\
+		      where $m$ is the \structure{cardinality of the training feature set}. \pause
+		\item The principal components cannot be computed easily, because \\
+		      only the kernel is known, but \structure{not} $\phi(\vec x)$.  \pause
+		\item However, the projection $c$ of the transformed feature vector $\phi(\vec x)$ on \\
+		      principal component $\vec e_i= \sum_{k} \alpha_{i,k}  \phi(\vec x_k)$ is easily computed by:
+		      \begin{displaymath}
+			      c \quad = \quad
+			      \phi( \vec x)^T \vec e_i \pause \quad = \quad
+			      \sum_{k} \alpha_{i,k} \phi(\vec x)^T\phi(\vec x_k) \quad \pause = \quad
+			      \sum_{k} \alpha_{i,k} k(\vec x, \vec x_k)
+		      \end{displaymath}
+	\end{itemize}
+\end{frame}
+
+
+\begin{frame}
+	\frametitle{Kernel PCA \cont}
+
+	It is assumed that the transformed features have \structure{zero mean}:
+
+	\begin{displaymath}
+		\frac{1}{m}\sum_{k=1}^m \phi(\vec x_k) = \vec 0. \pause
+	\end{displaymath}
+
+	This can be enforced by the \structure{normalization step}:
+	%%
+	\begin{eqnarray*}
+		\tilde\phi(\vec x_i) &=& \phi(\vec x_i) - \frac{1}{m}\sum_{k=1}^m \phi(\vec x_k)
+	\end{eqnarray*}
+\end{frame}
+
+
+\begin{frame}
+	\frametitle{Kernel PCA}
+
+	Implication for the components of the \structure{centered kernel matrix $\tilde {\mat K}$}:
+
+	\small
+	\begin{eqnarray*}
+		\tilde{K} _{i,j}
+		&=& \tilde\phi(\vec x_i) ^T  \tilde\phi(\vec x_j) \\ \pause
+		&=& \left( \phi(\vec x_i) - \frac{1}{m}\sum_{k=1}^m \phi(\vec x_k) \right)^T
+		\left( \phi(\vec x_j) - \frac{1}{m}\sum_{k=1}^m \phi(\vec x_k) \right) \\ \pause
+		&=& \phi(\vec x_i)^T \phi(\vec x_j) -
+		\frac{1}{m}\sum_{k=1}^m \phi(\vec x_i)^T \phi(\vec x_k) -
+		\frac{1}{m}\sum_{k=1}^m \phi(\vec x_k)^T  \phi(\vec x_j) + \\
+		& & \quad + \frac{1}{m^2}\sum_{k,l=1}^m \phi(\vec x_k)^T \phi(\vec x_l) \\ \pause
+		&=& K_{i,j} -
+		\frac{1}{m}\sum_{k=1}^m K_{i,k} -
+		\frac{1}{m}\sum_{k=1}^m K_{k,j} +
+		\frac{1}{m^2}\sum_{k,l=1}^m K_{k,l}
+	\end{eqnarray*}
+\end{frame}
+
+
+\begin{frame}
+	\frametitle{Kernel PCA \cont}
+
+	\begin{ovalblock}{Example: classical vs. kernel PCA}
+		\small
+		Consider $m=50$ images with $1024^2$ pixels.
+		The pixels define $1024^2$-dimensional feature vectors:
+		\begin{displaymath}
+			\vec x_1, \vec x_2, \dots, \vec x_{50} \in \real^{2^{20}} \pause
+		\end{displaymath}
+
+		The kernel PCA using the linear kernel
+		\begin{displaymath}
+			k(\vec x_i, \vec x_j) = \vec x_i^T \vec x_j
+		\end{displaymath}
+		requires the eigenvalue/-vector decomposition of the $(50\times 50)$ kernel matrix. \\[.5cm] \pause
+
+		The classical PCA requires the eigenvalue/-vector decomposition of a $(2^{20} \times 2^{20})$ matrix.
+	\end{ovalblock}
+\end{frame}
+
+
+\subsection{String Kernels}
+
+\begin{frame}
+	\frametitle{Kernels for Feature Sequences}
+
+	\begin{ovalblock}{Example: string kernels}
+		\begin{itemize}
+			\item In speech recognition we do not have feature vectors but sequences of feature vectors.
+			\item In order to use kernel methods we need a kernel for time series.
+		\end{itemize}
+
+		\begin{center}
+			\movie[]{
+				\includegraphics[height=2.0cm]{\pngdir/aibo.\png}
+			}{audio/aibo.aif}
+			\quad
+			\includegraphics[height=2.0cm]{\pngdir/spectrum.\png}
+		\end{center}
+		~
+	\end{ovalblock}
+\end{frame}
+
+
+\begin{frame}
+	\frametitle{Kernels for Feature Sequences \cont}
+
+	\begin{ovalblock}{Example: string kernels (cont.)}
+		\begin{itemize}
+			\item Feature vectors are considered in $\real^d =\cal X$.
+			\item Sequences of feature vectors are elements of $\cal X^*$.
+			\item \structure{Problem:} How to define a kernel over the sequence space $\cal X^*$? \\[.5cm]
+		\end{itemize}
+
+		\structure{Implications:}
+		\begin{itemize}
+			\item PCA on feature sequences -- COOL!
+			\item SVM for feature sequences -- EVEN COOLER!
+		\end{itemize}
+	\end{ovalblock}
+\end{frame}
+
+
+\begin{frame}
+	\frametitle{Kernels for Feature Sequences \cont}
+
+	\begin{ovalblock}{Example: string kernels (cont.)}
+		Comparison of sequences via \emph{dynamic time warping} (DTW): \\[.5cm]
+
+		Given the feature sequences $(p, q\in \{1,2,\dots\})$:
+		\begin{eqnarray*}
+			\langle \vec x_1, \vec x_2, \dots, \vec x_p\rangle & \in & {\cal X^*} \\
+			\langle \vec y_1, \vec y_2, \dots, \vec y_q\rangle & \in & {\cal X^*}
+		\end{eqnarray*}
+	\end{ovalblock}
+\end{frame}
+
+
+\begin{frame}
+	\frametitle{Kernels for Feature Sequences \cont}
+
+	\begin{ovalblock}{Example: string kernels (cont.)}
+		\begin{itemize}
+			\item Distance is computed by DTW:
+			      \begin{displaymath}
+				      D( \langle \vec x_1, \vec x_2, \dots, \vec x_p\rangle,
+				      \langle \vec y_1, \vec y_2, \dots, \vec y_q\rangle )
+				      = \frac{1}{p}\sum_{k=1}^{p} \| \vec x_{v(k)}- \vec y_{w(k)} \|_2
+			      \end{displaymath}
+			      where $v, w$ define the mapping of indices to indices. \\[.5cm] \pause
+			\item The DTW kernel can be defined as:
+			      \begin{displaymath}
+				      k(\vec x, \vec y) = e^{-D(
+						      \langle \vec x_1, \vec x_2, \dots, \vec x_p\rangle,
+						      \langle \vec y_1, \vec y_2, \dots, \vec y_q\rangle) }
+			      \end{displaymath}
+		\end{itemize}
+	\end{ovalblock}
+\end{frame}
+
+
+%\subsection{Fisher Kernels}
+
+\begin{frame}
+	\frametitle{Fisher Kernels}
+
+	Now we design kernels building on probability density functions $p(\vec x;\vec  \theta)$.
+
+	\begin{itemize}
+		\item \structure{Fisher score:}
+		      \begin{displaymath}
+			      \mat J_{\vec \theta} (\vec x) =
+			      -\frac{\partial}{\partial \vec \theta} \log p(\vec x; \vec \theta) \pause
+		      \end{displaymath}
+		\item \structure{Fisher information matrix:}
+		      \begin{displaymath}
+			      \mat I (\vec x) =
+			      E_{\vec x} [\mat J_{\vec \theta}(\vec x) \mat J_{\vec \theta}^T(\vec x)]
+		      \end{displaymath}
+	\end{itemize}
+	\pspread
+
+	\structure{Note:} \\[.15cm]
+
+	The Fisher information matrix is the curvature of the Kullback-Leibler divergence.
+\end{frame}
+
+
+\begin{frame}
+	\frametitle{Fisher Kernels \cont}
+
+	The Fisher kernel can be defined in \structure{two different ways}:
+
+	\begin{displaymath}
+		k(\vec x, \vec x') = \mat J_{\vec \theta}^T(\vec x) \mat J_{\vec \theta}(\vec x')
+	\end{displaymath}
+
+	or
+
+	\begin{displaymath}
+		k(\vec x, \vec x') =  \mat J_{\vec \theta}^T(\vec x)    \mat I ^{-1}(\vec x) \mat J_{\vec \theta}(\vec x')
+	\end{displaymath}
+\end{frame}
+
+
+\begin{frame}
+	\frametitle{Fisher Kernels \cont}
+
+	\structure{Application:} learning from partially labeled data \pause
+
+	\small
+	\begin{itemize}
+		\item Some classification approaches require \structure{huge collections of data} \\
+		      (e.\,g.\ for text or speech recognition). \pause
+		\item Labeling of the data can be \structure{time-consuming} and \structure{costly}. \pause
+		\item If the data can be modeled with a small number of well separated components \\
+		      (with each component corresponding to a distinct category), \\
+		      little labeled data would suffice to assign a proper label to each of them. \pause
+		\item A machine learning approach that makes use of only partially labeled data \\
+		      usually achieves much better classification performance than \\
+		      using only the labeled data alone. \pause
+		\item Fisher kernels describe a generative model that can be used in a discriminative approach (e.\,g.\ SVM).
+	\end{itemize}
+\end{frame}
+
+
+\subsection{Lessons Learned}
+
+\begin{frame}
+	\frametitle{Lessons Learned}
+
+	\begin{itemize}
+		\item Limitations of linear decision boundaries \\[.5cm]
+		\item Non-linear feature transforms \\[.5cm]
+		\item Kernel function and kernel matrix \\[.5cm]
+		\item Kernel trick \\[.5cm]
+		\item Probabilities and kernels
+	\end{itemize}
+\end{frame}
+
+\input{nextTime.tex}
+
+%\subsection{Further Readings}
+
+\begin{frame}
+	\frametitle{Further Readings}
+
+	\begin{itemize}
+		\item Bernhard Sch{\"o}lkopf, Alexander J. Smola: \\
+		      \structure{Learning with Kernels}, \\
+		      The MIT Press, Cambridge, 2003. \\[.25cm]
+		\item Vladimir N. Vapnik: \\
+		      \structure{The Nature of Statistical Learning Theory}, \\
+		      Information Science and Statistics, Springer, Heidelberg, 2000. \\[.25cm]
+		\item John Shawe-Taylor, Nello Cristianini: \\
+		      \point \href{https://www.google.de/search?hl=de&q=Kernel\%20Methods\%20for\%20Pattern\%20Analysis+pdf}
+		      {\structure{Kernel Methods for Pattern Analysis}}, \\
+		      Cambridge University Press, Cambridge, 2004
+	\end{itemize}
+\end{frame}
+
+
+\subsection{Comprehensive Questions}
+
+\begin{frame}
+	\frametitle{Comprehensive Questions}
+
+	\begin{itemize}
+		\item What are the properties of kernel functions? \\[1cm]
+		\item What is the kernel matrix? \\[1cm]
+		\item What is the kernel trick? \\[1cm]
+		\item How can we use kernels for string comparison?
+	\end{itemize}
+\end{frame}
+%
+%
+% \mode<beamer>{
+%   \begin{frame}[plain]
+%     \begin{figure}
+%       \resizebox{!}{8.5cm}{
+%         \alt<3->{
+%           \input{\texfigdir/svm-rbf.pstex_t}
+%         }{\alt<2>{
+%           \input{\texfigdir/svm-polynomial1.pstex_t}
+%         }{
+%           \input{\texfigdir/svm-linear1.pstex_t}
+%         }}
+%       }
+%     \end{figure}
+%   \end{frame}
+% }

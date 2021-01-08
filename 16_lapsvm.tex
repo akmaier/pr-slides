@@ -1,0 +1,420 @@
+\section{Laplacian Support Vector Machines}
+
+\subsection{Motivation}
+
+\begin{frame}
+  \frametitle{Motivation}
+  
+  \structure{Example: two class ``clock'' data set}
+  
+  \begin{figure}
+    \centering
+
+    \subfloat[Large set of unlabeled samples (black squares) and only one labeled sample per class (blue circle, green diamond)]{
+      \resizebox{.28\linewidth}{!}{
+        \input{\texfigdir/clock1.pstex_t}
+      }
+    }
+    \quad
+    \subfloat[Result of a maximum margin supervised classification]{
+      \resizebox{.28\linewidth}{!}{
+        \input{\texfigdir/clock2.pstex_t}
+      }
+    }
+    \quad
+    \subfloat[Result of a semi-supervised classification with intrinsic norm from manifold regularization]{
+      \resizebox{.28\linewidth}{!}{
+        \input{\texfigdir/clock3.pstex_t}
+      }
+    }
+  \end{figure}
+\end{frame}
+
+
+\subsection{Learning from Labeled and Unlabeled Data}
+
+\begin{frame}
+  \frametitle{Learning from labeled and unlabeled data}
+  
+  \structure{Training data: $\mathcal{S} = \mathcal{L} \cup \mathcal{U}$}
+  
+  \begin{itemize}
+    \item labeled data: $\mathcal{L} = \{(\vec{x}_i, y_i), \quad i=1,\ldots,l\}$
+    \item unlabeled data: $\mathcal{U} = \{\vec{x}_i, \quad i = \underbrace{l+1,\ldots,m}_u\}$
+  \end{itemize}
+  \pspread
+  
+  \structure{Graph Laplacian $\mat{L}$ associated with $\mathcal{S}$:}
+  
+  \begin{itemize}
+    \item $\mat{L} = \mat{D} - \mat{W}$
+    \item adjacency matrix $\mat{W}$
+    \item diagonal matrix $\mat{D}$ with the degree of each node: $d_{ii} = \sum_{j=1}^m w_{ij}$
+  \end{itemize}
+  \pspread
+  
+  \structure{Kernel matrix $\mat{K}$:} $k_{ij} = k(\vec{x}_i, \vec{x}_j)$
+  \pspread
+  
+  \structure{Decision boundary $f(\vec{x})$:} $\vec{f} = [f(\vec{x}_i),~i=1,\ldots,m]^T$
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Learning from labeled and unlabeled data \cont}
+  
+  \structure{Regularization framework for function learning:}
+  
+  \begin{center}
+    \tikz[baseline]{
+      \node[fill=bl1!100, anchor=base, rounded corners=3pt, inner xsep=3mm] (d1) {
+        \color{bl3}
+        $\displaystyle
+          f^* = \argmin_{f \in \mathcal{H}_k} 
+          \sum_{i=1}^l V(\vec{x}_i, y_i, f) + 
+          \gamma_\text{A} \, \|f\|^2_\text{A} +
+          \gamma_\text{I} \, \|f\|^2_\text{I}
+        $
+      };
+    }
+  \end{center}
+  \vspace{.25cm}
+  
+  \structure{Loss function $V(\vec{x}_i, y_i, f)$}
+  
+  \begin{itemize}
+    \item Squared loss function \structure{$(y_i - f(\vec{x}_i))^2$} for Regularized Least Squares (RLS)
+    \item Hinge loss function \structure{$\max [0, 1-y_i f(\vec{x}_i)]$} for SVM
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Learning from labeled and unlabeled data \cont}
+  
+  \structure{Regularization framework for function learning:}
+  
+  \begin{center}
+    \tikz[baseline]{
+      \node[fill=bl1!100, anchor=base, rounded corners=3pt, inner xsep=3mm] (d1) {
+        \color{bl3}
+        $\displaystyle
+          f^* = \argmin_{f \in \mathcal{H}_k} 
+          \sum_{i=1}^l V(\vec{x}_i, y_i, f) + 
+          \gamma_\text{A} \, \|f\|^2_\text{A} +
+          \gamma_\text{I} \, \|f\|^2_\text{I}
+        $
+      };
+    }
+  \end{center}
+  \vspace{.15cm}
+  
+  \structure{Regularization terms}
+  
+  \begin{itemize}
+    \item \emph{Ambient} norm $\|\cdot\|_\text{A}$: 
+      \begin{itemize}
+        \item norm of the function $f$ in the Reproducing Kernel Hilbert Space (RKHS)
+        \item enforces a smoothness condition on the possible solutions \\[.25cm]
+      \end{itemize}
+    \item \emph{Intrinsic} norm $\|\cdot\|_\text{I}$:
+      \begin{itemize}
+        \item norm of the function $f$ in the low dimensional manifold
+        \item enforces a smoothness along the sampled $\mathcal{M}$
+      \end{itemize}
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Reproducing Kernel Hilbert Spaces (RKHS)}
+
+  \structure{Hilbert space}
+
+  \begin{itemize}
+    \item \structure{abstract vector space} with any finite or \structure{infinite} number of dimensions
+    \item possesses the structure of the \structure{inner product}
+    \item allows the measurement of \structure{angles} and \structure{lengths}
+    \item is \structure{complete} \\[.3cm]
+  \end{itemize}
+  \pause
+
+  \structure{Reproducing Kernel Hilbert Space}
+
+  \begin{itemize}
+    \item Hilbert space of functions
+    \item can be defined by kernels
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Manifolds}
+
+  A \structure{manifold} is a topological space that on a small enough scale \\ resembles
+  the Euclidean space. \\[.3cm]
+ 
+  \begin{figure}
+    \centering
+    \subfloat{
+      \includegraphics[height=3.3cm]{\pngdir/globe.\png} \pause
+    }
+    \qquad \qquad
+    \subfloat{
+      \alt<4->{
+  \copyrightbox[b]{
+      \makebox[.4\linewidth]{
+        \href{https://commons.wikimedia.org/wiki/File:Waldseem%C3%BCller-Globus.jpg
+        }
+        {
+        \includegraphics[height=3.3cm]{\jpgdir/waldseemueller-globus.\jpg}
+        }
+      }
+  }{Martin Waldseemüller, Public domain, via Wikimedia Commons}
+      }{\alt<3>{
+        \includegraphics[height=3.3cm]{\pngdir/worlmap_notflat.\png}
+      }{
+        \includegraphics[height=3.3cm]{\pngdir/worldmap.\png}
+      }}
+    }
+  \end{figure}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Manifold Learning}
+
+  \structure{The Swiss Roll Problem}
+  
+\begin{figure}
+    \subfloat{
+          \includegraphics[height=4cm]{\pngdir/swiss_roll.\png}
+      }
+    \hspace{2cm} \pause
+    \subfloat{
+    \copyrightbox[b]{
+      \makebox[.35\linewidth]{
+          \includegraphics[height=3.2cm]{\pngdir/swiss_roll_solution.\png}
+      }
+    }{Algorithm: S. Marsland, “Machine Learning: An Algorithmic Perspective”, Chapter 10, 2009.}
+    }
+  \end{figure}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Learning from labeled and unlabeled data \cont}
+  
+  \structure{Intrinsic norm $\|\cdot\|_\text{I}$:}
+  
+  \begin{displaymath}
+    \|f\|_\text{I}^2 = 
+    \sum_{i=1}^m \sum_{j=i}^m w_{ij} \big( f(\vec{x}_i) - f(\vec{x}_j) \big)^2 = 
+    \vec{f}^T \mat{L} \, \vec{f}
+  \end{displaymath}
+\end{frame}
+
+  
+\begin{frame}
+  \frametitle{Learning from labeled and unlabeled data \cont}
+  
+  \structure{Representer Theorem} (Kimeldorf and Wahba, 1970): \\[.3cm]
+  
+  The solution $f^*$ of this optimization problem has the form:
+
+  \begin{displaymath}
+    f^*(\vec{x}) = \sum_{i=1}^m \beta_i^* \cdot k(\vec{x}_i, \vec{x}) + \beta_0^*
+  \end{displaymath}
+\end{frame}
+
+
+\subsection{Laplacian Support Vector Machines}
+
+\begin{frame}
+  \frametitle{Laplacian Support Vector Machines}
+  
+  \structure{Constrained primal optimization problem based on the dual form:}
+ 
+  \begin{center}
+    \small
+    \tikz[baseline]{
+      \node[fill=bl1!100, anchor=base, rounded corners=3pt, inner xsep=3mm] (d1) {
+        \color{bl3}
+        $\displaystyle
+          \begin{aligned}
+            \min\limits_{\vec{\beta} \in \real^m, \vec{\xi}\in\real^l} 
+            & \qquad \sum_{i=1}^l \xi_i +
+              \gamma_\text{A} \cdot \vec{\beta}^T \mat{K} \vec{\beta} +
+              \gamma_\text{I} \cdot \vec{\beta}^T \mat{K} \mat{L} \mat{K} \vec{\beta} \\[.3cm]
+            \mbox{subject to} 
+            & \qquad y_i \left( \sum_{j=1}^m \vec{\beta}_j k(\vec{x}_j, \vec{x}_i) + \beta_0\right) \geq 1 - \xi_i, \quad i = 1,\ldots,l \\[.3cm]
+            & \qquad \xi_i \geq 0, \quad i = 1,\ldots,l
+          \end{aligned}
+        $
+      };
+    }
+  \end{center}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Laplacian Support Vector Machines \cont}
+  
+  \structure{Lagrange function $L$:}
+  
+  \begin{eqnarray*}
+    L(\vec\beta,\beta_0,\vec\xi,\vec\lambda,\vec\nu) 
+    &=& \sum_{i=1}^l \xi_i +
+        \frac{1}{2} \vec{\beta}^T (2 \gamma_\text{A} \mat{K} + 2 \gamma_\text{I} \mat{K}\mat{L}\mat{K}) \vec{\beta} -{} \\
+    & & {}- \sum_{i=1}^l \lambda_i \left(y_i \Bigg(\sum_{j=1}^m \beta_i k(\vec{x}_i,\vec{x}_j) + \beta_0\Bigg) - 1 + \xi_i\right) -{} \\
+    & & {}- \sum_{i=1}^l \nu_i \xi_i
+  \end{eqnarray*}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Laplacian Support Vector Machines \cont}
+  
+  \structure{KKT condition:} the gradient w.\,r.\,t. the primal variables $\vec{\beta}, \beta_0, \vec{\xi}$ has to vanish
+  \pause
+  
+  \begin{itemize}
+    \item Partial derivative w.\,r.\,t. $\beta_0$:
+      \begin{displaymath}
+        \frac{\partial L}{\partial \beta_0} \stackrel{!}{=} 0  \quad \Rightarrow \quad
+        \sum_{i=1}^l \lambda_i y_i = 0
+      \end{displaymath}
+      \pause
+    \item Partial derivative w.\,r.\,t. $\xi_i$:
+      \begin{displaymath}
+        \frac{\partial L}{\partial \xi_i} \stackrel{!}{=} 0  \quad \Rightarrow \quad
+        1 - \lambda_i - \nu_i = 0 \quad \Rightarrow \quad
+        0 \leq \lambda_i \leq 1
+      \end{displaymath}
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Laplacian Support Vector Machines \cont}
+  
+  \structure{Simplifying the Langrangian using the two identities above:}
+  
+  {\small
+    \begin{eqnarray*}
+      L(\vec{\beta}, \vec{\lambda}) 
+      &=& \frac{1}{2} \vec{\beta}^T (2 \gamma_\text{A} \mat{K} + 2 \gamma_\text{I} \mat{K}\mat{L}\mat{K}) \vec{\beta} -{} \\
+      & & {}- \sum_{i=1}^l \lambda_i \left(y_i \Bigg(\sum_{j=1}^m \beta_i k(\vec{x}_i,\vec{x}_j) + \beta_0\Bigg) - 1 \right) \\
+      &=& \frac{1}{2} \vec{\beta}^T (2 \gamma_\text{A} \mat{K} + 2 \gamma_\text{I} \mat{K}\mat{L}\mat{K}) \vec{\beta} -
+          \vec{\beta}^T \mat{K} \mat{J}_{\mathcal{L}}^T \mat{Y} \vec{\lambda} +
+          \sum_{i=1}^l \lambda_i
+    \end{eqnarray*}
+  }
+  
+  with $\mat{J}_{\mathcal{L}} = [\mat{I}~\mat{0}] \in \real^{l\times m}$:
+  \begin{itemize}
+    \item identity matrix $\mat{I} \in \real^{l \times l}$
+    \item rectangular matrix $\mat{0} \in \real^{l \times u}$ with all entries being 0 \\[.25cm]
+  \end{itemize}
+  and diagonal matrix $\mat{Y} \in \real^{l \times l}$ composed by the $l$ class labels $y_i$
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Laplacian Support Vector Machines \cont}
+  
+  \structure{Partial derivative w.\,r.\,t. $\vec{\beta}$:}
+  
+  \begin{eqnarray*}
+    \frac{\partial L}{\vec{\beta}} \stackrel{!}{=} \vec{0} 
+    &\Rightarrow& 
+    (2 \gamma_\text{A} \mat{K} + 2 \gamma_\text{I} \mat{K}\mat{L}\mat{K}) \vec{\beta} -
+    \mat{K} \mat{J}_{\mathcal{L}}^T \mat{Y} \vec{\lambda} = \vec{0} \\[.25cm]
+    &\Rightarrow& 
+    \vec{\beta} = (2 \gamma_\text{A} \mat{I} + 2 \gamma_\text{I} \mat{K}\mat{L})^{-1} 
+    \mat{J}_{\mathcal{L}}^T \mat{Y} \vec{\lambda}
+  \end{eqnarray*}
+  \pspread
+  
+  \structure{Note:} direct relationship between parameters $\vec{\beta}$ and Lagrange multipliers $\vec{\lambda}$
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Laplacian Support Vector Machines \cont}
+  
+  \structure{Substituting back in the Langrange expression leads to the dual problem:}
+
+  \begin{center}
+    \small
+    \tikz[baseline]{
+      \node[fill=bl1!100, anchor=base, rounded corners=3pt, inner xsep=3mm] (d1) {
+        \color{bl3}
+        $\displaystyle
+          \begin{aligned}
+            \max\limits_{\vec{\lambda} \in \real^l} 
+            & \qquad \sum_{i=1}^l \lambda_i - \frac{1}{2} \vec{\lambda}^T \mat{Q} \vec{\lambda} \\[.3cm]
+            \mbox{subject to} 
+            & \qquad 0 \leq \lambda_i \leq 1, \quad i = 1,\ldots,l \\
+            & \qquad \sum_{i=1}^l \lambda_i y_i = 0
+          \end{aligned}
+        $
+      };
+    }
+  \end{center}
+  
+  where 
+  
+  {\small
+  \begin{displaymath}
+    \mat{Q} = \mat{Y} \mat{J}_{\mathcal{L}} \mat{K} 
+    (2 \gamma_\text{A} \mat{I} + 2 \gamma_\text{I} \mat{K}\mat{L})^{-1} 
+    \mat{J}_{\mathcal{L}}^T \mat{Y}
+  \end{displaymath}
+  }
+\end{frame}
+
+
+\subsection{Lessons Learned}
+
+\begin{frame}
+  \frametitle{Lessons Learned}
+  
+  \structure{Laplacian SVM:}
+  
+  \begin{itemize}
+    \item Ongoing research topic \\[.25cm]
+    \item Extension of the Kernel SVM \\[.25cm]
+    \item Additional regularization term \\[.25cm]
+    \item Derivation of the dual problem
+  \end{itemize}
+\end{frame}
+
+\input{nextTime.tex}
+
+\subsection{Further Readings}
+
+\begin{frame}
+  \frametitle{Further Readings}
+  
+  \begin{itemize}
+    \item Stefano Melacci, Mikhail Belkin: \\
+      \structure{Laplacian Support Vector Machines Trained in the Primal}, \\
+      Journal of Machine Learning Research, 12:1149-1184, 2011 \\[.25cm]
+    \item Mikhail Belkin, Partha Niyogi, Vikas Sindhwani: \\
+      \structure{Manifold Regularization: A Geometric Framework for Learning \\
+      from Labeled and Unlabeled Examples}, \\
+      Journal of Machine Learning Research, 7:2399-2434, 2006
+  \end{itemize}
+\end{frame}
+
+
+% \subsection{Comprehensive Questions}
+% 
+ %\begin{frame}
+ %  \frametitle{Comprehensive Questions}
+ %  
+ %  \begin{itemize}
+ %    \item
+ %  \end{itemize}
+ %\end{frame}

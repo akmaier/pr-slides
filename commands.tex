@@ -1,0 +1,128 @@
+\definecolor{brown}{rgb}{0.9059,0.8667,0.7725}
+\definecolor{bl1}{rgb}{0.9020,0.9216,0.9412}
+\definecolor{bl2}{rgb}{0.8000,0.8431,0.8824}
+\definecolor{bl3}{rgb}{0.0000,0.2000,0.4000}
+\definecolor{gr1}{rgb}{0.9020,0.9529,0.9020}
+\definecolor{gr2}{rgb}{0.8000,0.9020,0.8000}
+\definecolor{gr3}{rgb}{0.2471,0.6235,0.2471}
+\definecolor{gray4}{rgb}{0.2431,0.2431,0.2431}
+\definecolor{gray3}{rgb}{0.3098,0.3098,0.3098}
+\definecolor{gray2}{rgb}{0.4863,0.4863,0.4863}
+\definecolor{gray1}{rgb}{0.7725,0.7725,0.7725}
+%
+\def\vec#1{\ensuremath{{\bm #1}}}
+\def\mat#1{\vec{#1}}
+\newcommand{\symb}{\Pisymbol{psy}}
+\newcommand{\rb}[1]{\raisebox{1.5ex}[-1.5ex]{#1}}
+\def\spread{\vspace*{\fill}}
+\def\pspread{\pause\spread}
+\def\forts{{\small (Forts.)}}
+\def\cont{{\small (cont.)}}
+\def\check{\structure{\ding{51}}}
+\def\Check{{\color{gray}\ding{51}}}
+\def\point{\structure{\ding{43}}\hspace{0.5em}}
+\def\vorsicht{\includegraphics[width=1em]{\pngdir/gefahrenstelle.\png}\hspace{0.5em}}
+\def\stopp#1{\pause\vspace*{#1}}
+\def\real{\mathbb{R}}
+\def\argmin{\mathop{\mathsf{argmin}}}
+\def\argmax{\mathop{\mathsf{argmax}}}
+\def\sign{{\mathord{\mathsf{sign}}}}
+\def\figurename{Fig.}
+\def\tablename{Tab.}
+
+%set colors
+\setbeamercolor{block title}{bg=faublue!20,fg=faublue}
+\setbeamercolor{block body}{bg=faublue!10,fg=black}
+\setbeamertemplate{blocks}[shadow=false]
+
+\newcolumntype{x}[1]{>{\centering\arraybackslash\hspace{0pt}}p{#1}}
+
+% neue Umgebungen
+
+\newenvironment<>{ovalblock}[1]%
+  {\setbeamertemplate{blocks}[rounded][shadow=\shadow]%
+   \begin{block}{#1}}
+  {\end{block}%
+   \setbeamertemplate{blocks}[default]}
+
+
+\newenvironment<>{codeblock}[1]%
+  {\setbeamertemplate{blocks}[rounded][shadow=\shadow]%
+   \begin{exampleblock}{#1}}
+  {\end{exampleblock}%
+   \setbeamertemplate{blocks}[default]}
+
+
+\newenvironment<>{bearblock}[1]%
+  {\setbeamertemplate{blocks}[rounded][shadow=\shadow]%
+   \begin{alertblock}{#1}}
+  {\end{alertblock}%
+   \setbeamertemplate{blocks}[default]}
+
+
+\newenvironment<>{citeblock}[2]%
+  {\setbeamertemplate{blocks}[rounded][shadow=\shadow]%
+	\begin{block}{#1\hfill{\tiny#2}}}
+  {\end{block}%
+	\setbeamertemplate{blocks}[default]}
+
+
+% Leere Folien einfügen
+\newcommand{\oneemptyslide}[0]{
+  \mode<handout>{
+    \setbeamercolor{background canvas}{bg=black!0}
+    \begin{frame}[plain]
+    \end{frame}
+    \setbeamercolor{background canvas}{bg=black!5}
+
+    \addtocounter{framenumber}{-1}
+  }
+}
+
+
+\newcommand{\twoemptyslides}[0]{
+  \ifdefined\fourpages
+    \mode<handout>{
+      \setbeamercolor{background canvas}{bg=black!0}
+      \begin{frame}[plain]
+      \end{frame}
+
+      \begin{frame}[plain]
+      \end{frame}
+      \setbeamercolor{background canvas}{bg=black!5}
+
+      \addtocounter{framenumber}{-2}
+    }
+  \fi
+}
+
+
+\newcommand{\threeemptyslides}[0]{
+  \ifdefined\twopages
+    \mode<handout>{
+      \setbeamercolor{background canvas}{bg=black!0}
+      \begin{frame}[plain]
+      \end{frame}
+      \setbeamercolor{background canvas}{bg=black!5}
+
+      \addtocounter{framenumber}{-1}
+    }
+  \fi
+
+  \ifdefined\fourpages
+    \mode<handout>{
+      \setbeamercolor{background canvas}{bg=black!0}
+      \begin{frame}[plain]
+      \end{frame}
+
+      \begin{frame}[plain]
+      \end{frame}
+
+      \begin{frame}[plain]
+      \end{frame}
+      \setbeamercolor{background canvas}{bg=black!5}
+
+      \addtocounter{framenumber}{-3}
+    }
+  \fi
+}

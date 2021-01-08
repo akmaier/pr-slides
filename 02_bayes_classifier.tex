@@ -1,0 +1,312 @@
+\section{Pattern Recognition Basics}
+
+\subsection{Classification of Simple Patterns}
+
+\begin{frame}
+	\frametitle{Classification of Simple Patterns}
+
+	The system for the classification of simple patterns has the following generic structure\\
+	\vspace{2cm}
+	\pause
+%\begin{centering}
+	$\hspace{1.03cm} \overset{\vec f}{\longrightarrow}\fbox{Preprocessing}\overset{\vec g}{\longrightarrow}\fbox{Feature Extraction} \overset{\vec c}{\longrightarrow}\fbox{Classification} \overset{y}{\longrightarrow}$\\
+	$\hspace{1.03cm}\hspace{8.5cm} \uparrow $\\
+	$\hspace{1.03cm}\hspace{4.3cm} \fbox{Training Samples}\longrightarrow \fbox{Learning}$
+\end{frame}
+
+\begin{frame}
+	\frametitle{Classification of Simple Patterns \cont}
+
+	\begin{itemize}
+		\item {\em \structure{Supervised learning:}}
+
+		      $m$ training samples include feature and associated class number
+		      \begin{displaymath}
+			      S = \{ (\vec x_1, y_1), (\vec x_2, y_2), (\vec x_3, y_3), \dots, (\vec x_m, y_m) \}
+		      \end{displaymath}
+              where $\vec x_i \in \mathcal{X}$ denotes the feature vector and $y_i\in Z$ denotes the class number of sample $i$.
+	      If nothing special is mentioned ${\mathcal{X}}\subseteq \mathbb{R}^d$.
+		      \pause
+		      \vspace{0.5cm}
+		\item {\em \structure{Unsupervised learning:}}
+
+		      $m$ training samples just include features, no class assignments and even the number of classes is (not always) known
+		      \begin{displaymath}
+			      S = \{ \vec x_1, \vec x_2, \vec x_3, \dots, \vec x_m \}
+		      \end{displaymath}
+	\end{itemize}
+\end{frame}
+
+
+\subsection{Bayesian Classifier}
+
+\begin{frame}
+	\frametitle{Bayesian Classifier}
+
+	\structure{Notation:}
+
+	\begin{center}
+		\begin{minipage}{0.7\textwidth}
+			\begin{itemize}
+				\item[ $ \vec x \in \mathbb{R}^d:$]  $d$-dimensional feature vector
+				\item[ $y:$] class number \\
+				      (usually $y\in\{0,1\}$ or $y\in\{-1,+1\}$)
+				\item[$p(y):$] prior probability of pattern class $y$
+				\item[$p(\vec x):$] evidence\\
+				      (distribution of features in $d$-dimensional feature space)
+				\item[$p(\vec x , y):$] joint probability density function (pdf)
+				\item[$p(\vec x |y):$] class conditional density
+				\item[$p(y| \vec x):$] posterior probability
+			\end{itemize}
+		\end{minipage}
+	\end{center}
+\end{frame}
+
+
+\begin{frame}
+	\frametitle{Bayesian Classifier \cont}
+\vspace{-.52cm}
+  \begin{figure}
+    \resizebox{.85\linewidth}{!}{
+      \alt<25->{
+        \includegraphics[width=.85\linewidth]{\pngdir/condProb/Folie25.\png}
+      }{\alt<24>{
+        \includegraphics[width=.85\linewidth]{\pngdir/condProb/Folie24.\png}
+      }{\alt<23>{
+        \includegraphics[width=.85\linewidth]{\pngdir/condProb/Folie23.\png}
+      }{\alt<22>{
+        \includegraphics[width=.85\linewidth]{\pngdir/condProb/Folie22.\png}
+      }{\alt<21>{
+        \includegraphics[width=.85\linewidth]{\pngdir/condProb/Folie21.\png}
+      }{\alt<20>{
+        \includegraphics[width=.85\linewidth]{\pngdir/condProb/Folie20.\png}
+      }{\alt<19>{
+        \includegraphics[width=.85\linewidth]{\pngdir/condProb/Folie19.\png}
+      }{\alt<18>{
+        \includegraphics[width=.85\linewidth]{\pngdir/condProb/Folie18.\png}
+      }{\alt<17>{
+        \includegraphics[width=.85\linewidth]{\pngdir/condProb/Folie17.\png}
+      }{\alt<16>{
+        \includegraphics[width=.85\linewidth]{\pngdir/condProb/Folie16.\png}
+      }{\alt<15>{
+        \includegraphics[width=.85\linewidth]{\pngdir/condProb/Folie15.\png}
+      }{\alt<14>{
+        \includegraphics[width=.85\linewidth]{\pngdir/condProb/Folie14.\png}
+      }{\alt<13>{
+        \includegraphics[width=.85\linewidth]{\pngdir/condProb/Folie13.\png}
+      }{\alt<12>{
+        \includegraphics[width=.85\linewidth]{\pngdir/condProb/Folie12.\png}
+      }{\alt<11>{
+        \includegraphics[width=.85\linewidth]{\pngdir/condProb/Folie11.\png}
+      }{\alt<10>{
+        \includegraphics[width=.85\linewidth]{\pngdir/condProb/Folie10.\png}
+      }{\alt<9>{
+        \includegraphics[width=.85\linewidth]{\pngdir/condProb/Folie9.\png}
+      }{\alt<8>{
+        \includegraphics[width=.85\linewidth]{\pngdir/condProb/Folie8.\png}
+      }{\alt<7>{
+        \includegraphics[width=.85\linewidth]{\pngdir/condProb/Folie7.\png}
+      }{\alt<6>{
+        \includegraphics[width=.85\linewidth]{\pngdir/condProb/Folie6.\png}
+      }{\alt<5>{
+        \includegraphics[width=.85\linewidth]{\pngdir/condProb/Folie5.\png}
+      }{\alt<4>{
+        \includegraphics[width=.85\linewidth]{\pngdir/condProb/Folie4.\png}
+      }{\alt<3>{
+        \includegraphics[width=.85\linewidth]{\pngdir/condProb/Folie3.\png}
+      }{\alt<2>{
+        \includegraphics[width=.85\linewidth]{\pngdir/condProb/Folie2.\png}
+      }{
+        \includegraphics[width=.85\linewidth]{\pngdir/condProb/Folie1.\png}
+      }}}}}}}}}}}}}}}}}}}}}}}}
+    }
+  \end{figure}
+
+\end{frame}
+
+\begin{frame}
+	\frametitle{Bayesian Classifier \cont}
+
+	\structure{Bayes rule:}\\[.5cm]
+
+	\begin{eqnarray*}
+		\underbrace{p(\vec x , y)}_{joint\ pdf}
+		&=& \pause \underbrace{p(y)}_{prior} \cdot \underbrace{p(\vec x | y)}_{class\ conditional\ pdf} \\[.5cm] \pause
+		&=& \underbrace{ p(\vec x)}_{evidence} \cdot \underbrace{ p(y| \vec x)}_{posterior}
+	\end{eqnarray*}
+\end{frame}
+
+
+\begin{frame}
+	\frametitle{Bayesian Classifier \cont}
+
+	Now we get the posterior as follows:
+
+	\begin{eqnarray*}
+		p(y| \vec x)
+		&=& \pause \frac{p(y) \cdot p(\vec x | y)}{p(\vec x)} \\ \pause
+		&=& \frac{p(y) \cdot p(\vec x | y)}{\sum\limits_{y'}p(\vec x , y')} \\ \pause
+		&=& \frac{p(y) \cdot p(\vec x | y)}{\sum\limits_{y'}p(y') \cdot p(\vec x | y')}\\
+	\end{eqnarray*}
+\end{frame}
+
+
+\begin{frame}
+	\frametitle{Bayesian Classifier \cont}
+
+	\structure{Note:}
+	\begin{displaymath}
+		p(\vec x) = \sum\limits_{y}p(y) \cdot p(\vec x | y)
+	\end{displaymath}
+	is a \structure{marginal} of $p(\vec x , y)$.
+
+	\begin{itemize}
+		\item We get $p(\vec{x})$ by marginalizing $p(\vec{x}, y)$ over $y$.
+		\item Accordingly we get $p(y)$ by marginalizing $p(\vec{x}, y)$ over $\vec{x}$, i.\,e.
+		      \begin{eqnarray*}
+			      p(y)&=& \int p(\vec{x}, y) \mathsf{d}\vec{x}
+		      \end{eqnarray*}
+	\end{itemize}
+
+	\alert{Did you notice:} $y$ is a discrete random variable whereas $\vec{x}$ is a continuous random vector (summation vs.\ integration).
+\end{frame}
+
+
+\input{nextTime.tex}
+
+\begin{frame}
+	\frametitle{Bayesian Classifier \cont}
+
+	Now let us summarize the Bayesian decision rule:\\[.3cm]
+	We decide for the class $y^*$ according to the decision rule
+	\begin{eqnarray*}
+		y^* &=& \pause \argmax\limits_{y} p(y | \vec x)\ \\[.3cm] \pause
+		&=& \argmax\limits_{y} \frac{p(y) \cdot p(\vec x | y)}{p(\vec x)} \\[.3cm] \pause
+		&=& \argmax\limits_{y} p(y) \cdot p(\vec x | y) \\[.3cm] \pause
+		&=& \argmax\limits_{y} \{\log p(y)\ + \log p(\vec x | y)\}
+	\end{eqnarray*}
+\end{frame}
+
+
+\begin{frame}
+	\frametitle{Bayesian Classifier \cont}
+
+	\structure{Notes:} \\[.3cm]
+
+	\begin{itemize}
+		\item The key aspect in designing a classifier is to find a good model \\
+		      for the posterior $p(y|\vec x)$. \\[.3cm]
+		\item Feature vectors $\vec x$ usually have fixed dimensions $d$ in simple classification schemes, \\[.3cm]
+		\item but ${\mathcal{X}}$ is not necessarily a subset of $\mathbb{R}^d$: \\
+		      features of varying dimension, sequences and sets of features
+	\end{itemize}
+\end{frame}
+
+
+\begin{frame}
+	\frametitle{Bayesian Classifier \cont}
+
+	\begin{itemize}
+		\item \structure{Generative modeling:} \\
+		      modeling and estimation of $p(y)$ and $p(\vec x | y)$. \\[.5cm]
+		\item \structure{Discriminative modeling:} \\
+		      straight modeling and estimation of $p(y|\vec x)$.
+	\end{itemize}
+\end{frame}
+
+
+\subsection{Optimality of the Bayesian Classifier}
+
+\begin{frame}
+	\frametitle{Optimality of the Bayesian Classifier}
+
+	%  \begin{citeblock}{Definition}
+	\begin{definition}
+		$l(y_{1},y_{2})$ is the \structure{loss} if a feature vector belonging to class $y_{2}$
+		is assigned to class $y_{1}$. The $(0,1)$-loss function is defined by
+		\begin{eqnarray*}
+			l(y_{1},y_{2}) &= &\left\{ \begin{array}{cc}
+				0 & ,\ if\ y_{1}=y_{2} \\
+				1 & ,\ otherwise
+			\end{array} \right.
+		\end{eqnarray*}
+		%  \end{citeblock}
+	\end{definition}
+\end{frame}
+
+
+\begin{frame}
+	\frametitle{Optimality of the Bayesian Classifier \cont}
+
+	The \structure{best (or optimal) decision rule} according to classification loss minimizes the average loss L:
+
+	\begin{eqnarray*}
+		\mathsf{AL}(\vec x , y) &=& \sum\limits_{y'}l(y,y')p(y'|\vec x)
+	\end{eqnarray*}
+
+\end{frame}
+
+
+\begin{frame}
+	\frametitle{Optimality of the Bayesian Classifier \cont}
+
+	Using the $(0,1)$-loss function, the class decision is based on:
+
+	\begin{eqnarray*}
+		y^* &=& \argmin\limits_{y} \mathsf{AL}(\vec x, y)\\
+		\pause  &=& \argmin\limits_{y} \sum\limits_{y'} l(y,y') \cdot p(y'|\vec x)\\
+		%           \pause  &=& \argmin\limits_{y} (1-p(y|\vec x))\\
+		\pause  &=& \argmax\limits_{y} p(y|\vec x)\\
+	\end{eqnarray*}
+\end{frame}
+
+
+\begin{frame}
+	\frametitle{Optimality of the Bayesian Classifier \cont}
+
+	\structure{Conclusion:}
+
+	\begin{itemize}
+		\item The optimal classifier w.\,r.\,t.\ the (0,1)-loss function applies the Bayesian decision rule.
+		\item This classifier is called \structure{Bayesian classifier}. \\[.75cm]
+	\end{itemize}
+	\spread
+
+	\vorsicht The loss function is {\bf NOT} convex. \vfill
+\end{frame}
+
+
+\subsection{Lessons Learned}
+
+\begin{frame}
+	\frametitle{Lessons Learned}
+
+	\begin{itemize}
+		\item General structure of a classification system \\[.5cm] \pause
+		\item Supervised and unsupervised learning \\[.5cm] \pause
+		\item Basics on probabilities (probability, pdf, Bayes rule, etc.) \\[.5cm] \pause
+		\item Optimality of Bayes classifier and the role of the loss function \\[.5cm] \pause
+		\item Discriminative and generative approach to model a posteriori probability
+	\end{itemize}
+\end{frame}
+
+\input{nextTime.tex}
+
+\subsection{Further Readings}
+
+\begin{frame}
+	\frametitle{Further Readings}
+
+	\begin{itemize}
+		\item Heinrich Niemann: \\
+		      \structure{Pattern Analysis}, \\
+		      Springer Series in Information Sciences 4, Springer, Berlin, 1982. \\[.15cm]
+		\item Heinrich Niemann: \\
+		      \structure{Klassifikation von Mustern}, \\
+		      Springer Verlag, Berlin, 1983. \\[.15cm]
+		\item Richard O. Duda, Peter E. Hart, David G. Stork: \\
+		      \structure{Pattern Classification}, 2nd Edition, \\
+		      John Wiley \& Sons, New York, 2000.
+	\end{itemize}
+\end{frame}
+
