@@ -1,0 +1,114 @@
+%-------------------------------------------------------------------------------
+% Main file
+% (C) Oliver Reiche <oliver.reiche@fau.de>
+%-------------------------------------------------------------------------------
+
+\mode<presentation>
+
+
+\usepackage{calc}
+\usepackage{pgf}
+
+
+\newif\ifbeamer@image
+\beamer@imagefalse
+
+\newif\ifbeamer@plain
+\beamer@plainfalse
+
+\newif\ifbeamer@longtitle
+\beamer@longtitlefalse
+
+\DeclareOptionBeamer{image}[true]{%
+  \csname beamer@image#1\endcsname%
+}
+
+\DeclareOptionBeamer{plain}[true]{%
+  \csname beamer@plain#1\endcsname%
+}
+
+\DeclareOptionBeamer{longtitle}[true]{%
+  \csname beamer@longtitle#1\endcsname%
+}
+
+\ProcessOptionsBeamer
+
+
+% Include TechFak FAU theme
+\usetheme[
+  image=\ifbeamer@image true\else false\fi,
+  plain=\ifbeamer@plain true\else false\fi,
+  longtitle=\ifbeamer@longtitle true\else false\fi
+]{fau-tf}
+
+
+% Overload outer and inner theme definitions
+\useinnertheme{fau-tf-lme}
+\useoutertheme{fau-tf-lme}
+
+% Distinguish between languages
+\def\lmelogo{theme/art/tf/lme/lme-english}
+\@ifpackageloaded{babel}{
+  \iflanguage{ngerman}{\def\lmelogo{theme/art/tf/lme/lme-german}}{}}{}
+
+
+\ifdim \beamer@aspectratio pt=\beamer@fourtothree pt%
+  % Aspect ratio 4:3
+  \pgfdeclareimage[height=0.649cm]{lme-body}{\lmelogo}
+  \pgfdeclareimage[height=1.000cm]{lme-title}{\lmelogo}
+  %\pgfdeclareimage[height=0.649cm]{saotlogo-body}{theme/art/tf/lme/saot-logo}
+  %\pgfdeclareimage[height=1.000cm]{saotlogo-title}{theme/art/tf/lme/saot-logo}
+  %\pgfdeclareimage[height=0.649cm]{saottext-body}{theme/art/tf/lme/saot-text-logo}
+  %\pgfdeclareimage[height=1.000cm]{saottext-title}{theme/art/tf/lme/saot-text-logo}
+  %\pgfdeclareimage[height=0.649cm]{uker-body}{theme/art/tf/lme/uker-color-logo}
+  %\pgfdeclareimage[height=1.000cm]{uker-title}{theme/art/tf/lme/uker-color-logo}
+  %\pgfdeclareimage[height=0.649cm]{usyd-body}{theme/art/tf/lme/usyd-logo}
+  %\pgfdeclareimage[height=1.000cm]{usyd-title}{theme/art/tf/lme/usyd-logo}
+  %\pgfdeclareimage[height=0.649cm]{partners-body}{theme/art/tf/lme/saot-uk-usyd-logo}
+  %\pgfdeclareimage[height=1.000cm]{partners-title}{theme/art/tf/lme/saot-uk-usyd-logo}
+\else\ifdim \beamer@aspectratio pt=\beamer@sixteentonine pt%
+  % Aspect ratio 16:9 % FIXME
+  \pgfdeclareimage[height=0.649cm]{lme-body}{\lmelogo}
+  \pgfdeclareimage[height=1.000cm]{lme-title}{\lmelogo}
+  %\pgfdeclareimage[height=0.649cm]{saotlogo-body}{theme/art/tf/lme/saot-logo}
+  %\pgfdeclareimage[height=1.000cm]{saotlogo-title}{theme/art/tf/lme/saot-logo}
+  %\pgfdeclareimage[height=0.649cm]{saottext-body}{theme/art/tf/lme/saot-text-logo}
+  %\pgfdeclareimage[height=1.000cm]{saottext-title}{theme/art/tf/lme/saot-text-logo}
+  %\pgfdeclareimage[height=0.649cm]{uker-body}{theme/art/tf/lme/uker-color-logo}
+  %\pgfdeclareimage[height=1.000cm]{uker-title}{theme/art/tf/lme/uker-color-logo}
+  %\pgfdeclareimage[height=0.649cm]{usyd-body}{theme/art/tf/lme/usyd-logo}
+  %\pgfdeclareimage[height=1.000cm]{usyd-title}{theme/art/tf/lme/usyd-logo}
+ % \pgfdeclareimage[height=0.649cm]{partners-body}{theme/art/tf/lme/saot-uk-usyd-logo}
+ % \pgfdeclareimage[height=1.000cm]{partners-title}{theme/art/tf/lme/saot-uk-usyd-logo}
+\else%
+  \errmessage{Any layout other than aspect ratio 4:3 or 16:9 is not supported}
+\fi\fi%
+
+\newcommand{\setPartnerLogo}[1]{
+    \def\partnersLogo{#1}
+    \ifdim \beamer@aspectratio pt=\beamer@fourtothree pt%
+        \pgfdeclareimage[height=0.649cm]{partners-body}{#1}
+        \pgfdeclareimage[height=1.000cm]{partners-title}{#1}
+    \else\ifdim \beamer@aspectratio pt=\beamer@sixteentonine pt%
+        \pgfdeclareimage[height=0.649cm]{partners-body}{#1}
+        \pgfdeclareimage[height=1.000cm]{partners-title}{#1}
+    \else
+        \errmessage{Any layout other than aspect ratio 4:3 or 16:9 is not supported}
+     \fi\fi%i
+}
+
+\newcommand{\setLeftSeal}[1]{
+    \def\leftSeal{#1}
+    \ifdim \beamer@aspectratio pt=\beamer@fourtothree pt%
+        \pgfdeclareimage[height=3.35cm]{left-seal-large}{#1} % Same height as FAU seal
+        \pgfdeclareimage[height=2.67cm]{left-seal-small}{#1}
+    \else\ifdim \beamer@aspectratio pt=\beamer@sixteentonine pt%
+        \pgfdeclareimage[height=4.18cm]{left-seal-large}{#1}
+        \pgfdeclareimage[height=2.31cm]{left-seal-small}{#1}
+    \else
+        \errmessage{Any layout other than aspect ratio 4:3 or 16:9 is not supported}
+     \fi\fi%i
+}
+
+\mode
+<all>

@@ -1,0 +1,46 @@
+%-------------------------------------------------------------------------------
+% Inner theme file
+% (C) Oliver Reiche <oliver.reiche@fau.de>
+%-------------------------------------------------------------------------------
+
+
+\mode<presentation>
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Title page %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\setbeamertemplate{title page}{%
+  \titlepagebody[%
+    \color{normal text.fg}%
+	\pgfuseimage{lme-title}%
+	\ifdefined\partnersLogo
+	        \hspace{0.1cm}
+	        \pgfuseimage{partners-title}
+	\else
+	\fi
+  ]{\inserttitle}
+}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Title page end %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Section page %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\renewcommand{\sectionpagebody}{%
+  \titlepagebody[%
+    \color{normal text.fg}%
+	\pgfuseimage{lme-title}%
+	\ifdefined\partnersLogo
+	        \hspace{0.1cm}
+	        \pgfuseimage{partners-title}
+	\else
+	\fi
+%	\pgfuseimage{saottext-title}
+%	\hspace{0.1cm}
+% 	\pgfuseimage{uker-title}%
+%	\hspace{0.1cm}
+%	\pgfuseimage{usyd-title}%   
+  ]{\insertsection}
+}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Section page end %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\mode
+<all>

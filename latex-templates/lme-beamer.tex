@@ -1,0 +1,155 @@
+\documentclass[aspectratio=43,t]{beamer}
+%\documentclass[aspectratio=169,t]{beamer}
+%\documentclass[aspectratio=43,t,handout]{beamer}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+% English
+\usepackage[english]{babel}
+% or German?
+%\usepackage[ngerman]{babel}
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{csquotes}
+
+\usepackage[backend=bibtex,sorting=none,doi=false,style=phys]{biblatex}
+\bibliography{./references}
+
+% --------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+% THEME SETTINGS
+
+%%%%%%%%%DO NOT REMOVE%%%%%%%%%%%
+\makeatletter
+\def\beamer@calltheme#1#2#3{\def\beamer@themelist{#2}
+    \@for\beamer@themename:=\beamer@themelist\do
+    {\usepackage[{#1}]{\beamer@themelocation/#3\beamer@themename}}}
+\def\usefolder#1{\def\beamer@themelocation{#1}}
+\def\beamer@themelocation{}
+\usefolder{theme}
+
+% Themes:
+%  - fau:          FAU theme
+%  - fau-tf:       TechFak FAU theme
+%  - fau-tf-lme:   TechFak LME FAU theme
+%
+% Options:
+%  - image:        Cover image on title page
+%  - plain:        Plain title page
+%  - longtitle:    Title page layout for long title
+\usetheme[longtitle]{fau-tf-lme}
+
+% END of THEME SETTINGS
+% --------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+% Enable semi-transparent animation preview
+\setbeamercovered{transparent}
+
+
+\lstset{%
+  language=C++,
+  tabsize=2,
+  basicstyle=\tt\scriptsize,
+  keywordstyle=\color{blue},
+  commentstyle=\color{green!50!black},
+  stringstyle=\color{red},
+  numbers=left,
+  numbersep=0.5em,
+  numberstyle=\tt\tiny
+}
+
+% --------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+% Title, authors, and date
+\title[CID]{FAU Corporate Identity}
+\subtitle{The New Design}
+\author[T.\ Geimer]{Tobias Geimer M.\,Sc.}
+% English version
+\institute[Pattern Recognition Lab]{Image Fusion Group, Pattern Recognition Lab, Friedrich-Alexander University Erlangen-Nürnberg}
+% German version
+%\institute[Pattern Recognition Lab]{Image Fusion Group, Pattern Recognition Lab, Friedrich-Alexander-Universität Erlangen-Nürnberg}
+\date{\today}
+
+% Set additional partners logo in the headline for title and body pages
+%Comment out this macro if no partner logo is needed.
+\setPartnerLogo{theme/art/tf/lme/partner-logo} % <-----  PARTNER LOGO
+
+% Set additional seal or conference logo on the left side of the title page only. Does not overwrite the FAU seal!
+%Comment out this macro if no conference logo is needed.
+\setLeftSeal{theme/art/tf/lme/conference-logo} % <-----  CONFERENCE LOGO
+
+\begin{document}
+  % Title
+  \maketitle
+
+  { % Motivation
+    \setbeamertemplate{footline}{}
+    \begin{frame}[noframenumbering]{Motivation}
+      Some motivational example\dots
+      
+      \fullcite{goossens93}
+    \end{frame}
+  }
+
+  { % Outline
+    \setbeamertemplate{footline}{}
+    \begin{frame}[noframenumbering]{Outline}
+      \tableofcontents
+    \end{frame}
+  }
+
+  % Body
+  \section{Lists}
+  \begin{frame}{Lists}
+    \begin{block}{List of Items}
+      \begin{itemize}
+        \item one
+        \item two
+        \item three
+        \item \dots
+      \end{itemize}
+    \end{block}
+
+    \pause
+
+    \begin{block}{Numbered List of Items}
+      \begin{enumerate}
+        \item<2-> one
+        \item<3-> two
+        \item<4-> three
+        \item<5-> \dots
+      \end{enumerate}
+    \end{block}
+  \end{frame}
+
+  \section{Listings}
+  \begin{frame}[fragile]{Listings}
+    \begin{lstlisting}[language=C++]
+#include <iostream>
+
+int main() {
+  std::cout << "Hello World!" << std::endl;
+  return 0;
+}
+\end{lstlisting}
+\end{frame}
+
+% ----------------------------------------
+% THANK YOU SLIDE
+% ----------------------------------------
+\begin{frame}{Thank you for your attention.}
+	\centering
+	\vspace{1cm}
+		
+	\textbf{\large Questions?}
+	
+	\vspace{0.5cm}
+
+	\begin{center}
+		\includegraphics[height=3.5cm]{./theme/art/tf/lme/qr-lme}
+		
+		\url{www5.cs.fau.de/~yourLastName}
+	\end{center}
+\end{frame}
+\end{document}
+

@@ -1,0 +1,32 @@
+%-------------------------------------------------------------------------------
+% Outer theme file
+% (C) Oliver Reiche <oliver.reiche@fau.de>
+%-------------------------------------------------------------------------------
+
+\mode<presentation>
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Headline %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\setbeamertemplate{headline}{%
+  \headlinebody[%
+    \color{normal text.fg}%
+	\pgfuseimage{lme-body}%
+	\hspace{0.15cm}
+	\ifdefined\partnersLogo
+	        \hspace{0.1cm}
+	        \pgfuseimage{partners-body}
+	\else
+	\fi
+%       \pgfuseimage{partners-body}%
+%	\pgfuseimage{saottext-body}%
+% 	\hspace{0.15cm}
+%	\pgfuseimage{uker-body}%
+%	\hspace{0.15cm}
+%	\pgfuseimage{usyd-body}%
+  ]
+}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Headline end %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\mode
+<all>

@@ -1,0 +1,6 @@
+build-pdf:
+  script:
+    - latexmk -pdf -shell-escape -verbose -file-line-error -interaction=nonstopmode lme-beamer.tex
+  artifacts:
+    paths:
+      - lme-beamer.pdf

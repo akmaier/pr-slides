@@ -1,0 +1,51 @@
+%-------------------------------------------------------------------------------
+% Font theme file
+% (C) Oliver Reiche <oliver.reiche@fau.de>
+%-------------------------------------------------------------------------------
+
+\mode<presentation>
+
+
+% Helvetica font
+\usepackage{mathptmx}
+\usepackage[scaled=0.83]{helvet}
+% Mono font Inconsolata
+\IfFileExists{zi4.sty}{%
+  \usepackage[scaled=0.9]{zi4}
+}{\IfFileExists{inconsolata.sty}{%
+  % Fall back for older LaTeX distributions
+  \usepackage[scaled=0.9]{inconsolata}
+}{}}
+\renewcommand*{\familydefault}{\sfdefault} % Serif-free is default
+\renewcommand*{\baselinestretch}{0.88}
+
+% Title
+\setbeamerfont{title}{series=\bfseries,size=\fontsize{17}{21}}
+\setbeamerfont{subtitle}{series=\normalfont,size=\fontsize{12}{15}}
+\setbeamerfont{frametitle}{series=\bfseries, size=\fontsize{13}{16}}
+
+% Headline
+\setbeamerfont{headline}{size=\fontsize{5.5}{7}}
+
+% Footline
+\setbeamerfont{footline}{size=\fontsize{5.5}{7}}
+\setbeamerfont{footnote}{size=\fontsize{5.5}{7}}
+
+% Blocktitle
+\setbeamerfont{block title}{%
+  series=\bfseries,size=\fontsize{12}{15},parent={structure,block body}}
+\setbeamerfont{block title alerted}{%
+  series=\bfseries,size=\fontsize{12}{15},parent={block title,alerted text}}
+\setbeamerfont{block title example}{%
+  series=\bfseries,size=\fontsize{12}{15},parent={block title,example text}}
+
+% Bold font for sections in TOC and description items
+\setbeamerfont{section in toc}{series=\bfseries}
+\setbeamerfont{description item}{series=\bfseries}
+
+% Caption
+\setbeamerfont{caption}{size=\scriptsize}
+
+
+\mode
+<all>
