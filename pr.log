@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016) (preloaded format=pdflatex 2017.1.10)  8 JAN 2021 12:24
+This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016) (preloaded format=pdflatex 2017.1.10)  8 JAN 2021 11:47
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -2240,13 +2240,13 @@ LaTeX Font Info:    Font shape `T1/phv/m/n' will be
 Overfull \vbox (10.89758pt too high) has occurred while \output is active []
 
 )
-(./09_perceptron.tex
-Overfull \hbox (9.74998pt too wide) in paragraph at lines 1--1
+(./21_adaboost.tex
+Overfull \hbox (9.74998pt too wide) in paragraph at lines 3--3
 [][] 
  []
 
 
-Overfull \vbox (10.56006pt too high) detected at line 1
+Overfull \vbox (10.56006pt too high) detected at line 3
  []
 
 [3
@@ -2265,26 +2265,34 @@ pdfTeX warning: pdflatex (file ./theme/art/tf/fau-logo-english.pdf): PDF inclus
 ion: multiple pdfs with page group included in a single page
 > <./theme/art/tf/lme/lme-english.png>]
 LaTeX Font Info:    Font shape `T1/phv/m/n' will be
-(Font)              scaled to size 6.64001pt on input line 15.
+(Font)              scaled to size 6.64001pt on input line 16.
 LaTeX Font Info:    Font shape `T1/phv/m/it' in size <8> not available
-(Font)              Font shape `T1/phv/m/sl' tried instead on input line 15.
+(Font)              Font shape `T1/phv/m/sl' tried instead on input line 16.
 LaTeX Font Info:    Font shape `T1/phv/m/sl' will be
-(Font)              scaled to size 6.64001pt on input line 15.
+(Font)              scaled to size 6.64001pt on input line 16.
 LaTeX Font Info:    Font shape `T1/phv/bx/it' in size <8> not available
-(Font)              Font shape `T1/phv/b/it' tried instead on input line 15.
+(Font)              Font shape `T1/phv/b/it' tried instead on input line 16.
 LaTeX Font Info:    Font shape `T1/phv/b/it' in size <8> not available
-(Font)              Font shape `T1/phv/b/sl' tried instead on input line 15.
+(Font)              Font shape `T1/phv/b/sl' tried instead on input line 16.
 LaTeX Font Info:    Font shape `T1/phv/b/sl' will be
-(Font)              scaled to size 6.64001pt on input line 15.
+(Font)              scaled to size 6.64001pt on input line 16.
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <8> not available
-(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 15.
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 16.
 LaTeX Font Info:    Font shape `T1/phv/bx/n' in size <13> not available
-(Font)              Font shape `T1/phv/b/n' tried instead on input line 15.
+(Font)              Font shape `T1/phv/b/n' tried instead on input line 16.
 LaTeX Font Info:    Font shape `T1/phv/b/n' will be
-(Font)              scaled to size 10.79002pt on input line 15.
+(Font)              scaled to size 10.79002pt on input line 16.
 
 Overfull \vbox (10.89758pt too high) has occurred while \output is active []
 
+LaTeX Font Info:    Font shape `T1/phv/bx/n' in size <12> not available
+(Font)              Font shape `T1/phv/b/n' tried instead on input line 35.
+LaTeX Font Info:    Font shape `T1/phv/b/n' will be
+(Font)              scaled to size 9.96002pt on input line 35.
+LaTeX Font Info:    Font shape `T1/phv/bx/n' in size <5> not available
+(Font)              Font shape `T1/phv/b/n' tried instead on input line 35.
+LaTeX Font Info:    Font shape `T1/phv/b/n' will be
+(Font)              scaled to size 4.15001pt on input line 35.
 
 Overfull \vbox (10.89758pt too high) has occurred while \output is active []
 
@@ -2302,23 +2310,32 @@ Overfull \vbox (10.89758pt too high) has occurred while \output is active []
 [7
 
 
-]
-
-Package amsmath Warning: Foreign command \atopwithdelims;
-(amsmath)                \frac or \genfrac should be used instead
-(amsmath)                 on input line 91.
+] (./texfig_c/boosting_schematic.pstex_t
+<./texfig_c/boosting_schematic.pdf, id=88, 199.74625pt x 324.21124pt>
+File: ./texfig_c/boosting_schematic.pdf Graphic file (type pdf)
+<use ./texfig_c/boosting_schematic.pdf>
+Package pdftex.def Info: ./texfig_c/boosting_schematic.pdf  used on input line 
+3.
+(pdftex.def)             Requested size: 199.74576pt x 324.21045pt.
+LaTeX Font Info:    Font shape `T1/phv/m/it' in size <12> not available
+(Font)              Font shape `T1/phv/m/sl' tried instead on input line 22.
+LaTeX Font Info:    Font shape `T1/phv/m/sl' will be
+(Font)              scaled to size 9.96002pt on input line 22.
+LaTeX Font Info:    Font shape `T1/phv/bx/it' in size <12> not available
+(Font)              Font shape `T1/phv/b/it' tried instead on input line 22.
+LaTeX Font Info:    Font shape `T1/phv/b/it' in size <12> not available
+(Font)              Font shape `T1/phv/b/sl' tried instead on input line 22.
+LaTeX Font Info:    Font shape `T1/phv/b/sl' will be
+(Font)              scaled to size 9.96002pt on input line 22.
+LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <12> not available
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 22.
+)
+Overfull \vbox (0.71783pt too high) detected at line 78
+ []
 
 
 Overfull \vbox (10.89758pt too high) has occurred while \output is active []
 
-
-
-Package mathptmx Warning: There are no bold math fonts on input line 112.
-
-LaTeX Font Info:    Font shape `T1/phv/bx/n' in size <10> not available
-(Font)              Font shape `T1/phv/b/n' tried instead on input line 112.
-LaTeX Font Info:    Font shape `T1/phv/b/n' will be
-(Font)              scaled to size 8.30002pt on input line 112.
 
 Overfull \vbox (10.89758pt too high) has occurred while \output is active []
 
@@ -2326,8 +2343,136 @@ Overfull \vbox (10.89758pt too high) has occurred while \output is active []
 [9
 
 
-]
+ <./texfig_c/boosting_schematic.pdf>]
 Overfull \vbox (10.89758pt too high) has occurred while \output is active []
+
+
+===> dbg String: Beginn \str@kt
+===> dbg String: rectangle size
+===> dbg Coord:  (Ursprung) (\x@nss, \y@nss) = (0, 50000)
+===> dbg Count:  (Breite) \xsize@nss = 100000
+===> dbg String: Beginn \@assign
+===> dbg Coord:  (Ursprung) (\x@nss, \y@nss) = (0, 50000)
+===> dbg Count:  (Breite) \xsize@nss = 100000
+===> dbg String: Beginn \set@nss
+===> dbg String: Beginn \block@nss
+===> dbg Count:  \ydepth@nss = 0
+===> dbg Count:  (original) \TextBoxHt@nss = 14.64099pt
+===> dbg Count:  (korrigiert) \TextBoxHt@nss = 14.64099pt
+===> dbg Count:  (skaliert) \TextBoxHt@nss = 0.0784pt
+===> dbg Coord:  (Ursprung) (\x@nss, \y@nss) = (0, 44862)
+===> dbg Coord:  (Breite, Hoehe) (\xsize@nss, \ydepth@nss) = (100000, 5138)
+===> dbg String: Ende \@assign
+===> dbg Coord:  (Ursprung) (\x@nss, \y@nss) = (0, 44862)
+===> dbg String: Beginn \@assign
+===> dbg Coord:  (Ursprung) (\x@nss, \y@nss) = (0, 44862)
+===> dbg Count:  (Breite) \xsize@nss = 100000
+===> dbg String: Beginn \set@nss
+===> dbg String: Beginn \block@nss
+===> dbg Count:  \ydepth@nss = 5138
+===> dbg Count:  (original) \TextBoxHt@nss = 11.01286pt
+===> dbg Count:  (korrigiert) \TextBoxHt@nss = 11.01286pt
+===> dbg Count:  (skaliert) \TextBoxHt@nss = 0.05898pt
+===> dbg Coord:  (Ursprung) (\x@nss, \y@nss) = (0, 40997)
+===> dbg Coord:  (Breite, Hoehe) (\xsize@nss, \ydepth@nss) = (100000, 3865)
+===> dbg String: Ende \@assign
+===> dbg Coord:  (Ursprung) (\x@nss, \y@nss) = (0, 40997)
+===> dbg String: Beginn \set@nss
+===> dbg String: Beginn \block@nss
+===> dbg Count:  \ydepth@nss = 3865
+===> dbg Count:  (original) \TextBoxHt@nss = 11.01286pt
+===> dbg Count:  (korrigiert) \TextBoxHt@nss = 11.01286pt
+===> dbg Count:  (skaliert) \TextBoxHt@nss = 0.05898pt
+===> dbg Coord:  (Ursprung) (\x@nss, \y@nss) = (0, 37132)
+===> dbg Coord:  (Breite, Hoehe) (\xsize@nss, \ydepth@nss) = (100000, 3865)
+===> dbg String: Beginn \str@kt
+===> dbg String: rectangle size
+===> dbg Coord:  (Ursprung) (\x@nss, \y@nss) = (3865, 40997)
+===> dbg Count:  (Breite) \xsize@nss = 96135
+===> dbg String: Beginn \@assign
+===> dbg Coord:  (Ursprung) (\x@nss, \y@nss) = (3865, 40997)
+===> dbg Count:  (Breite) \xsize@nss = 96135
+===> dbg String: Beginn \set@nss
+===> dbg String: Beginn \block@nss
+===> dbg Count:  \ydepth@nss = 3865
+===> dbg Count:  (original) \TextBoxHt@nss = 14.69054pt
+===> dbg Count:  (korrigiert) \TextBoxHt@nss = 14.69054pt
+===> dbg Count:  (skaliert) \TextBoxHt@nss = 0.07867pt
+===> dbg Coord:  (Ursprung) (\x@nss, \y@nss) = (3865, 35841)
+===> dbg Coord:  (Breite, Hoehe) (\xsize@nss, \ydepth@nss) = (96135, 5156)
+===> dbg String: Ende \@assign
+===> dbg Coord:  (Ursprung) (\x@nss, \y@nss) = (3865, 35841)
+===> dbg String: Beginn \@assign
+===> dbg Coord:  (Ursprung) (\x@nss, \y@nss) = (3865, 35841)
+===> dbg Count:  (Breite) \xsize@nss = 96135
+===> dbg String: Beginn \set@nss
+===> dbg String: Beginn \block@nss
+===> dbg Count:  \ydepth@nss = 5156
+===> dbg Count:  (original) \TextBoxHt@nss = 21.79832pt
+===> dbg Count:  (korrigiert) \TextBoxHt@nss = 21.79832pt
+===> dbg Count:  (skaliert) \TextBoxHt@nss = 0.11674pt
+===> dbg Coord:  (Ursprung) (\x@nss, \y@nss) = (3865, 28190)
+===> dbg Coord:  (Breite, Hoehe) (\xsize@nss, \ydepth@nss) = (96135, 7651)
+===> dbg String: Ende \@assign
+===> dbg Coord:  (Ursprung) (\x@nss, \y@nss) = (3865, 28190)
+===> dbg String: Beginn \@assign
+===> dbg Coord:  (Ursprung) (\x@nss, \y@nss) = (3865, 28190)
+===> dbg Count:  (Breite) \xsize@nss = 96135
+===> dbg String: Beginn \set@nss
+===> dbg String: Beginn \block@nss
+===> dbg Count:  \ydepth@nss = 7651
+===> dbg Count:  (original) \TextBoxHt@nss = 21.88142pt
+===> dbg Count:  (korrigiert) \TextBoxHt@nss = 21.88142pt
+===> dbg Count:  (skaliert) \TextBoxHt@nss = 0.11719pt
+===> dbg Coord:  (Ursprung) (\x@nss, \y@nss) = (3865, 20510)
+===> dbg Coord:  (Breite, Hoehe) (\xsize@nss, \ydepth@nss) = (96135, 7680)
+===> dbg String: Ende \@assign
+===> dbg Coord:  (Ursprung) (\x@nss, \y@nss) = (3865, 20510)
+===> dbg String: Beginn \@assign
+===> dbg Coord:  (Ursprung) (\x@nss, \y@nss) = (3865, 20510)
+===> dbg Count:  (Breite) \xsize@nss = 96135
+===> dbg String: Beginn \set@nss
+===> dbg String: Beginn \block@nss
+===> dbg Count:  \ydepth@nss = 7680
+===> dbg Count:  (original) \TextBoxHt@nss = 23.11476pt
+===> dbg Count:  (korrigiert) \TextBoxHt@nss = 23.11476pt
+===> dbg Count:  (skaliert) \TextBoxHt@nss = 0.1238pt
+===> dbg Coord:  (Ursprung) (\x@nss, \y@nss) = (3865, 12397)
+===> dbg Coord:  (Breite, Hoehe) (\xsize@nss, \ydepth@nss) = (96135, 8113)
+===> dbg String: Ende \@assign
+===> dbg Coord:  (Ursprung) (\x@nss, \y@nss) = (3865, 12397)
+===> dbg String: Beginn \@assign
+===> dbg Coord:  (Ursprung) (\x@nss, \y@nss) = (3865, 12397)
+===> dbg Count:  (Breite) \xsize@nss = 96135
+===> dbg String: Beginn \set@nss
+===> dbg String: Beginn \block@nss
+===> dbg Count:  \ydepth@nss = 8113
+===> dbg Count:  (original) \TextBoxHt@nss = 11.85716pt
+===> dbg Count:  (korrigiert) \TextBoxHt@nss = 11.85716pt
+===> dbg Count:  (skaliert) \TextBoxHt@nss = 0.06349pt
+===> dbg Coord:  (Ursprung) (\x@nss, \y@nss) = (3865, 8236)
+===> dbg Coord:  (Breite, Hoehe) (\xsize@nss, \ydepth@nss) = (96135, 4161)
+===> dbg String: Ende \@assign
+===> dbg Coord:  (Ursprung) (\x@nss, \y@nss) = (3865, 8236)
+===> dbg String: Ende \str@kt
+===> dbg String: Beginn \@assign
+===> dbg Coord:  (Ursprung) (\x@nss, \y@nss) = (0, 4371)
+===> dbg Count:  (Breite) \xsize@nss = 100000
+===> dbg String: Beginn \set@nss
+===> dbg String: Beginn \block@nss
+===> dbg Count:  \ydepth@nss = 36626
+===> dbg Count:  (original) \TextBoxHt@nss = 16.48141pt
+===> dbg Count:  (korrigiert) \TextBoxHt@nss = 16.48141pt
+===> dbg Count:  (skaliert) \TextBoxHt@nss = 0.08826pt
+===> dbg Coord:  (Ursprung) (\x@nss, \y@nss) = (0, -1413)
+===> dbg Coord:  (Breite, Hoehe) (\xsize@nss, \ydepth@nss) = (100000, 5784)
+===> dbg String: Ende \@assign
+===> dbg Coord:  (Ursprung) (\x@nss, \y@nss) = (0, -1413)
+===> dbg String: Ende \str@kt
+
+Overfull \hbox (0.8118pt too wide) in paragraph at lines 169--169
+[][] 
+ []
 
 
 Overfull \vbox (10.89758pt too high) has occurred while \output is active []
@@ -2337,12 +2482,18 @@ Overfull \vbox (10.89758pt too high) has occurred while \output is active []
 
 
 ]
-LaTeX Font Info:    Font shape `T1/phv/bx/n' in size <12> not available
-(Font)              Font shape `T1/phv/b/n' tried instead on input line 165.
-LaTeX Font Info:    Font shape `T1/phv/b/n' will be
-(Font)              scaled to size 9.96002pt on input line 165.
-
 Overfull \vbox (10.89758pt too high) has occurred while \output is active []
+
+
+(./texfig_c/adaboost1.pstex_t
+<./texfig_c/adaboost1.pdf, id=114, 790.955pt x 624.3325pt>
+File: ./texfig_c/adaboost1.pdf Graphic file (type pdf)
+<use ./texfig_c/adaboost1.pdf>
+Package pdftex.def Info: ./texfig_c/adaboost1.pdf  used on input line 3.
+(pdftex.def)             Requested size: 790.95308pt x 624.33098pt.
+)
+Overfull \vbox (8.2869pt too high) detected at line 198
+ []
 
 
 Overfull \vbox (10.89758pt too high) has occurred while \output is active []
@@ -2351,8 +2502,29 @@ Overfull \vbox (10.89758pt too high) has occurred while \output is active []
 [13
 
 
-]
+] (./texfig_c/adaboost3.pstex_t
+<./texfig_c/adaboost3.pdf, id=123, 794.97pt x 624.3325pt>
+File: ./texfig_c/adaboost3.pdf Graphic file (type pdf)
+<use ./texfig_c/adaboost3.pdf>
+Package pdftex.def Info: ./texfig_c/adaboost3.pdf  used on input line 3.
+(pdftex.def)             Requested size: 794.96806pt x 624.33098pt.
+)
+Overfull \vbox (10.2869pt too high) detected at line 215
+ []
+
+
 Overfull \vbox (10.89758pt too high) has occurred while \output is active []
+
+
+(./texfig_c/adaboost4.pstex_t
+<./texfig_c/adaboost4.pdf, id=125, 625.33624pt x 625.33624pt>
+File: ./texfig_c/adaboost4.pdf Graphic file (type pdf)
+<use ./texfig_c/adaboost4.pdf>
+Package pdftex.def Info: ./texfig_c/adaboost4.pdf  used on input line 3.
+(pdftex.def)             Requested size: 625.33472pt x 625.33472pt.
+)
+Overfull \vbox (8.29451pt too high) detected at line 228
+ []
 
 
 Overfull \vbox (10.89758pt too high) has occurred while \output is active []
@@ -2361,36 +2533,47 @@ Overfull \vbox (10.89758pt too high) has occurred while \output is active []
 [15
 
 
-]
-Overfull \vbox (10.89758pt too high) has occurred while \output is active []
-
-
-Overfull \vbox (10.89758pt too high) has occurred while \output is active []
-
-
-[17
-
-
-]
-<./png/gefahrenstelle.png, id=155, 401.5pt x 370.38374pt>
-File: ./png/gefahrenstelle.png Graphic file (type png)
-<use ./png/gefahrenstelle.png>
-Package pdftex.def Info: ./png/gefahrenstelle.png  used on input line 278.
-(pdftex.def)             Requested size: 8.30002pt x 7.65225pt.
-
+ <./texfig_c/adaboost1.pdf> <./texfig_c/adaboost3.pdf>]
+(./texfig_c/adaboost-classifier.pstex_t
+<./texfig_c/adaboost-classifier.pdf, id=139, 630.355pt x 630.355pt>
+File: ./texfig_c/adaboost-classifier.pdf Graphic file (type pdf)
+<use ./texfig_c/adaboost-classifier.pdf>
+Package pdftex.def Info: ./texfig_c/adaboost-classifier.pdf  used on input line
+ 3.
+(pdftex.def)             Requested size: 630.35345pt x 630.35345pt.
+) (./texfig_c/adaboost-error.pstex_t
+<./texfig_c/adaboost-error.pdf, id=140, 317.185pt x 236.885pt>
+File: ./texfig_c/adaboost-error.pdf Graphic file (type pdf)
+<use ./texfig_c/adaboost-error.pdf>
+Package pdftex.def Info: ./texfig_c/adaboost-error.pdf  used on input line 3.
+(pdftex.def)             Requested size: 317.1842pt x 236.88441pt.
+LaTeX Font Info:    Font shape `T1/phv/m/n' will be
+(Font)              scaled to size 9.13002pt on input line 14.
+)
 Overfull \vbox (10.89758pt too high) has occurred while \output is active []
 
 
 (./nextTime.tex
-<png/nextTime.png, id=157, 721.4171pt x 540.95592pt>
+<png/nextTime.png, id=142, 721.4171pt x 540.95592pt>
 File: png/nextTime.png Graphic file (type png)
 <use png/nextTime.png>
 Package pdftex.def Info: png/nextTime.png  used on input line 4.
 (pdftex.def)             Requested size: 364.19536pt x 273.0939pt.
- [19
+ [17
 
 
- <./png/gefahrenstelle.png>])
+ <./texfig_c/adaboost4.pdf> <./texfig_c/adaboost-classifier.pdf> <./texfig_c/ad
+aboost-error.pdf>])
+Overfull \vbox (10.89758pt too high) has occurred while \output is active []
+
+
+Overfull \vbox (10.89758pt too high) has occurred while \output is active []
+
+
+[19
+
+
+ <./png/nextTime.png>]
 Overfull \vbox (10.89758pt too high) has occurred while \output is active []
 
 
@@ -2400,7 +2583,178 @@ Overfull \vbox (10.89758pt too high) has occurred while \output is active []
 [21
 
 
- <./png/nextTime.png>])
+]
+Overfull \vbox (10.89758pt too high) has occurred while \output is active []
+
+
+Overfull \vbox (10.89758pt too high) has occurred while \output is active []
+
+
+[23
+
+
+]
+Overfull \vbox (10.89758pt too high) has occurred while \output is active []
+
+
+Overfull \vbox (10.89758pt too high) has occurred while \output is active []
+
+
+[25
+
+
+]
+Overfull \vbox (10.89758pt too high) has occurred while \output is active []
+
+
+(./texfig_c/exploss4.pstex_t
+<./texfig_c/exploss4.pdf, id=198, 255.95625pt x 181.67876pt>
+File: ./texfig_c/exploss4.pdf Graphic file (type pdf)
+<use ./texfig_c/exploss4.pdf>
+Package pdftex.def Info: ./texfig_c/exploss4.pdf  used on input line 3.
+(pdftex.def)             Requested size: 255.95561pt x 181.6783pt.
+)
+Overfull \vbox (10.89758pt too high) has occurred while \output is active []
+
+
+[27
+
+
+]
+Overfull \vbox (10.89758pt too high) has occurred while \output is active []
+
+
+Overfull \vbox (10.89758pt too high) has occurred while \output is active []
+
+
+[29
+
+
+ <./texfig_c/exploss4.pdf>] (./nextTime.tex
+File: png/nextTime.png Graphic file (type png)
+<use png/nextTime.png>
+Package pdftex.def Info: png/nextTime.png  used on input line 4.
+(pdftex.def)             Requested size: 364.19536pt x 273.0939pt.
+)
+Overfull \vbox (10.89758pt too high) has occurred while \output is active []
+
+
+[31
+
+
+] (./texfig_c/haar_features.pstex_t
+<./texfig_c/haar_features.pdf, id=227, 186.6975pt x 186.6975pt>
+File: ./texfig_c/haar_features.pdf Graphic file (type pdf)
+<use ./texfig_c/haar_features.pdf>
+Package pdftex.def Info: ./texfig_c/haar_features.pdf  used on input line 3.
+(pdftex.def)             Requested size: 186.69704pt x 186.69704pt.
+)
+Overfull \vbox (10.89758pt too high) has occurred while \output is active []
+
+
+(./texfig_c/integral_image.pstex_t
+<./texfig_c/integral_image.pdf, id=229, 229.85875pt x 144.54pt>
+File: ./texfig_c/integral_image.pdf Graphic file (type pdf)
+<use ./texfig_c/integral_image.pdf>
+Package pdftex.def Info: ./texfig_c/integral_image.pdf  used on input line 3.
+(pdftex.def)             Requested size: 229.85817pt x 144.53963pt.
+)
+Overfull \vbox (10.89758pt too high) has occurred while \output is active []
+
+
+[33
+
+
+ <./texfig_c/haar_features.pdf>] (./texfig_c/integral_image2.pstex_t
+<./texfig_c/integral_image2.pdf, id=240, 229.85875pt x 144.54pt>
+File: ./texfig_c/integral_image2.pdf Graphic file (type pdf)
+<use ./texfig_c/integral_image2.pdf>
+Package pdftex.def Info: ./texfig_c/integral_image2.pdf  used on input line 3.
+(pdftex.def)             Requested size: 229.85817pt x 144.53963pt.
+)
+Overfull \vbox (10.89758pt too high) has occurred while \output is active []
+
+
+Overfull \vbox (10.89758pt too high) has occurred while \output is active []
+
+
+[35
+
+
+ <./texfig_c/integral_image.pdf> <./texfig_c/integral_image2.pdf>]
+Overfull \vbox (10.89758pt too high) has occurred while \output is active []
+
+<./png/bestfeature.png, id=255, 421.575pt x 224.037pt>
+File: ./png/bestfeature.png Graphic file (type png)
+<use ./png/bestfeature.png>
+Package pdftex.def Info: ./png/bestfeature.png  used on input line 700.
+(pdftex.def)             Requested size: 132.82898pt x 70.58911pt.
+
+Overfull \vbox (10.89758pt too high) has occurred while \output is active []
+
+
+[37
+
+
+]
+Overfull \vbox (10.89758pt too high) has occurred while \output is active []
+
+
+(./texfig_c/cascade.pstex_t
+<./texfig_c/cascade.pdf, id=266, 286.06876pt x 151.56625pt>
+File: ./texfig_c/cascade.pdf Graphic file (type pdf)
+<use ./texfig_c/cascade.pdf>
+Package pdftex.def Info: ./texfig_c/cascade.pdf  used on input line 3.
+(pdftex.def)             Requested size: 286.06805pt x 151.56587pt.
+)
+Overfull \vbox (10.89758pt too high) has occurred while \output is active []
+
+
+[39
+
+
+ <./png/bestfeature.png>]
+Overfull \vbox (10.89758pt too high) has occurred while \output is active []
+
+
+Overfull \vbox (10.89758pt too high) has occurred while \output is active []
+
+
+[41
+
+
+ <./texfig_c/cascade.pdf>]
+<./png/FaceTraining.png, id=290, 654.19406pt x 657.2053pt>
+File: ./png/FaceTraining.png Graphic file (type png)
+<use ./png/FaceTraining.png>
+Package pdftex.def Info: ./png/FaceTraining.png  used on input line 801.
+(pdftex.def)             Requested size: 149.43387pt x 150.12114pt.
+
+Overfull \vbox (10.89758pt too high) has occurred while \output is active []
+
+<./png/facedetection.png, id=293, 433.62pt x 226.446pt>
+File: ./png/facedetection.png Graphic file (type png)
+<use ./png/facedetection.png>
+Package pdftex.def Info: ./png/facedetection.png  used on input line 817.
+(pdftex.def)             Requested size: 166.03876pt x 86.71033pt.
+
+Overfull \vbox (10.89758pt too high) has occurred while \output is active []
+
+
+[43
+
+
+ <./png/FaceTraining.png>]
+Overfull \vbox (10.89758pt too high) has occurred while \output is active []
+
+
+Overfull \vbox (10.89758pt too high) has occurred while \output is active []
+
+
+[45
+
+
+ <./png/facedetection.png>])
 \tf@nav=\write7
 \openout7 = `pr.nav'.
 
@@ -2410,7 +2764,7 @@ Overfull \vbox (10.89758pt too high) has occurred while \output is active []
 \tf@snm=\write9
 \openout9 = `pr.snm'.
 
- [22
+ [46
 
 ] 
 AED: lastpage setting LastPage
@@ -2426,7 +2780,7 @@ Package atveryend Info: Empty hook `AfterLastShipout' on input line 202.
 Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 202.
 Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 202.
 Package rerunfilecheck Info: File `pr.out' has not changed.
-(rerunfilecheck)             Checksum: A0790A4F6CE1AA038C8908E88DF12F41;660.
+(rerunfilecheck)             Checksum: D4887389277BE29E0BA59BF857D375DB;239.
 
 
 LaTeX Font Warning: Size substitutions with differences
@@ -2435,33 +2789,37 @@ LaTeX Font Warning: Size substitutions with differences
 Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 202.
  ) 
 Here is how much of TeX's memory you used:
- 35950 strings out of 493014
- 824899 string characters out of 6133351
- 1048236 words of memory out of 5000000
- 38550 multiletter control sequences out of 15000+600000
- 132895 words of font info for 187 fonts, out of 8000000 for 9000
+ 36255 strings out of 493014
+ 831290 string characters out of 6133351
+ 1046236 words of memory out of 5000000
+ 38728 multiletter control sequences out of 15000+600000
+ 168540 words of font info for 244 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 78i,16n,127p,717b,821s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 78i,16n,127p,717b,856s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/local/texlive/2016/texmf-dist/fonts/enc/dvips/base/8r.enc}{/usr/local/t
 exlive/2016/texmf-dist/fonts/enc/dvips/inconsolata/i4-t1-0.enc}</usr/local/texl
 ive/2016/texmf-dist/fonts/type1/public/inconsolata/Inconsolata-zi4r.pfb></usr/l
 ocal/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/lo
 cal/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/loc
 al/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmmib10.pfb></usr/loc
-al/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmss10.pfb></usr/loca
-l/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmss8.pfb></usr/local/
-texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/t
-exlive/2016/texmf-dist/fonts/type1/public/rsfs/rsfs10.pfb></usr/local/texlive/2
-016/texmf-dist/fonts/type1/urw/helvetic/uhvb8a.pfb></usr/local/texlive/2016/tex
-mf-dist/fonts/type1/urw/helvetic/uhvbo8a.pfb></usr/local/texlive/2016/texmf-dis
-t/fonts/type1/urw/helvetic/uhvr8a.pfb></usr/local/texlive/2016/texmf-dist/fonts
-/type1/urw/helvetic/uhvro8a.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1
-/urw/symbol/usyr.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/urw/symbol
-/usyr.pfb>
-Output written on pr.pdf (11 pages, 1449405 bytes).
+al/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cmextra/cmmib7.pfb></usr
+/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmss10.pfb></usr/
+local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmss12.pfb></usr/l
+ocal/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmss8.pfb></usr/loc
+al/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmss9.pfb></usr/local
+/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/
+texlive/2016/texmf-dist/fonts/type1/public/rsfs/rsfs10.pfb></usr/local/texlive/
+2016/texmf-dist/fonts/type1/urw/helvetic/uhvb8a.pfb></usr/local/texlive/2016/te
+xmf-dist/fonts/type1/urw/helvetic/uhvbo8a.pfb></usr/local/texlive/2016/texmf-di
+st/fonts/type1/urw/helvetic/uhvr8a.pfb></usr/local/texlive/2016/texmf-dist/font
+s/type1/urw/helvetic/uhvro8a.pfb></usr/local/texlive/2016/texmf-dist/fonts/type
+1/urw/symbol/usyr.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/urw/symbo
+l/usyr.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/urw/zapfding/uzdr.pf
+b>
+Output written on pr.pdf (23 pages, 3508615 bytes).
 PDF statistics:
- 242 PDF objects out of 1000 (max. 8388607)
- 193 compressed objects within 2 object streams
- 52 named destinations out of 1000 (max. 500000)
- 165 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 404 PDF objects out of 1000 (max. 8388607)
+ 322 compressed objects within 4 object streams
+ 96 named destinations out of 1000 (max. 500000)
+ 196 words of extra memory for PDF output out of 10000 (max. 10000000)
 

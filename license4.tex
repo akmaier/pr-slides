@@ -1,0 +1,358 @@
+\documentclass[11pt]{article}
+
+\usepackage[a4paper,left=2cm,top=2cm,centering]{geometry}
+\usepackage[pdftex]{hyperref}
+\usepackage{xcolor}
+\usepackage{titlesec}
+\usepackage{lastpage,fancyhdr}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{threeparttable}
+
+\setlength{\parskip}{\baselineskip} \setlength{\parindent}{0pt}
+
+%\titleformat*{\section}{\large\bfseries\sffamily}
+
+\titleformat{\section}{\sffamily\large\bfseries\uppercase}{\thesection.}{.5em}{}
+
+\definecolor{hl}{rgb}{0.0000,0.2000,0.4000}
+
+\newcommand{\MyNameField}[1]{%
+  \TextField[name=FullName,multiline=false,borderstyle=U,bordercolor=hl,width=#1,height=1.5em,onexit={%
+    this.getField('SignatureName').value = this.getField('FullName').value;
+  }]{~}
+}
+
+\newcommand{\MyTextline}[2]{%
+  \TextField[name=#1,multiline=false,borderstyle=U,bordercolor=hl,width=#2,height=1.5em]{~}
+}
+
+\hypersetup{
+% colorlinks = true,   % F"uhrt zu einem farbigen Ausdruck!
+% linkcolor =  red,
+% urlcolor =   magenta,
+% citecolor =  cyan,
+  pdfborder=0 0 0,
+  pdfpagelabels,
+  plainpages =        false,
+  hypertexnames =     true,
+  linktocpage =       true,
+  bookmarksopen =     false,
+  bookmarksnumbered = true,
+  bookmarksopenlevel= 0,
+  pdftitle =    {Data License Agreement FAU Aibo Emotion Corpus},
+  pdfauthor =   {Elmar N{\"o}th, Department of Computer Science 5 (Pattern Recognition), FAU Erlangen-Nuremberg},
+  pdfsubject =  {Data License Agreement},
+  pdfkeywords = {Data License Agreement, FAU Aibo Emotion Corpus}
+}
+
+
+\begin{document}
+
+  \pagestyle{fancy}
+  \fancyhead[R]{FAU Aibo Emotion Corpus}
+  \fancyfoot[C]{\thepage{} of \pageref{LastPage}}
+
+  \vspace*{-1cm}
+  \begin{center}
+    \Large \sffamily \textbf{DATA LICENSE AGREEMENT} \\[2em]
+  \end{center}
+
+  THIS AGREEMENT is effective as of the last signature date hereto (the ``Effective Date'') by and between
+%
+  \begin{center}
+    Lehrstuhl f{\"u}r Informatik 5 (Mustererkennung) \\
+    Friedrich-Alexander-Universit{\"a}t Erlangen-N{\"u}rnberg \\
+    % Prof.\ Dr.-Ing.\ habil.\ Andreas Maier\\
+    Martensstra{\ss}e 3, 91058 Erlangen, Germany \\[0.2cm]
+    (hereinafter ``FAU'') \\[.5cm]
+
+    and
+  \end{center}
+  \vspace{-.1cm}
+
+
+  \begin{Form}
+
+  \begin{tabbing}
+    ~~~~ \= Person (full name incl.\ title)~~~~       \=  \MyNameField{10cm} \\[.5em]  % \rule{10cm}{0.5pt} \\
+         \> E-mail                                    \>  \MyTextline{email}{10cm} \\[.5em] 
+         \> Organization                              \>  \MyTextline{orga1}{10cm} \\[.5em] 
+         \>                                           \>  \MyTextline{orga2}{10cm} \\[.5em] 
+         \>                                           \>  \MyTextline{orga3}{10cm} \\[.5em]
+%         \> VAT identification no.\textsuperscript{1} \>  \MyTextline{vat}{10cm} \\[.5em]
+%         \> DUNS no.\textsuperscript{2}               \>  \MyTextline{duns}{10cm} \\[.5em]
+         \> Address                                   \>  \MyTextline{addr1}{10cm} \\[.5em]
+         \>                                           \>  \MyTextline{addr2}{10cm} \\[.5em]
+         \>                                           \>  \MyTextline{addr3}{10cm} \\[.5em]
+         \>                                           \>  \MyTextline{addr4}{10cm}
+  \end{tabbing}
+%  \textsuperscript{1} applicable within the European Community, see Sec.~\ref{sec:costs} (Costs) \\
+%  \textsuperscript{2} applicable outside the European Community, see Sec.~\ref{sec:costs} (Costs)
+
+  \begin{center}
+    (hereinafter the ``Researcher''). \\[1.0cm]
+  \end{center}
+
+  WHEREAS, FAU is the owner of all right, title and interest and into certain data as described in the attached Exhibit A (hereinafter, the ``Data'');
+
+  WHEREAS, Researcher desires access the Data for non-commercial research purposes, and FAU is willing to agree to such use of the Data, subject to the terms of this Agreement;
+
+  WHEREAS, subject to Researcher's signature below, FAU's acceptance of the terms and conditions set forth herein is deemed to have been provided upon FAU's delivery of the Data to Researcher.
+
+  NOW, THEREFORE, in consideration of the foregoing premises and mutual covenants contained herein, FAU and Researcher, intending to be legally bound hereby, agree as follows:
+
+  \clearpage
+
+  \section{License}
+  \label{sec:license}
+
+  \begin{enumerate}[label=\alph*)]
+    \item \textbf{Grant.} 
+      Subject to the terms and conditions of this Agreement, FAU hereby grants to Researcher a limited, non-exclusive, revocable, non-transferable license to use and reproduce the Data, and to publish results derived by Researcher from his or her analysis of the Data (``Results''), solely for the purposes of conducting non-commercial, academic research (``Non-Commercial Research''). 
+      Any other use or reproduction of the Data is prohibited.
+    \item \textbf{Research Teams.}
+      Researcher, in furtherance of the Non-Commercial Research, shall be permitted to make the Data available to other individuals, provided that (i) such individuals are acting under the direction and control of Researcher; (ii) such individuals may only use the Data in furtherance of the Non-Commercial Research being performed by Researcher; and (iii) Researcher shall be solely responsible for ensuring such individuals comply with the requirements of this Agreement including, without limitation, Sections~\ref{sec:restrictions}, \ref{sec:rights}, and \ref{sec:liability}.
+    \item \textbf{Attributions.}  
+      In the event that Researcher produces a written work that incorporates the Results or limited excerpts of the Data,
+      %(with prior written consent from FAU),%
+      Researcher agrees to acknowledge the Data as property of FAU by  
+      %displaying the following attributions:\\
+      %Source: Derived from data provided by FAU\\
+      %Copyright 201x FAU.  www5.cs.fau.de
+      citation of the following publication:
+      \begin{quote}
+        \emph{Stefan Steidl: ``Automatic Classification of Emotion-Related User States in Spontaneous Children's Speech''. Logos Verlag, Berlin, 2009.}
+      \end{quote}
+%     \item \textbf{Disclaimer.}  Researcher must also include the following disclaimer language in all publications:
+%       \begin{quote}
+%         ``The opinions set forth in this publication are those of the author(s) and not FAU.''
+%       \end{quote}
+  \end{enumerate}
+
+  
+  \section{Data}
+  \label{sec:data}
+
+  The Data will be provided to Researcher by FAU in the format described in Exhibit A.
+
+
+%   \section{Costs}
+%   \label{sec:costs}
+%  
+%   \begin{enumerate}[label=\alph*)]
+%     \item \textbf{Purchasing price.}
+%       Researcher agrees to pay a fee of \textbf{EUR 150.00} within four weeks after he or she got access to Data and received FAU's invoice via bank transfer to the following bank account:
+% 
+%       \begin{center}
+%         \begin{tabular}{l l}
+%           Name of the bank account holder: & Staatsoberkasse Landshut \\
+%           Name of the bank:                & Bayerische Landesbank M\"unchen \\
+%           IBAN:                            & \textbf{DE66\,7005\,0000\,0301\,2792\,80} \\
+%           SWIFT/BIC:                       & \textbf{BYLADEMM} \\[.3cm]
+%         \end{tabular}
+%       \end{center}
+%     \item \textbf{Tax.}
+%       FAU does not charge any VAT if Researcher provides the VAT identification number of his or her organization (applicable for organizations within the European Community) or the DUNS number (applicable for organizations outside the European Community).
+%       Otherwise, FAU charges additionally 19\,\% VAT.
+%     \item \textbf{Banking fees.}
+%       Reseacher has to pay the costs for the international bank transfer if any.
+%     \item \textbf{Refund.}
+%       FAU will not refund any fees after termination or expiration of this Agreement.
+%   \end{enumerate}
+
+
+  \section{Restrictions}
+  \label{sec:restrictions}
+
+  The rights to the Data granted to Researcher pursuant to this Agreement shall be subject to the following restrictions:
+
+  \begin{enumerate}[label=\alph*)]
+    \item The license set forth in Section~\ref{sec:license} shall permit research to be conducted only by, or under the direction and control of, the Researcher solely for non-commercial, academic research purposes. 
+    Access to the Data shall not be permitted to anyone except Researcher, except as expressly set forth in Section~\ref{sec:license}\,b).
+    \item Researcher may not reproduce the Data as a whole in any format.  
+      Researcher may reproduce limited excerpts of the Data solely in furtherance of Researcher's non-commercial research.
+    \item Except as otherwise expressly permitted by this Agreement, Researcher shall not publish, retransmit, display, redistribute, reproduce, or otherwise transfer the Data in any form to any third party.
+    \item Researcher shall not commercialize, attempt to commercialize, or otherwise obtain commercial gain or benefit from his or her use of the Data.
+    \item Researcher acknowledges and agrees that the Data he or she is receiving is not, and does not include, personally-identifiable data.
+     Researcher agrees that he or she will not attempt to compile or match up Data with other personal data so that any individual(s) may be identified.
+    \item Researcher shall use the Data solely for the purpose of and in accordance with this Agreement, and shall not otherwise use or disclose any of the Data to any third party.  
+    \item Research shall have no right to modify the Data and/or create any derivative works of the Data.
+  \end{enumerate}
+
+  
+  \section{Proprietary Rights}
+  \label{sec:rights}
+
+  \begin{enumerate}[label=\alph*)]
+    \item \textbf{Ownership of Data.} 
+     Except for the non-commercial, research license set forth in Section~\ref{sec:license}, FAU shall be and remain the sole and exclusive owner of all right, title, and interest in and to the Data, including all intellectual property rights therein, and no other rights or interests in the Data are transferred by or through this Agreement from FAU to Researcher, or any other third party.
+    \item \textbf{Security and Notification.}
+      Researcher shall ensure that the Data is secure and kept confidential at all times, and shall take necessary steps to prevent any unauthorized disclosure or use of such Data.
+      Researcher shall immediately, upon discovery of any disclosure not authorized hereunder, notify FAU and take reasonable steps to prevent any further disclosure or unauthorized use.
+    \item \textbf{Destruction of Data.}
+      Upon termination or expiration of the Agreement, Researcher shall permanently destroy the Data and any and all copies thereof, and shall send written certification to FAU that all Data have been permanently destroyed.
+  \end{enumerate}
+  
+
+  \section{Exclusion of Warranties}
+  \label{sec:warranties}
+
+  The Data provided by FAU to Researcher under this Agreement is ``as is'' and without any warranty, of any kind.  
+  FAU DISCLAIMS, AND RESEARCHER HEREBY WAIVES, ALL EXPRESS, IMPLIED AND/OR STATUTORY WARRANTIES, INCLUDING BUT NOT LIMITED TO IMPLIED WARRANTIES OF MERCHANTABILITY, NON-INFRINGEMENT AND FITNESS FOR A PARTICULAR PURPOSE.
+
+
+  \section{Limitation of Liability}
+  \label{sec:liability}
+
+  In no event shall FAU be liable to Researcher or any individual receiving access to the Data pursuant to Section~\ref{sec:license}\,b), regardless of the form of action or theory of recovery, in association with this Agreement, for 
+  (i) any indirect, special, exemplary, consequential, incidental or punitive damages, even if FAU has been advised of the possibility of such damages; 
+  (ii) lost profits, lost revenue, lost business expectancy, benefit of bargain damages, business interruption losses or loss of data; or 
+  (iii) direct damages or any kind.
+
+
+  \section{Term}
+  \label{sec:term}
+
+  \begin{enumerate}[label=\alph*)]
+    \item \textbf{Term.}
+      This Agreement shall be effective as of the Effective Date and shall continue in full force and effect until terminated in accordance with this Section~\ref{sec:term}.
+    \item \textbf{Termination.}
+      FAU or Researcher may terminate this Agreement, for any reason, by providing written notice to each of the parties hereof of its intent to terminate this Agreement.
+      In the event such notice is provided, termination of this Agreement shall be effective on the 30th calendar day following receipt of such notice.
+      FAU will only terminate this Agreement in well-justified situations, e.\,g., if Reviewer breaches this Agreement or if one of the recorded subjects withdraws his or her permission that we can use his or her data.
+  \end{enumerate}
+  
+
+  \section{Irreparable Harm}
+  \label{sec:harm}
+
+  The provisions of Sections~\ref{sec:license}, \ref{sec:restrictions}, and \ref{sec:rights} of this Agreement may relate to unique and valuable assets of FAU.
+  Breach or threatened breach of these sections may result in irreparable harm to FAU and remedies at law for such breach or threatened breach will be inadequate.  
+  In the event of a breach or threatened breach of Sections~\ref{sec:license}, \ref{sec:restrictions}, and \ref{sec:rights}, FAU shall be entitled to seek specific performance and/or injunctive relief, without any requirement to post a bond or other security.
+  Such remedy may not be deemed to be the exclusive remedy for any such breach of this Agreement, but may be in addition to all other remedies available at law or equity. 
+
+  
+  \section{Representations and Warranties}
+  \label{sec:representations}
+
+  \begin{enumerate}[label=\alph*)]
+    \item Researcher represents and warrants that he or she is empowered under applicable laws to enter into and perform this Agreement and that he or she has caused this Agreement to be executed and delivered to FAU.
+    \item Researcher further represents and warrants that he or she will comply with any and all laws, rules and regulations, throughout the world, which are applicable to the performance of his or her obligations under this Agreement, including all applicable laws, rules, and regulations relating to privacy and data protection.
+  \end{enumerate}
+
+  
+  \section{Governing Law}
+  \label{sec:law}
+
+  This Agreement shall be governed by the laws of the Federal Republic of Germany.
+  In the event of any litigation related to this Agreement, the parties agree and consent to the exclusive jurisdiction of the Federal Republic of Germany   and the Courts located in the Federal Republic of Germany.
+
+%  This Agreement shall be governed by the federal laws of the United States and the state laws of the State of New Jersey.  
+%  In the event of any litigation related to this Agreement, the parties agree and consent to the exclusive jurisdiction of the State and Federal Courts located in the State of New Jersey, USA. 
+
+
+  \section{Assignment}
+  \label{sec:assignment}
+
+  Researcher may not assign this Agreement without the prior written permission of FAU.
+  Any attempt to assign any rights, duties, or obligations that arise under this Agreement without such permission shall be void.
+
+
+  \section{Survival beyond Termination or Expiration}
+  \label{sec:survival}
+
+  The provisions of Sections~\ref{sec:restrictions}~(Restrictions), \ref{sec:rights}~(Proprietary Rights), \ref{sec:warranties}~(Exclusion of Warranties), \ref{sec:liability}~(Limitation of Liability), \ref{sec:harm}~(Irreparable Harm), and \ref{sec:law}~(Governing Law), shall survive the termination or expiration of this Agreement.
+
+  \vspace{3cm}
+
+
+  IN WITNESS WHEREOF, the parties hereunder have executed this Agreement of the day and year last written below.
+
+  \textbf{Researcher}
+%
+  \begin{tabbing}
+    Signature: \hspace{1.5cm} \= ~~\rule{6.5cm}{0.5pt} \\[.5em]
+    Print name:        \> \TextField[name=SignatureName,multiline=false,borderstyle=U,bordercolor=hl,width=6.5cm,height=1.5em]{~} 
+    \hspace{2cm} {\color{gray} Company's stamp} \\[.5em]
+    Place and date:    \> \MyTextline{date}{6.5cm} \\
+  \end{tabbing}
+  
+
+  \textbf{FAU}
+%
+  \begin{tabbing}
+    Signature: \hspace{1.5cm} \= ~~\rule{6.5cm}{0.5pt} \\[.5cm]
+    Print name:        \> ~~\rule{6.5cm}{0.5pt} \hspace{2.4cm} {\color{gray} FAU's stamp}  \\[.5cm]
+    Place and date:    \> ~~\rule{6.5cm}{0.5pt} \\[-1.6cm]
+                       \> ~~~~Prof. Dr.-Ing. habil. Elmar N{\"o}th \\[.5cm]
+                       \> ~~~~Erlangen, 
+  \end{tabbing}
+
+  \clearpage
+
+
+  \begin{center}
+    \sffamily \Large \textbf{EXHIBIT A} \\[.5em]
+    \textbf{DESCRIPTION AND FORMAT OF DATA}
+  \end{center}
+
+  \section*{Description of Data}
+
+  The \emph{FAU Aibo Emotion Corpus} is a corpus of spontaneous, emotionally colored speech of children interacting with the Sony pet robot Aibo.
+  51 children at the age of 10 to 13 years have been recorded at two German schools using a close-talk microphone.
+  The corpus consists of about 9 hours of German speech.
+  The audio recordings of the children have been segmented manually into small, syntactically meaningful 'chunks' using syntactic-prosodic criteria.
+  Each chunk is stored in a separate audio file.
+  The data has been annotated with 11 emotion-related categories by five human labelers on the word level.
+  The categories are:   
+
+  \begin{table}[!h]
+    \small
+    \centering
+    \begin{tabular}{l l p{10cm}}
+      \toprule
+      label & user state & description \\
+      \midrule
+      J & joyful        & the child enjoys Aibo's action and/or notices that something is funny\\
+      S & surprised     & the child is (positively) surprised, because obviously he or she did not expect Aibo to react that way\\
+      M & motherese     & the child addresses Aibo in the way mothers/parents address their babies (also called 'infant-directed speech') -- either because Aibo is well-behaving or because the child wants Aibo to obey; this is the positive equivalent to 'reprimanding'\\
+      N & neutral       & default user state, not belonging to any other category; not labeled explicitly\\
+      O & other         & not neutral but not belonging to any of the other categories, i.\,e.\ some other spurious emotions\\
+      B & bored         & the child is (momentarily) not interested in the interaction with Aibo\\
+      E & emphatic      & the child speaks in a pronounced, accentuated, sometimes hyper-articulated way but without showing any emotion\\
+      H & helpless      & the child hesitates, seems not to know what to tell Aibo next; can be marked by disfluencies and/or filled pauses\\
+      T & touchy        & the child is slightly irritated; pre-stage of anger\\
+      R & reprimanding  & the child is reproachful, reprimanding, 'wags the finger'; this is the negative equivalent of 'motherese'\\
+      A & angry         & the child is clearly angry, annoyed, speaks in a loud voice\\
+%      X & the word is not labeled 
+      \bottomrule
+    \end{tabular}
+  \end{table}
+
+  FAU provides the original emotion labels of the five human labelers on the word level as well as one derived emotion label for the whole chunk.
+  Furthermore, the transliteration of the audio data with the corresponding lexicon, and information about the gender and the age of the children are provided.
+
+
+  \section*{Data Format}
+
+  The data will be released in the following format:
+
+  FAU provides a download link for an ISO image.
+  The audio files are stored in the Waveform Audio File Format (WAVE) using linear pulse-code modulation, mono, 16\,bit, and a sampling frequency of 16\,kHz.
+  The annotations, transcriptions, and meta data will be provided as plain-text files.
+  
+
+%  For publications and talks concerning directly or indirectly the use of the corpus, the licensee has to cite FAU with the citations privided by FAU.
+%  Currently, these are:
+%  \begin{enumerate}
+%    \item \emph{S.\ Steidl. ``Automatic Classification of Emotion-Related User States in Spontaneous Children's Speech''. Logos Verlag, Berlin, 2009.}
+%    \item \emph{A.\ Batliner, S.\ Steidl, C.\ Hacker, and E.\ N{\"o}th. ``Private Emotions vs. Social Interaction -- a Data-driven Approach towards Analysing Emotion in Speech''. User Modeling and User-Adpated Interaction (umuai), Vol.\ 18, No.\ 1-2, pp.\ 175-206, 2008.}
+%  \end{enumerate}
+%  However, common publications are preferred.
+
+%  The licensee agrees to provide FAU with all publications where the FAU Aibo Emotion Corpus has been used.
+
+  \end{Form}
+
+\end{document}

@@ -1,10 +1,5 @@
 \beamer@endinputifotherversion {3.36pt}
-\beamer@sectionintoc {10}{Rosenblatt's Perceptron (1957)}{3}{0}{1}
-\beamer@subsectionintoc {10}{1}{Motivation}{4}{0}{1}
-\beamer@subsectionintoc {10}{2}{Objective Function}{5}{0}{1}
-\beamer@subsectionintoc {10}{3}{Minimization of Objective Function}{7}{0}{1}
-\beamer@subsectionintoc {10}{4}{Remarks on Perceptron Learning}{10}{0}{1}
-\beamer@subsectionintoc {10}{5}{Convergence of Learning Algorithm}{12}{0}{1}
-\beamer@subsectionintoc {10}{6}{Lessons Learned}{18}{0}{1}
-\beamer@subsectionintoc {10}{7}{Further Readings}{20}{0}{1}
-\beamer@subsectionintoc {10}{8}{Comprehensive Questions}{21}{0}{1}
+\beamer@sectionintoc {22}{AdaBoost}{3}{0}{1}
+\beamer@subsectionintoc {22}{1}{AdaBoost}{11}{0}{1}
+\beamer@subsectionintoc {22}{2}{Exponential Loss}{18}{0}{1}
+\beamer@subsectionintoc {22}{3}{Further Reading}{45}{0}{1}

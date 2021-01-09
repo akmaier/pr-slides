@@ -1,9 +1,4 @@
-\BOOKMARK [2][]{Outline0.10}{Rosenblatt's Perceptron \(1957\)}{}% 1
-\BOOKMARK [3][]{Outline0.10.1.4}{Motivation}{Outline0.10}% 2
-\BOOKMARK [3][]{Outline0.10.2.5}{Objective Function}{Outline0.10}% 3
-\BOOKMARK [3][]{Outline0.10.3.7}{Minimization of Objective Function}{Outline0.10}% 4
-\BOOKMARK [3][]{Outline0.10.4.10}{Remarks on Perceptron Learning}{Outline0.10}% 5
-\BOOKMARK [3][]{Outline0.10.5.12}{Convergence of Learning Algorithm}{Outline0.10}% 6
-\BOOKMARK [3][]{Outline0.10.6.18}{Lessons Learned}{Outline0.10}% 7
-\BOOKMARK [3][]{Outline0.10.7.20}{Further Readings}{Outline0.10}% 8
-\BOOKMARK [3][]{Outline0.10.8.21}{Comprehensive Questions}{Outline0.10}% 9
+\BOOKMARK [2][]{Outline0.22}{AdaBoost}{}% 1
+\BOOKMARK [3][]{Outline0.22.1.11}{AdaBoost}{Outline0.22}% 2
+\BOOKMARK [3][]{Outline0.22.2.18}{Exponential Loss}{Outline0.22}% 3
+\BOOKMARK [3][]{Outline0.22.3.45}{Further Reading}{Outline0.22}% 4

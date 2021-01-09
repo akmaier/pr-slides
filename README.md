@@ -1,18 +1,17 @@
-# pr-slides: Pattern Recognition – Lecture Slides
+# Pattern Recognition – Lecture Slides - pr-slides
 
-This repository contains the slides of the FAU lecture Pattern Recognition
-
-## Building individual slide sets
-
-use 'make.pl' to create the slides, e.g.
-
-make.pl 01
-
-to build the first slide deck. Created slides will be moved to folder 'shipping'.
-
-The corresponding video recordings are available here:
+Slides of the lecture "Pattern Recognition" FAU Germany. Video recordings are available at 
 
 https://www.youtube.com/playlist?list=PLpOGQvPCDQzsWvT_bqmexrJ359RTQQuMO
 
-If you spot any problems, please suggest fixed. All code is released under MIT license. All slides are released under CC 4.0 BY International.
+All sources are under MIT license. Slides are under Creative Commons CC 4.0 BY International.
 
+## Building individual slide sets
+
+Slides can be built using 'make.pl'. To build the first set of slides use
+
+make.pl 01
+
+Have fun!
+
+Andreas Maier
