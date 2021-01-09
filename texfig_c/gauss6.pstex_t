@@ -1,0 +1,82 @@
+\begin{picture}(0,0)%
+\includegraphics{\texfigdir/gauss6.\texfig}%
+\end{picture}%
+\setlength{\unitlength}{3947sp}%
+%
+\begingroup\makeatletter\ifx\SetFigFont\undefined%
+\gdef\SetFigFont#1#2#3#4#5{%
+  \reset@font\fontsize{#1}{#2pt}%
+  \fontfamily{#3}\fontseries{#4}\fontshape{#5}%
+  \selectfont}%
+\fi\endgroup%
+\begin{picture}(8702,11402)(2400,-24362)
+%  text 
+\put(3076,-22786){\makebox(0,0)[lb]{\smash{{\SetFigFont{34}{40.8}{\familydefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}$\mat\Sigma = \left( \begin{array}{r r} 1.0 & -0.8 \\ -0.8 & 1.0 \end{array} \right)$}%
+}}}}
+%  text 
+\put(2778,-21206){\makebox(0,0)[rb]{\smash{{\SetFigFont{20}{24.0}{\familydefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}-5}%
+}}}}
+%  text 
+\put(3113,-21601){\makebox(0,0)[b]{\smash{{\SetFigFont{20}{24.0}{\familydefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}-5}%
+}}}}
+%  text 
+\put(3878,-21601){\makebox(0,0)[b]{\smash{{\SetFigFont{20}{24.0}{\familydefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}-4}%
+}}}}
+%  text 
+\put(2778,-20441){\makebox(0,0)[rb]{\smash{{\SetFigFont{20}{24.0}{\familydefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}-4}%
+}}}}
+%  text 
+\put(2778,-19676){\makebox(0,0)[rb]{\smash{{\SetFigFont{20}{24.0}{\familydefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}-3}%
+}}}}
+%  text 
+\put(2778,-18911){\makebox(0,0)[rb]{\smash{{\SetFigFont{20}{24.0}{\familydefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}-2}%
+}}}}
+%  text 
+\put(2778,-18146){\makebox(0,0)[rb]{\smash{{\SetFigFont{20}{24.0}{\familydefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}-1}%
+}}}}
+%  text 
+\put(2778,-17379){\makebox(0,0)[rb]{\smash{{\SetFigFont{20}{24.0}{\familydefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0} 0}%
+}}}}
+%  text 
+\put(2778,-16614){\makebox(0,0)[rb]{\smash{{\SetFigFont{20}{24.0}{\familydefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0} 1}%
+}}}}
+%  text 
+\put(2778,-14319){\makebox(0,0)[rb]{\smash{{\SetFigFont{20}{24.0}{\familydefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0} 4}%
+}}}}
+%  text 
+\put(2778,-13554){\makebox(0,0)[rb]{\smash{{\SetFigFont{20}{24.0}{\familydefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0} 5}%
+}}}}
+%  text 
+\put(2778,-15084){\makebox(0,0)[rb]{\smash{{\SetFigFont{20}{24.0}{\familydefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0} 3}%
+}}}}
+%  text 
+\put(2778,-15849){\makebox(0,0)[rb]{\smash{{\SetFigFont{20}{24.0}{\familydefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0} 2}%
+}}}}
+%  text 
+\put(4643,-21601){\makebox(0,0)[b]{\smash{{\SetFigFont{20}{24.0}{\familydefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}-3}%
+}}}}
+%  text 
+\put(5408,-21601){\makebox(0,0)[b]{\smash{{\SetFigFont{20}{24.0}{\familydefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}-2}%
+}}}}
+%  text 
+\put(6173,-21601){\makebox(0,0)[b]{\smash{{\SetFigFont{20}{24.0}{\familydefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}-1}%
+}}}}
+%  text 
+\put(6939,-21601){\makebox(0,0)[b]{\smash{{\SetFigFont{20}{24.0}{\familydefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0} 0}%
+}}}}
+%  text 
+\put(7704,-21601){\makebox(0,0)[b]{\smash{{\SetFigFont{20}{24.0}{\familydefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}1}%
+}}}}
+%  text 
+\put(8469,-21601){\makebox(0,0)[b]{\smash{{\SetFigFont{20}{24.0}{\familydefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}2}%
+}}}}
+%  text 
+\put(9234,-21601){\makebox(0,0)[b]{\smash{{\SetFigFont{20}{24.0}{\familydefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}3}%
+}}}}
+%  text 
+\put(9999,-21601){\makebox(0,0)[b]{\smash{{\SetFigFont{20}{24.0}{\familydefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}4}%
+}}}}
+%  text 
+\put(10764,-21601){\makebox(0,0)[b]{\smash{{\SetFigFont{20}{24.0}{\familydefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}5}%
+}}}}
+\end{picture}%

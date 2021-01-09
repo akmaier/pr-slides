@@ -1,0 +1,37 @@
+\begin{picture}(0,0)%
+\includegraphics{\texfigdir/em_local.\texfig}%
+\end{picture}%
+\setlength{\unitlength}{4144sp}%
+%
+\begingroup\makeatletter\ifx\SetFigFont\undefined%
+\gdef\SetFigFont#1#2#3#4#5{%
+  \reset@font\fontsize{#1}{#2pt}%
+  \fontfamily{#3}\fontseries{#4}\fontshape{#5}%
+  \selectfont}%
+\fi\endgroup%
+\begin{picture}(4036,3000)(1,-2162)
+%  text 
+\put(2194,-2102){\makebox(0,0)[b]{\smash{{\SetFigFont{10}{12.0}{\familydefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}parameter $\theta$}%
+}}}}
+%  text 
+\put(122,-502){\rotatebox{90.0}{\makebox(0,0)[b]{\smash{{\SetFigFont{10}{12.0}{\familydefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}KL}%
+}}}}}
+%  text 
+\put(954,-155){\makebox(0,0)[b]{\smash{{\SetFigFont{10}{12.0}{\familydefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}EM result}%
+}}}}
+%  text 
+\put(3925,568){\makebox(0,0)[rb]{\smash{{\SetFigFont{10}{12.0}{\familydefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}global maximum}%
+}}}}
+%  text 
+\put(1817,-1447){\makebox(0,0)[rb]{\smash{{\SetFigFont{10}{12.0}{\familydefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}initialization $\hatp^{(0)}$}%
+}}}}
+%  text 
+\put(1608,-1187){\makebox(0,0)[rb]{\smash{{\SetFigFont{8}{9.6}{\familydefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}$\hatp^{(1)}$}%
+}}}}
+%  text 
+\put(1440,-963){\makebox(0,0)[rb]{\smash{{\SetFigFont{8}{9.6}{\familydefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}$\hatp^{(2)}$}%
+}}}}
+%  text 
+\put(1251,-737){\makebox(0,0)[rb]{\smash{{\SetFigFont{8}{9.6}{\familydefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}$\hatp^{(3)}$}%
+}}}}
+\end{picture}%

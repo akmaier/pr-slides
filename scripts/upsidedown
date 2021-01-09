@@ -1,0 +1,9 @@
+#!/usr/bin/perl
+
+$file = shift @ARGV;
+
+$file =~ s/.ps$//g;
+
+$command = "cat $file.ps | pstops '1:0U(1w,1h)' > $file.U.ps";
+print "$command\n";
+system $command;

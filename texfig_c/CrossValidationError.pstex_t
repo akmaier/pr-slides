@@ -1,0 +1,29 @@
+\begin{picture}(0,0)%
+\includegraphics{\texfigdir/CrossValidationError.\texfig}%
+\end{picture}%
+\setlength{\unitlength}{4144sp}%
+%
+\begingroup\makeatletter\ifx\SetFigFont\undefined%
+\gdef\SetFigFont#1#2#3#4#5{%
+  \reset@font\fontsize{#1}{#2pt}%
+  \fontfamily{#3}\fontseries{#4}\fontshape{#5}%
+  \selectfont}%
+\fi\endgroup%
+\begin{picture}(5907,3751)(-12,-2717)
+\put(1441,-2041){\rotatebox{90.0}{\makebox(0,0)[rb]{\smash{{\SetFigFont{12}{14.4}{\familydefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}stop}%
+}}}}}
+\put(1666,-2041){\rotatebox{90.0}{\makebox(0,0)[rb]{\smash{{\SetFigFont{12}{14.4}{\familydefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}training}%
+}}}}}
+\put(1891,-2041){\rotatebox{90.0}{\makebox(0,0)[rb]{\smash{{\SetFigFont{12}{14.4}{\familydefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}here}%
+}}}}}
+\put(4096,-1861){\makebox(0,0)[lb]{\smash{{\SetFigFont{12}{14.4}{\familydefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}amount of training,}%
+}}}}
+\put(4096,-2086){\makebox(0,0)[lb]{\smash{{\SetFigFont{12}{14.4}{\familydefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}parameter adjustment}%
+}}}}
+\put( 64,884){\makebox(0,0)[b]{\smash{{\SetFigFont{12}{14.4}{\familydefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}E}%
+}}}}
+\put(2026,-511){\rotatebox{45.0}{\makebox(0,0)[lb]{\smash{{\SetFigFont{12}{14.4}{\familydefault}{\mddefault}{\updefault}{\color[rgb]{0.243,0.624,0.243}validation}%
+}}}}}
+\put(1756,-1321){\rotatebox{350.0}{\makebox(0,0)[lb]{\smash{{\SetFigFont{12}{14.4}{\familydefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}training}%
+}}}}}
+\end{picture}%

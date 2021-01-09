@@ -1,0 +1,25 @@
+\frametitle{Performance Evaluation \cont}
+
+   \structure{Receiver Operating Characteristic (ROC) Curves}
+
+   \begin{itemize}
+      \item A classifier defines a single 2-d point in the ROC graph. \\[.7cm]
+   \end{itemize}
+
+   \begin{columns}
+      \column{.4\linewidth}
+      \resizebox{1.4\linewidth}{!}{
+         \input{\texfigdir/roc.pstex_t}
+      }
+      %
+      \column{.6\linewidth}
+      \footnotesize
+      \vspace{-4.0cm}
+      \begin{itemize}
+         \item[(1)] Perfect classifier: no false positives, all negatives are classified as negatives
+         \item[(2)] Random decision: half of positives are classified correctly, half of negatives are classified
+           correctly
+         \item[(3)] Low true positive rate, but lower false positive rate; strong evidence for positive classification
+         \item[(4)] Here something goes really wrong!
+      \end{itemize}
+   \end{columns}

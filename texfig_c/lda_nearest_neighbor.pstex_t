@@ -1,0 +1,31 @@
+\begin{picture}(0,0)%
+\includegraphics{\texfigdir/lda_nearest_neighbor.\texfig}%
+\end{picture}%
+\setlength{\unitlength}{4144sp}%
+%
+\begingroup\makeatletter\ifx\SetFigFont\undefined%
+\gdef\SetFigFont#1#2#3#4#5{%
+  \reset@font\fontsize{#1}{#2pt}%
+  \fontfamily{#3}\fontseries{#4}\fontshape{#5}%
+  \selectfont}%
+\fi\endgroup%
+\begin{picture}(2069,2608)(17,-1781)
+\put(766,119){\makebox(0,0)[lb]{\smash{{\SetFigFont{8}{9.6}{\familydefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}$\phi(\vec{x})$}%
+}}}}
+\put(1126,-241){\makebox(0,0)[lb]{\smash{{\SetFigFont{8}{9.6}{\familydefault}{\mddefault}{\updefault}{\color[rgb]{0.486,0.486,0.486}$\phi(\vec{x})$}%
+}}}}
+\put(496,389){\makebox(0,0)[lb]{\smash{{\SetFigFont{8}{9.6}{\familydefault}{\mddefault}{\updefault}{\color[rgb]{0.486,0.486,0.486}$\phi(\vec{x})$}%
+}}}}
+\put(181,704){\makebox(0,0)[lb]{\smash{{\SetFigFont{8}{9.6}{\familydefault}{\mddefault}{\updefault}{\color[rgb]{0.486,0.486,0.486}$\phi(\vec{x})$}%
+}}}}
+\put(2071,-286){\makebox(0,0)[lb]{\smash{{\SetFigFont{8}{9.6}{\familydefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}$\phi(\vec{\mu}_1)$}%
+}}}}
+\put(676,-1726){\makebox(0,0)[lb]{\smash{{\SetFigFont{8}{9.6}{\familydefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}$\phi(\vec{\mu}_0)$}%
+}}}}
+\put(1711,-646){\makebox(0,0)[lb]{\smash{{\SetFigFont{8}{9.6}{\familydefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}$\vec{a} = \phi(\vec{\mu}_1)-\phi(\vec{\mu}_0)$}%
+}}}}
+\put(676,-556){\makebox(0,0)[rb]{\smash{{\SetFigFont{8}{9.6}{\familydefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}$\vec{b} = \phi(\vec{x}) - \phi(\vec{\mu}_0)$}%
+}}}}
+\put(1126,-1276){\makebox(0,0)[lb]{\smash{{\SetFigFont{8}{9.6}{\familydefault}{\mddefault}{\updefault}{\color[rgb]{0.675,0.596,0.471}$\frac{\vec{b}^T \vec{a}}{\vec{a}^T \vec{a}} \vec{a}$}%
+}}}}
+\end{picture}%

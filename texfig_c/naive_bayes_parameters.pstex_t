@@ -1,0 +1,64 @@
+\begin{picture}(0,0)%
+\includegraphics{\texfigdir/naive_bayes_parameters.\texfig}%
+\end{picture}%
+\setlength{\unitlength}{4144sp}%
+%
+\begingroup\makeatletter\ifx\SetFigFont\undefined%
+\gdef\SetFigFont#1#2#3#4#5{%
+  \reset@font\fontsize{#1}{#2pt}%
+  \fontfamily{#3}\fontseries{#4}\fontshape{#5}%
+  \selectfont}%
+\fi\endgroup%
+\begin{picture}(3609,2494)(-14,-1656)
+%  text 
+\put( 97,-284){\rotatebox{90.0}{\makebox(0,0)[b]{\smash{{\SetFigFont{8}{9.6}{\familydefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}Number of parameters}%
+}}}}}
+%  text 
+\put(1133,-1487){\makebox(0,0)[b]{\smash{{\SetFigFont{7}{8.4}{\familydefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}20}%
+}}}}
+%  text 
+\put(1722,-1487){\makebox(0,0)[b]{\smash{{\SetFigFont{7}{8.4}{\familydefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}40}%
+}}}}
+%  text 
+\put(2310,-1487){\makebox(0,0)[b]{\smash{{\SetFigFont{7}{8.4}{\familydefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}60}%
+}}}}
+%  text 
+\put(3488,-1487){\makebox(0,0)[b]{\smash{{\SetFigFont{7}{8.4}{\familydefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}100}%
+}}}}
+%  text 
+\put(465,-1029){\makebox(0,0)[rb]{\smash{{\SetFigFont{7}{8.4}{\familydefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0} 1000}%
+}}}}
+%  text 
+\put(465,-674){\makebox(0,0)[rb]{\smash{{\SetFigFont{7}{8.4}{\familydefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0} 2000}%
+}}}}
+%  text 
+\put(465,-318){\makebox(0,0)[rb]{\smash{{\SetFigFont{7}{8.4}{\familydefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0} 3000}%
+}}}}
+%  text 
+\put(465, 37){\makebox(0,0)[rb]{\smash{{\SetFigFont{7}{8.4}{\familydefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0} 4000}%
+}}}}
+%  text 
+\put(465,393){\makebox(0,0)[rb]{\smash{{\SetFigFont{7}{8.4}{\familydefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0} 5000}%
+}}}}
+%  text 
+\put(465,748){\makebox(0,0)[rb]{\smash{{\SetFigFont{7}{8.4}{\familydefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0} 6000}%
+}}}}
+%  text 
+\put(465,-1385){\makebox(0,0)[rb]{\smash{{\SetFigFont{7}{8.4}{\familydefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0} 0}%
+}}}}
+%  text 
+\put(545,-1487){\makebox(0,0)[b]{\smash{{\SetFigFont{7}{8.4}{\familydefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0} 0}%
+}}}}
+%  text 
+\put(2899,-1487){\makebox(0,0)[b]{\smash{{\SetFigFont{7}{8.4}{\familydefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}80}%
+}}}}
+%  text 
+\put(1396,344){\makebox(0,0)[rb]{\smash{{\SetFigFont{8}{9.6}{\familydefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}Na\"ive Bayes}%
+}}}}
+%  text 
+\put(2017,-1641){\makebox(0,0)[b]{\smash{{\SetFigFont{8}{9.6}{\familydefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}Dimension of the feature vector}%
+}}}}
+%  text 
+\put(1396,524){\makebox(0,0)[rb]{\smash{{\SetFigFont{8}{9.6}{\familydefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}Gaussians}%
+}}}}
+\end{picture}%

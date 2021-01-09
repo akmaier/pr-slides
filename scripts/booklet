@@ -1,0 +1,9 @@
+#!/usr/bin/perl
+
+$file = shift @ARGV;
+
+$file =~ s/.ps$//g;
+
+$command = "psbook $file.ps | psnup -2 | pstops '2:0U\@1.0(21cm,29.7cm),1\@1.0(00cm,00.0cm)' > $file.booklet.ps";
+print "$command\n";
+system $command;

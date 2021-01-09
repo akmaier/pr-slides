@@ -1,0 +1,26 @@
+\documentclass[10pt,handout,t]{beamer}
+
+% Skalierung auf DIN A4 beim Handout und mehrere Folien auf ein Blatt
+\mode<handout>{
+  \usepackage{pgf}
+  \usepackage{pgfpages}
+  \usepackage{lastpage}
+  \usepackage{refcount}
+
+  \newcounter{logicalpage}
+  \setcounter{logicalpage}{0}
+  \def\mystroke{\addtocounter{logicalpage}{1}%
+  \ifnum\value{logicalpage}>\getpagerefnumber{LastPage} \else \pgfstroke \fi}
+
+  \pgfpagesuselayout{4 on 1}[a4paper,border shrink=3mm,landscape]
+  \pgfpageslogicalpageoptions{1}{border code=\mystroke}
+  \pgfpageslogicalpageoptions{2}{border code=\mystroke}
+  \pgfpageslogicalpageoptions{3}{border code=\mystroke}
+  \pgfpageslogicalpageoptions{4}{border code=\mystroke}
+
+%  \pgfpagesuselayout{4 on 1}[a4paper,border shrink=3mm,landscape]
+%  \setbeamercolor{background canvas}{bg=black!5}
+  \def\shadow{false}
+  \def\fourpages{true}
+} 
+

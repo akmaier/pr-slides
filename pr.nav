@@ -1,0 +1,59 @@
+\beamer@endinputifotherversion {3.36pt}
+\headcommand {\slideentry {0}{0}{1}{1/1}{}{0}}
+\headcommand {\beamer@framepages {1}{1}}
+\headcommand {\slideentry {0}{0}{2}{2/2}{}{0}}
+\headcommand {\beamer@framepages {2}{2}}
+\headcommand {\sectionentry {10}{Rosenblatt's Perceptron (1957)}{3}{Rosenblatt's Perceptron (1957)}{0}}
+\headcommand {\beamer@sectionpages {1}{2}}
+\headcommand {\beamer@subsectionpages {1}{2}}
+\headcommand {\slideentry {10}{0}{3}{3/3}{}{0}}
+\headcommand {\beamer@framepages {3}{3}}
+\headcommand {\beamer@subsectionentry {0}{10}{1}{4}{Motivation}}\headcommand {\beamer@subsectionpages {3}{3}}
+\headcommand {\slideentry {10}{1}{1}{4/4}{Motivation}{0}}
+\headcommand {\beamer@framepages {4}{4}}
+\headcommand {\beamer@subsectionentry {0}{10}{2}{5}{Objective Function}}\headcommand {\beamer@subsectionpages {4}{4}}
+\headcommand {\slideentry {10}{2}{1}{5/5}{Objective Function}{0}}
+\headcommand {\beamer@framepages {5}{5}}
+\headcommand {\slideentry {10}{2}{2}{6/6}{Objective Function}{0}}
+\headcommand {\beamer@framepages {6}{6}}
+\headcommand {\beamer@subsectionentry {0}{10}{3}{7}{Minimization of Objective Function}}\headcommand {\beamer@subsectionpages {5}{6}}
+\headcommand {\slideentry {10}{3}{1}{7/7}{Minimization of Objective Function}{0}}
+\headcommand {\beamer@framepages {7}{7}}
+\headcommand {\slideentry {10}{3}{2}{8/8}{Minimization of Objective Function}{0}}
+\headcommand {\beamer@framepages {8}{8}}
+\headcommand {\slideentry {10}{3}{3}{9/9}{Minimization of Objective Function}{0}}
+\headcommand {\beamer@framepages {9}{9}}
+\headcommand {\beamer@subsectionentry {0}{10}{4}{10}{Remarks on Perceptron Learning}}\headcommand {\beamer@subsectionpages {7}{9}}
+\headcommand {\slideentry {10}{4}{1}{10/10}{Remarks on Perceptron Learning}{0}}
+\headcommand {\beamer@framepages {10}{10}}
+\headcommand {\slideentry {10}{4}{2}{11/11}{Remarks on Perceptron Learning}{0}}
+\headcommand {\beamer@framepages {11}{11}}
+\headcommand {\beamer@subsectionentry {0}{10}{5}{12}{Convergence of Learning Algorithm}}\headcommand {\beamer@subsectionpages {10}{11}}
+\headcommand {\slideentry {10}{5}{1}{12/12}{Convergence of Learning Algorithm}{0}}
+\headcommand {\beamer@framepages {12}{12}}
+\headcommand {\slideentry {10}{5}{2}{13/13}{Convergence of Learning Algorithm}{0}}
+\headcommand {\beamer@framepages {13}{13}}
+\headcommand {\slideentry {10}{5}{3}{14/14}{Convergence of Learning Algorithm}{0}}
+\headcommand {\beamer@framepages {14}{14}}
+\headcommand {\slideentry {10}{5}{4}{15/15}{Convergence of Learning Algorithm}{0}}
+\headcommand {\beamer@framepages {15}{15}}
+\headcommand {\slideentry {10}{5}{5}{16/16}{Convergence of Learning Algorithm}{0}}
+\headcommand {\beamer@framepages {16}{16}}
+\headcommand {\slideentry {10}{5}{6}{17/17}{Convergence of Learning Algorithm}{0}}
+\headcommand {\beamer@framepages {17}{17}}
+\headcommand {\beamer@subsectionentry {0}{10}{6}{18}{Lessons Learned}}\headcommand {\beamer@subsectionpages {12}{17}}
+\headcommand {\slideentry {10}{6}{1}{18/18}{Lessons Learned}{0}}
+\headcommand {\beamer@framepages {18}{18}}
+\headcommand {\slideentry {10}{6}{2}{19/19}{Lessons Learned}{0}}
+\headcommand {\beamer@framepages {19}{19}}
+\headcommand {\beamer@subsectionentry {0}{10}{7}{20}{Further Readings}}\headcommand {\beamer@subsectionpages {18}{19}}
+\headcommand {\slideentry {10}{7}{1}{20/20}{Further Readings}{0}}
+\headcommand {\beamer@framepages {20}{20}}
+\headcommand {\beamer@partpages {1}{21}}
+\headcommand {\beamer@subsectionpages {21}{21}}
+\headcommand {\beamer@sectionpages {3}{21}}
+\headcommand {\beamer@documentpages {21}}
+\headcommand {\def \inserttotalframenumber {19}}
+\headcommand {\beamer@subsectionentry {0}{10}{8}{21}{Comprehensive Questions}}\headcommand {\beamer@subsectionpages {20}{20}}
+\headcommand {\slideentry {10}{8}{1}{21/21}{Comprehensive Questions}{0}}
+\headcommand {\beamer@framepages {21}{21}}

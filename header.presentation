@@ -1,0 +1,2 @@
+\documentclass[aspectratio=43,t,10pt]{beamer}
+\def\shadow{true}
