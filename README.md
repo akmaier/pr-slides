@@ -10,7 +10,7 @@ All sources are under MIT license. Slides are under Creative Commons CC 4.0 BY I
 
 Slides can be built using 'make.pl'. To build the first set of slides use
 
-make.pl 01
+./make.pl 01
 
 Have fun!
 
